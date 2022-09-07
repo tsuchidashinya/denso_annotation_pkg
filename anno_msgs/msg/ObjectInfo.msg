@@ -1,0 +1,5 @@
+string object_name
+int32 object_id
+string label_name
+int32 label_id
+geometry_msgs/Transform position
