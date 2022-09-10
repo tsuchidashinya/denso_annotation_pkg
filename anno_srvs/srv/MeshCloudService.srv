@@ -1,0 +1,4 @@
+anno_msgs/ObjectInfo[] input_data
+---
+common_msgs/CloudData[] mesh
+common_msgs/PoseData[] pose
