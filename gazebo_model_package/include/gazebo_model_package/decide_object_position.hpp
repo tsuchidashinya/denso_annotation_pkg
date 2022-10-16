@@ -17,22 +17,38 @@
 
 enum Mode
 {
-    FullAuto,
-    MaxNumDecide,
-    ObjectNameSpecify,
+    Random,
     FullCustom
 };
 
-class DecideObjectPosition
+struct GazeboModelType
+{
+    gazebo_msgs::ModelState gazebo_model;
+    anno_msgs::ObjectInfo object_info;
+};
+struct GazeboModelMultiType
+{
+    std::vector<gazebo_msgs::ModelState> gazebo_models;
+    std::vector<anno_msgs::ObjectInfo> object_infoes;
+};
+class DecidePosition
 {
 public:
-    DecideObjectPosition();
-    std::vector<anno_msgs::ObjectInfo> decide_object_position();
-    static gazebo_msgs::ModelState gazebo_model_state_make(std::string, geometry_msgs::Transform);
+    DecidePosition();
+    anno_msgs::ObjectInfo register_object(int, std::string);
+    GazeboModelMultiType get_object_place_position(std::vector<anno_msgs::ObjectInfo>);
+    GazeboModelMultiType get_object_remove_position(std::vector<anno_msgs::ObjectInfo>);
+    GazeboModelType get_box_position(double);
+    GazeboModelType get_phoxi_position(double, double, double);
+    static gazebo_msgs::ModelState make_gazebo_model_state(std::string, geometry_msgs::Transform);
+    void change_mode(Mode);
+    void set_parameter();
     XmlRpc::XmlRpcValue param_list;
+    Mode mode_;
 
 private:
     ros::NodeHandle pnh_;
-    int mode_;
-    int max_num_;
+    double z_position_;
+    double box_height_;
+    double object_radious_;
 };
