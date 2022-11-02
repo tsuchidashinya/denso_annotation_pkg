@@ -1,5 +1,4 @@
-#pragma once
-#include <mesh_cloud_package/mesh_cloud.hpp>>
+#include <mesh_cloud_package/mesh_cloud.hpp>
 
 using mesh_sampler::uniform_sampling;
 
@@ -15,16 +14,6 @@ MeshCloudServer::MeshCloudServer(ros::NodeHandle &nh)
 {
     set_parameter();
     server_ = nh_.advertiseService(mesh_service_name_, &MeshCloudServer::service_callback, this);
-    visual_server_ = nh_.advertiseService("visual_mesh_service", &MeshCloudServer::visual_service_callback, this);
-
-    print_parameter("sample_point is" + to_string(sample_points));
-}
-
-bool MeshCloudServer::visual_service_callback(denso_srvs::visual_serviceRequest &request, denso_srvs::visual_serviceResponse &response)
-{
-    visualize_data(request.the_number_of_mesh);
-    response.owari = 1;
-    return true;
 }
 
 void MeshCloudServer::initialize(denso_srvs::mesh_provide_serviceRequest request)
@@ -99,18 +88,7 @@ denso_msgs::pose_data MeshCloudServer::stamped_to_pose(tf::StampedTransform tf_s
     return out_data;
 }
 
-void MeshCloudServer::visualize_data(int the_number_of_mesh)
-{
-    for (int i = 0; i < the_number_of_mesh; i++)
-    {
-        sensor_msgs::PointCloud2 ros_pcl;
-        ros_pcl = convert_pcl_to_ros(mesh_pcl_clusters_[i]);
-        ros_pcl.header.frame_id = sensor_frame_;
-        mesh_cluster_pub_[i].publish(ros_pcl);
-    }
-}
-
-void MeshCloudServer::hyper_parameter()
+void MeshCloudServer::set_parameter()
 {
     pnh_.getParam("sample_points", sample_points);
     pnh_.getParam("mesh_file_path", mesh_path_);

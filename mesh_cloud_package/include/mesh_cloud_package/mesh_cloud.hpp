@@ -10,6 +10,8 @@
 #include <anno_srvs/MeshCloudService.h>
 #include <common_msgs/CloudData.h>
 #include <common_msgs/PoseData.h>
+#include <util/util_base.hpp>
+#include <util/util_sensor.hpp>
 
 using namespace pcl;
 using namespace std;
@@ -19,7 +21,7 @@ struct mesh_out_type
     vector<common_msgs::CloudData> mesh_data;
     vector<common_msgs::PoseData> pose_data;
 };
-class MeshCloudServer 
+class MeshCloudServer
 {
 public:
     MeshCloudServer(ros::NodeHandle &);
@@ -43,6 +45,7 @@ private:
     vector<PolygonMesh> meshes_cluster_;
     vector<double> GT_translation_, GT_rotation_;
     tf::StampedTransform transform_;
+    XmlRpc::XmlRpcValue param_list;
     string object_name_, mesh_path_, mesh_topic_name_, world_frame_, mesh_service_name_, sensor_frame_;
     int sample_points, background_instance_;
     double LEAF_SIZE_;
