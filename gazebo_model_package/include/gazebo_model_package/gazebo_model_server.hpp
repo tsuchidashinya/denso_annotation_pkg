@@ -29,4 +29,6 @@ private:
     ros::ServiceServer server_;
     ros::ServiceClient gazebo_client_;
     tf2_ros::StaticTransformBroadcaster br_;
+    std::string service_name_, sensor_frame_, world_frame_, object_name_;
+    int object_num_;
 };
