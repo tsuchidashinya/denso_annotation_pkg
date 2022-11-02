@@ -8,25 +8,27 @@
 #include <mesh_cloud_package/mesh_sampler.hpp>
 #include <tf/transform_datatypes.h>
 #include <anno_srvs/MeshCloudService.h>
+#include <common_msgs/CloudData.h>
+#include <common_msgs/PoseData.h>
 
 using namespace pcl;
 using namespace std;
 
 struct mesh_out_type
 {
-    vector<denso_msgs::annotation_data> mesh_data;
-    vector<denso_msgs::pose_data> pose_data;
+    vector<common_msgs::CloudData> mesh_data;
+    vector<common_msgs::PoseData> pose_data;
 };
-class MeshCloud : Base_Function
+class MeshCloudServer 
 {
 public:
-    MeshCloud(ros::NodeHandle &);
+    MeshCloudServer(ros::NodeHandle &);
     void set_parameter();
-    mesh_out_type make_mesh(denso_srvs::mesh_provide_serviceRequest);
-    bool service_callback(denso_srvs::mesh_provide_serviceRequest &, denso_srvs::mesh_provide_serviceResponse &);
+    mesh_out_type make_mesh(anno_srvs::MeshCloudServiceRequest);
+    bool service_callback(anno_srvs::MeshCloudServiceRequest &, anno_srvs::MeshCloudServiceResponse &);
     void visualize_data(int);
-    void initialize(denso_srvs::mesh_provide_serviceRequest);
-    denso_msgs::pose_data stamped_to_pose(tf::StampedTransform);
+    void initialize();
+    common_msgs::PoseData stamped_to_pose(tf::StampedTransform);
 
 private:
     ros::NodeHandle nh_;

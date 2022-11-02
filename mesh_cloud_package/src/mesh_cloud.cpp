@@ -9,25 +9,25 @@ using mesh_sampler::uniform_sampling;
 3: mesh_topic_name
 4: the number of mesh object
 */
-MeshCloud::MeshCloud(ros::NodeHandle &nh)
+MeshCloudServer::MeshCloudServer(ros::NodeHandle &nh)
     : nh_(nh),
       pnh_("~")
 {
-    hyper_parameter();
-    server_ = nh_.advertiseService(mesh_service_name_, &MeshCloud::service_callback, this);
-    visual_server_ = nh_.advertiseService("visual_mesh_service", &MeshCloud::visual_service_callback, this);
+    set_parameter();
+    server_ = nh_.advertiseService(mesh_service_name_, &MeshCloudServer::service_callback, this);
+    visual_server_ = nh_.advertiseService("visual_mesh_service", &MeshCloudServer::visual_service_callback, this);
 
     print_parameter("sample_point is" + to_string(sample_points));
 }
 
-bool MeshCloud::visual_service_callback(denso_srvs::visual_serviceRequest &request, denso_srvs::visual_serviceResponse &response)
+bool MeshCloudServer::visual_service_callback(denso_srvs::visual_serviceRequest &request, denso_srvs::visual_serviceResponse &response)
 {
     visualize_data(request.the_number_of_mesh);
     response.owari = 1;
     return true;
 }
 
-void MeshCloud::initialize(denso_srvs::mesh_provide_serviceRequest request)
+void MeshCloudServer::initialize(denso_srvs::mesh_provide_serviceRequest request)
 {
     mesh_pcl_clusters_.resize(request.the_number_of_mesh);
     mesh_cluster_pub_.resize(request.the_number_of_mesh);
@@ -38,7 +38,7 @@ void MeshCloud::initialize(denso_srvs::mesh_provide_serviceRequest request)
     }
 }
 
-bool MeshCloud::service_callback(denso_srvs::mesh_provide_serviceRequest &request, denso_srvs::mesh_provide_serviceResponse &response)
+bool MeshCloudServer::service_callback(denso_srvs::mesh_provide_serviceRequest &request, denso_srvs::mesh_provide_serviceResponse &response)
 {
     initialize(request);
     mesh_out_type out_data;
@@ -53,7 +53,7 @@ bool MeshCloud::service_callback(denso_srvs::mesh_provide_serviceRequest &reques
     return true;
 }
 
-mesh_out_type MeshCloud::make_mesh(denso_srvs::mesh_provide_serviceRequest request)
+mesh_out_type MeshCloudServer::make_mesh(denso_srvs::mesh_provide_serviceRequest request)
 {
     print_parameter_and_name(request.the_number_of_mesh, "the number of mesh");
     for (int i = 0; i < request.tf_object_frame.size(); i++)
@@ -85,7 +85,7 @@ mesh_out_type MeshCloud::make_mesh(denso_srvs::mesh_provide_serviceRequest reque
     return out_data;
 }
 
-denso_msgs::pose_data MeshCloud::stamped_to_pose(tf::StampedTransform tf_stamped)
+denso_msgs::pose_data MeshCloudServer::stamped_to_pose(tf::StampedTransform tf_stamped)
 {
     denso_msgs::pose_data out_data;
 
@@ -99,7 +99,7 @@ denso_msgs::pose_data MeshCloud::stamped_to_pose(tf::StampedTransform tf_stamped
     return out_data;
 }
 
-void MeshCloud::visualize_data(int the_number_of_mesh)
+void MeshCloudServer::visualize_data(int the_number_of_mesh)
 {
     for (int i = 0; i < the_number_of_mesh; i++)
     {
@@ -110,7 +110,7 @@ void MeshCloud::visualize_data(int the_number_of_mesh)
     }
 }
 
-void MeshCloud::hyper_parameter()
+void MeshCloudServer::hyper_parameter()
 {
     pnh_.getParam("sample_points", sample_points);
     pnh_.getParam("mesh_file_path", mesh_path_);
@@ -119,7 +119,7 @@ void MeshCloud::hyper_parameter()
     pnh_.getParam("object_name", object_name_);
 }
 
-void MeshCloud::hyper_parameter_realtime()
+void MeshCloudServer::hyper_parameter_realtime()
 {
     nh_.getParam("world_frame", world_frame_);
     nh_.getParam("backgound_instance", background_instance_);
@@ -131,7 +131,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "mesh_service");
     ros::NodeHandle nh;
-    MeshCloud mesh(nh);
+    MeshCloudServer mesh(nh);
     ros::spin();
     return 0;
 }
