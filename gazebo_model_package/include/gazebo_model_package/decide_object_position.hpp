@@ -11,6 +11,7 @@
 
 #pragma once
 #include <util/util_base.hpp>
+#include <util/util_tf.hpp>
 #include <gazebo_msgs/SetModelState.h>
 #include <gazebo_msgs/ModelState.h>
 #include <anno_msgs/ObjectInfo.h>
@@ -36,8 +37,8 @@ class DecidePosition
 public:
     DecidePosition();
     anno_msgs::ObjectInfo register_object(int, std::string);
-    GazeboModelMultiType get_object_place_position(std::vector<anno_msgs::ObjectInfo>);
-    GazeboModelMultiType get_object_remove_position(std::vector<anno_msgs::ObjectInfo>);
+    GazeboModelMultiType get_ramdam_place_position(std::vector<anno_msgs::ObjectInfo>);
+    GazeboModelMultiType get_remove_position(std::vector<anno_msgs::ObjectInfo>);
     GazeboModelType get_box_position(double);
     GazeboModelType get_phoxi_position(double, double, double);
     static gazebo_msgs::ModelState make_gazebo_model_state(std::string, geometry_msgs::Transform);

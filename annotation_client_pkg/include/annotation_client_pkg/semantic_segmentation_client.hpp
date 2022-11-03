@@ -17,4 +17,5 @@ public:
 private:
     ros::NodeHandle nh_, pnh_;
     ros::ServiceClient sensor_client_;
+    std::string sensor_service_name_;
 };

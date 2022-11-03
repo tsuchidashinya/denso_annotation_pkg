@@ -1,5 +1,4 @@
-#pragma once
-#include <mesh_cloud_package/mesh_cloud.hpp>>
+#include <mesh_cloud_package/mesh_cloud.hpp>
 
 using mesh_sampler::uniform_sampling;
 

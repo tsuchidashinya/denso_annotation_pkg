@@ -56,10 +56,10 @@ bool GazeboModelServer::service_callback(anno_srvs::GazeboService::Request &requ
         objects.object_infoes.push_back(decide_position.register_object(i, object_name_));
     }
 
-    objects = decide_position.get_object_remove_position(objects.object_infoes);
+    objects = decide_position.get_remove_position(objects.object_infoes);
     set_multi_gazebo_model(objects.gazebo_models);
 
-    objects = decide_position.get_object_place_position(objects.object_infoes);
+    objects = decide_position.get_ramdam_place_position(objects.object_infoes);
     set_multi_gazebo_model(objects.gazebo_models);
 
     response.out_data = objects.object_infoes;
