@@ -44,7 +44,7 @@ anno_msgs::ObjectInfo DecidePosition::register_object(int object_id, std::string
  *
  * @return std::vector<anno_msgs::ObjectInfo>
  */
-GazeboModelMultiType DecidePosition::get_object_place_position(std::vector<anno_msgs::ObjectInfo> object_info)
+GazeboModelMultiType DecidePosition::get_ramdam_place_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
     GazeboModelMultiType output;
     if (mode_ == Mode::Random)
@@ -106,7 +106,7 @@ GazeboModelMultiType DecidePosition::get_object_place_position(std::vector<anno_
     return output;
 }
 
-GazeboModelMultiType DecidePosition::get_object_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
+GazeboModelMultiType DecidePosition::get_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
     GazeboModelMultiType output;
     output.object_infoes = object_info;
