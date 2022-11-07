@@ -11,6 +11,7 @@
 
 #pragma once
 #include <util/util_base.hpp>
+#include <tf_package/tf_basic.hpp>
 #include <gazebo_msgs/SetModelState.h>
 #include <gazebo_msgs/ModelState.h>
 #include <anno_msgs/ObjectInfo.h>
