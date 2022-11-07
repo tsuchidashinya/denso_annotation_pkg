@@ -97,7 +97,7 @@ GazeboModelMultiType DecidePosition::get_object_place_position(std::vector<anno_
             }
 
             double z = z_position_ + box_height_ + map_index * 0.05;
-            output.object_infoes[i].position = UtilBase::geo_trans_make(x, y, z, UtilBase::rotate_xyz_make(0, 0, 0));
+            output.object_infoes[i].position = UtilBase::geo_trans_make(x, y, z, TfBasic::rotate_xyz_make(0, 0, 0));
             output.object_infoes[i].object_id = object_info[i].object_id;
             output.object_infoes[i].object_name = object_info[i].object_name;
             output.gazebo_models[i] = make_gazebo_model_state(output.object_infoes[i].object_name, output.object_infoes[i].position);
@@ -116,7 +116,7 @@ GazeboModelMultiType DecidePosition::get_object_remove_position(std::vector<anno
         double x = 100;
         double y = 100;
         double z = 100;
-        tf2::Quaternion quaternion = UtilBase::rotate_xyz_make(0, 0, 0);
+        tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, 0, 0);
         output.gazebo_models[i] = make_gazebo_model_state(object_info[i].object_name, UtilBase::geo_trans_make(x, y, z, quaternion));
     }
     return output;
@@ -131,7 +131,7 @@ GazeboModelType DecidePosition::get_box_position(double probability)
         double x = 0;
         double y = 0;
         double z = z_position_;
-        tf2::Quaternion quat = UtilBase::rotate_xyz_make(0, 0, 0);
+        tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
         output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
         output.object_info.object_name = "denso_box";
         output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
@@ -141,7 +141,7 @@ GazeboModelType DecidePosition::get_box_position(double probability)
         double x = 100;
         double y = 100;
         double z = z_position_;
-        tf2::Quaternion quat = UtilBase::rotate_xyz_make(0, 0, 0);
+        tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
         output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
         output.object_info.object_name = "denso_box";
         output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
@@ -157,7 +157,7 @@ GazeboModelType DecidePosition::get_phoxi_position(double angle_min, double angl
     double x = distance * sin(angle);
     double y = 0;
     double z = distance * cos(angle);
-    tf2::Quaternion quaternion = UtilBase::rotate_xyz_make(0, angle, 0);
+    tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, angle, 0);
     output.object_info.position = UtilBase::geo_trans_make(x, y, z, quaternion);
     output.object_info.object_name = "phoxi_camera";
     output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
