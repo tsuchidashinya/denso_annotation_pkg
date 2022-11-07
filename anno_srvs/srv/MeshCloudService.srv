@@ -1,0 +1,5 @@
+string[] tf_names
+string[] object_names
+---
+common_msgs/CloudData[] mesh
+common_msgs/PoseData[] pose

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(anno_srvs)
+project(mesh_cloud_package)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,10 +8,10 @@ project(anno_srvs)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-    message_generation
-    anno_msgs
-    common_msgs 
-    sensor_msgs
+  roscpp
+  pcl_ros
+  common_srvs 
+  common_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -55,12 +55,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  GazeboService.srv 
-  RecordService.srv 
-  MeshCloudService.srv 
-)
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -70,10 +69,10 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  common_msgs anno_msgs sensor_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs  # Or other packages containing msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -106,8 +105,8 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES anno_srvs
- CATKIN_DEPENDS message_runtime
+#  LIBRARIES mesh_cloud_package
+#  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
 
@@ -119,12 +118,12 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
 # include
-# ${catkin_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/anno_srvs.cpp
+#   src/${PROJECT_NAME}/mesh_cloud_package.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -135,7 +134,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/anno_srvs_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/mesh_cloud_package_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -199,7 +198,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_anno_srvs.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_mesh_cloud_package.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

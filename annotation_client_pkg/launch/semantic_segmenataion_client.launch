@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="annotation_client_pkg" type="semseg" name="semseg" output="screen">
+        <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
+    </node>
+
+</launch>        
