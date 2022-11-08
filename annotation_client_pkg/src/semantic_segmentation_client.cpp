@@ -19,9 +19,9 @@ void SemanticSegmentation::set_paramenter()
 
 void SemanticSegmentation::main()
 {
-    // common_srvs::SensorService sensor_srv;
-    // sensor_srv.request.counter = 1;
-    // UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
+    common_srvs::SensorService sensor_srv;
+    sensor_srv.request.counter = 1;
+    UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     
     DecidePosition decide_gazebo_object;
     GazeboModelMove gazebo_model_move(nh_);
@@ -34,6 +34,7 @@ void SemanticSegmentation::main()
     sensor_trans.rotation = TfBasic::make_geo_quaternion(TfBasic::rotate_xyz_make(0, M_PI/2, 0, TfBasic::make_tf2_quaternion(sensor_pos_info.position.rotation)));
     sensor_tf = TfBasic::make_geo_trans_stamped("photoneo_center", world_frame_, sensor_trans);
     tf_basic_.static_broadcast(sensor_tf);
+    UtilBase::message_show("tf_basic", "message");
 
     std::vector<anno_msgs::ObjectInfo> multi_object;
     for (int i = 0; i < 10; i++) {
@@ -57,7 +58,7 @@ int main(int argc, char** argv)
     SemanticSegmentation semseg(nh);
     for (int i = 0; i < 20; i++) {
         semseg.main();
-        ros::Duration(20).sleep();
+        ros::Duration(1).sleep();
     }
     
     return 0;
