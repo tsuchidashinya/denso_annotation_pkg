@@ -22,7 +22,7 @@ class DecidePosition
 public:
     DecidePosition();
     anno_msgs::ObjectInfo make_object_info(int, std::string);
-    anno_msgs::ObjectInfo make_object_info(std::string, std::string, geometry_msgs::Transform);
+    anno_msgs::ObjectInfo make_object_info(std::string, std::string);
     std::vector<anno_msgs::ObjectInfo> get_randam_place_position(std::vector<anno_msgs::ObjectInfo>);
     std::vector<anno_msgs::ObjectInfo> get_remove_position(std::vector<anno_msgs::ObjectInfo>);
     anno_msgs::ObjectInfo get_box_position();

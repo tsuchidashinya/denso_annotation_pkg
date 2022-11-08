@@ -24,16 +24,29 @@ void DecidePosition::set_parameter()
     box_height_ = param_list["box_height"];
     box_name_ = static_cast<std::string>(param_list["box_name"]);
     object_radious_ = param_list["radious"];
+    sensor_name_ = static_cast<std::string>(param_list["sensor_name"]);
+    sensor_angle_max_ = param_list["sensor_angle_max"];
+    sensor_angle_min_ = param_list["sensor_angle_min"];
+    sensor_distance_ = param_list["distance"];
 }
 
 
 anno_msgs::ObjectInfo DecidePosition::make_object_info(int object_id, std::string object_name)
 {
-    anno_msgs::ObjectInfo output;
-    output.tf_name = object_name + "_" + std::to_string(object_id);
-    output.object_name = object_name;
-    return output;
+    anno_msgs::ObjectInfo outdata;
+    outdata.tf_name = object_name + "_" + std::to_string(object_id);
+    outdata.object_name = object_name;
+    return outdata;
 }
+
+anno_msgs::ObjectInfo DecidePosition::make_object_info(std::string object_name, std::string tf_name)
+{
+    anno_msgs::ObjectInfo outdata;
+    outdata.object_name = object_name;
+    outdata.tf_name = tf_name;
+    return outdata;
+}
+
 /**
  * @brief オブジェクトの配置を決定する
  *
@@ -41,8 +54,6 @@ anno_msgs::ObjectInfo DecidePosition::make_object_info(int object_id, std::strin
  */
 std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
-    GazeboModelMultiType output;
-
     {
         int count = 0;
         int map_index = 0;
@@ -51,7 +62,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
         bool loop_ok;
         double x, y, x_range = 0.08, y_range = 0.12;
         UtilBase util;
-        for (int i = 0; i < output.object_infoes.size(); i++)
+        for (int i = 0; i < object_info.size(); i++)
         {
             count = 0;
             if (i > 0)
@@ -76,7 +87,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
 
                     for (int j = check_point[map_index]; j < i; j++)
                     {
-                        double d1[2] = {x, y}, d2[2] = {output.object_infoes[j].position.translation.x, output.object_infoes[j].position.translation.y};
+                        double d1[2] = {x, y}, d2[2] = {object_info[j].position.translation.x, object_info[j].position.translation.y};
                         if (UtilBase::distance(d1, d2) < object_radious_ * 2)
                             loop_ok = false;
                     }
@@ -109,45 +120,32 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vect
     return object_info;
 }
 
-// anno_msgs::ObjectInfo DecidePosition::get_box_position(double probability)
-// {
-//     UtilBase util;
-//     GazeboModelType output;
-//     if (probability <= util.random_float(0, 1))
-//     {
-//         double x = 0;
-//         double y = 0;
-//         double z = z_position_;
-//         tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
-//         output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
-//         output.object_info.object_name = "denso_box";
-//         output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
-//     }
-//     else
-//     {
-//         double x = 100;
-//         double y = 100;
-//         double z = z_position_;
-//         tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
-//         output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
-//         output.object_info.object_name = "denso_box";
-//         output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
-//     }
-//     return output;
-// }
+anno_msgs::ObjectInfo DecidePosition::get_box_position()
+{
+    UtilBase util;
+    anno_msgs::ObjectInfo outdata;
+    double x = 0;
+    double y = 0;
+    double z = z_position_;
+    tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
+    outdata.position = TfBasic::make_geo_transform(x, y, z, quat);
+    outdata.object_name = box_name_;
+    outdata.tf_name = box_name_;
+    return outdata;
+}
 
 anno_msgs::ObjectInfo DecidePosition::get_sensor_position()
 {
     UtilBase util;
-    GazeboModelType output;
-    double angle = util.random_float(angle_min, angle_max);
-    double x = distance * sin(angle);
+    anno_msgs::ObjectInfo outdata;
+    double angle = util.random_float(sensor_angle_min_, sensor_angle_max_);
+    double x = sensor_distance_ * sin(angle);
     double y = 0;
-    double z = distance * cos(angle);
+    double z = sensor_distance_ * cos(angle);
     tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, angle, 0);
-    output.object_info.position = UtilBase::geo_trans_make(x, y, z, quaternion);
-    output.object_info.object_name = "phoxi_camera";
-    output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
-    return output;
+    outdata.position = TfBasic::make_geo_transform(x, y, z, quaternion);
+    outdata.object_name = sensor_name_;
+    outdata.object_name = sensor_name_;
+    return outdata;
 }
 

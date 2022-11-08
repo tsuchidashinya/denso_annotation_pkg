@@ -1,5 +1,4 @@
-string[] tf_names
-string[] object_names
+anno_msgs/ObjectInfo[] multi_object_info
 ---
 common_msgs/CloudData[] mesh
 common_msgs/PoseData[] pose

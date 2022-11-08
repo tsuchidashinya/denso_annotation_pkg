@@ -16,6 +16,9 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   roscpp
   util
+  gazebo_model_package
+  tf_package
+  util_anno
 )
 
 ## System dependencies are found with CMake's conventions
@@ -108,7 +111,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+ INCLUDE_DIRS include
 #  LIBRARIES annotation_client_pkg
 #  CATKIN_DEPENDS anno_msgs anno_srvs common_msgs common_srvs cv_bridge pcl_ros roscpp
 #  DEPENDS system_lib

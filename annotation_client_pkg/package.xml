@@ -57,6 +57,9 @@
   <build_depend>pcl_ros</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>util</build_depend>
+  <build_depend>util_anno</build_depend>
+  <build_depend>gazebo_model_package</build_depend>
+  <build_depend>tf_package</build_depend>
   <build_export_depend>anno_msgs</build_export_depend>
   <build_export_depend>anno_srvs</build_export_depend>
   <build_export_depend>common_msgs</build_export_depend>
