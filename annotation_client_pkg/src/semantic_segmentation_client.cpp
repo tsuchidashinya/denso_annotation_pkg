@@ -14,6 +14,7 @@ void SemanticSegmentation::set_paramenter()
     pnh_.getParam("annotation_main", param_list);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
+    world_frame_ = static_cast<std::string>(param_list["world_frame"]);
 }
 
 void SemanticSegmentation::main()
@@ -21,9 +22,19 @@ void SemanticSegmentation::main()
     // common_srvs::SensorService sensor_srv;
     // sensor_srv.request.counter = 1;
     // UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
-
+    
     DecidePosition decide_gazebo_object;
     GazeboModelMove gazebo_model_move(nh_);
+
+    anno_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
+    gazebo_model_move.set_gazebo_model(sensor_pos_info);
+    geometry_msgs::TransformStamped sensor_tf;
+    geometry_msgs::Transform sensor_trans;
+    sensor_trans.translation = sensor_pos_info.position.translation;
+    sensor_trans.rotation = TfBasic::make_geo_quaternion(TfBasic::rotate_xyz_make(0, M_PI/2, 0, TfBasic::make_tf2_quaternion(sensor_pos_info.position.rotation)));
+    sensor_tf = TfBasic::make_geo_trans_stamped("photoneo_center", world_frame_, sensor_trans);
+    tf_basic_.static_broadcast(sensor_tf);
+
     std::vector<anno_msgs::ObjectInfo> multi_object;
     for (int i = 0; i < 10; i++) {
         anno_msgs::ObjectInfo object;

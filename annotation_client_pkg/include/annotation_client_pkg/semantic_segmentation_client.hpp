@@ -19,4 +19,6 @@ private:
     ros::NodeHandle nh_, pnh_;
     ros::ServiceClient sensor_client_, mesh_client_;
     std::string sensor_service_name_, mesh_service_name_;
+    std::string world_frame_;
+    TfBasic tf_basic_;
 };

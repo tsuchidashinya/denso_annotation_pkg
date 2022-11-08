@@ -12,7 +12,7 @@ MeshCloudServer::MeshCloudServer(ros::NodeHandle &nh)
 {
     set_parameter();
     server_ = nh_.advertiseService(mesh_service_name_, &MeshCloudServer::service_callback, this);
-    timer_ = nh_.createTimer(ros::Duration(1), &MeshCloudServer::visualize_callback, this);
+    timer_ = nh_.createTimer(ros::Duration(0.1), &MeshCloudServer::visualize_callback, this);
 }
 
 void MeshCloudServer::visualize_callback(const ros::TimerEvent &event)
@@ -20,7 +20,7 @@ void MeshCloudServer::visualize_callback(const ros::TimerEvent &event)
     UtilSensor util_sensor;
     for (int i = 0; i < mesh_pcl_clusters_.size(); i++) {
         sensor_msgs::PointCloud2 pc = util_sensor.pcl_to_pc2(mesh_pcl_clusters_[i]);
-        pc.header.frame_id = world_frame_;
+        pc.header.frame_id = sensor_frame_;
         mesh_cluster_pub_[i].publish(pc);
     }
 }
@@ -63,12 +63,12 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
         pcl::io::mesh2vtk(mesh, polydata);
         uniform_sampling(polydata, sample_points, mesh_pcl_clusters_[i]);
         tf::StampedTransform sensor_to_world, world_to_object, sensor_to_object;
-        TfBasic tf_basic;
-        world_to_object = UtilBase::make_stamped_trans(tf_basic.get_tf(request.multi_object_info[i].tf_name, world_frame_));
+        
+        world_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, world_frame_));
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], world_to_object);
-        sensor_to_world = UtilBase::make_stamped_trans(tf_basic.get_tf(world_frame_, sensor_frame_));
+        sensor_to_world = UtilBase::make_stamped_trans(tf_basic_.get_tf(world_frame_, sensor_frame_));
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], sensor_to_world);
-        sensor_to_object = UtilBase::make_stamped_trans(tf_basic.get_tf(request.multi_object_info[i].tf_name, sensor_frame_));
+        sensor_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, sensor_frame_));
         out_data.pose_data[i] = stamped_to_pose(sensor_to_object);
         out_data.mesh_data[i] = UtilSensor::pcl_to_cloudmsg(mesh_pcl_clusters_[i]);
     }   
