@@ -19,9 +19,10 @@ class GazeboModelMove
 public:
     GazeboModelMove(ros::NodeHandle);
     XmlRpc::XmlRpcValue param_list;
-    void set_multi_gazebo_model(std::vector<gazebo_msgs::ModelState>);
-    void set_gazebo_model(gazebo_msgs::ModelState);
-    // bool service_callback(anno_srvs::GazeboService::Request &, anno_srvs::GazeboService::Response &);
+    static gazebo_msgs::ModelState make_gazebo_model_state(anno_msgs::ObjectInfo);
+    static gazebo_msgs::ModelState make_gazebo_model_state(std::string, geometry_msgs::Transform);
+    void set_multi_gazebo_model(std::vector<anno_msgs::ObjectInfo>);
+    void set_gazebo_model(anno_msgs::ObjectInfo);
     void set_parameter();
 
 private:

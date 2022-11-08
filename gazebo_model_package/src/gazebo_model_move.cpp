@@ -42,3 +42,20 @@ void GazeboModelMove::set_gazebo_model(gazebo_msgs::ModelState gazebo_model)
     }
 }
 
+/**
+ * @brief gazebo_modelメッセージを生成する関数です。
+ *
+ * @param object_name Gazeboオブジェクトの名前
+ * @param trans geometry_msgs::Transform型の姿勢データ
+ * @return gazebo_msgs::ModelState
+ */
+gazebo_msgs::ModelState GazeboModelMove::make_gazebo_model_state(std::string object_name, geometry_msgs::Transform trans)
+{
+    gazebo_msgs::ModelState model;
+    model.model_name = object_name;
+    model.pose.position.x = trans.translation.x;
+    model.pose.position.y = trans.translation.y;
+    model.pose.position.z = trans.translation.z;
+    tf2::convert(trans.rotation, model.pose.orientation);
+    return model;
+}

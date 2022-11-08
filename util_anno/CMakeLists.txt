@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(labeling_package)
+project(util_anno)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -10,11 +10,11 @@ project(labeling_package)
 find_package(catkin REQUIRED COMPONENTS
   anno_msgs
   anno_srvs
-  common_srvs
   common_msgs
+  common_srvs
   cv_bridge
   pcl_ros
-  tf_package
+  roscpp
   util
 )
 
@@ -75,7 +75,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   anno_msgs
+#   anno_msgs#   common_msgs
 # )
 
 ################################################
@@ -109,8 +109,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES nearest_point_extractor
-#  CATKIN_DEPENDS anno_msgs anno_srvs common_srvs cv_bridge pcl_ros tf_package util
+ LIBRARIES util_anno
+#  CATKIN_DEPENDS anno_msgs anno_srvs common_msgs common_srvs cv_bridge pcl_ros roscpp util
 #  DEPENDS system_lib
 )
 
@@ -127,7 +127,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/labeling_package.cpp
+#   src/${PROJECT_NAME}/util_anno.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -138,7 +138,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/labeling_package_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/util_anno_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -202,14 +202,14 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_labeling_package.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_util_anno.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_library(nearest_point_extractor src/nearest_point_extractor.cpp)
-target_link_libraries(nearest_point_extractor
+add_library(util_anno src/util_anno.cpp)
+target_link_libraries(util_anno
   ${catkin_LIBRARIES}
 )

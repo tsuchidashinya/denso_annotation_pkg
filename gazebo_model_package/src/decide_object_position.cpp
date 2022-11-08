@@ -15,8 +15,6 @@ DecidePosition::DecidePosition()
     : pnh_("~")
 {
     pnh_.getParam("decide_object_position", param_list);
-    mode_ = Mode::Random;
-    change_mode(mode_);
     set_parameter();
 }
 
@@ -24,18 +22,15 @@ void DecidePosition::set_parameter()
 {
     z_position_ = param_list["z_position"];
     box_height_ = param_list["box_height"];
+    box_name_ = static_cast<std::string>(param_list["box_name"]);
     object_radious_ = param_list["radious"];
 }
 
-void DecidePosition::change_mode(Mode mode)
-{
-    mode_ = mode;
-}
 
-anno_msgs::ObjectInfo DecidePosition::register_object(int object_id, std::string object_name)
+anno_msgs::ObjectInfo DecidePosition::make_object_info(int object_id, std::string object_name)
 {
     anno_msgs::ObjectInfo output;
-    output.object_id = object_id;
+    output.tf_name = object_name + "_" + std::to_string(object_id);
     output.object_name = object_name;
     return output;
 }
@@ -44,13 +39,11 @@ anno_msgs::ObjectInfo DecidePosition::register_object(int object_id, std::string
  *
  * @return std::vector<anno_msgs::ObjectInfo>
  */
-GazeboModelMultiType DecidePosition::get_ramdam_place_position(std::vector<anno_msgs::ObjectInfo> object_info)
+std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
     GazeboModelMultiType output;
-    if (mode_ == Mode::Random)
+
     {
-        output.object_infoes.resize(object_info.size());
-        output.gazebo_models.resize(object_info.size());
         int count = 0;
         int map_index = 0;
         std::map<int, int> check_point;
@@ -97,59 +90,53 @@ GazeboModelMultiType DecidePosition::get_ramdam_place_position(std::vector<anno_
             }
 
             double z = z_position_ + box_height_ + map_index * 0.05;
-            output.object_infoes[i].position = UtilBase::geo_trans_make(x, y, z, TfBasic::rotate_xyz_make(0, 0, 0));
-            output.object_infoes[i].object_id = object_info[i].object_id;
-            output.object_infoes[i].object_name = object_info[i].object_name;
-            output.gazebo_models[i] = make_gazebo_model_state(output.object_infoes[i].object_name, output.object_infoes[i].position);
+            object_info[i].position = TfBasic::make_geo_transform(x, y, z, TfBasic::rotate_xyz_make(0, 0, 0));
         }
     }
-    return output;
+    return object_info;
 }
 
-GazeboModelMultiType DecidePosition::get_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
+std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
-    GazeboModelMultiType output;
-    output.object_infoes = object_info;
-    output.gazebo_models.resize(object_info.size());
     for (int i = 0; i < object_info.size(); i++)
     {
         double x = 100;
         double y = 100;
         double z = 100;
         tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, 0, 0);
-        output.gazebo_models[i] = make_gazebo_model_state(object_info[i].object_name, UtilBase::geo_trans_make(x, y, z, quaternion));
+        object_info[i].position =  TfBasic::make_geo_transform(x, y, z, quaternion);
     }
-    return output;
+    return object_info;
 }
 
-GazeboModelType DecidePosition::get_box_position(double probability)
-{
-    UtilBase util;
-    GazeboModelType output;
-    if (probability <= util.random_float(0, 1))
-    {
-        double x = 0;
-        double y = 0;
-        double z = z_position_;
-        tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
-        output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
-        output.object_info.object_name = "denso_box";
-        output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
-    }
-    else
-    {
-        double x = 100;
-        double y = 100;
-        double z = z_position_;
-        tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
-        output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
-        output.object_info.object_name = "denso_box";
-        output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
-    }
-    return output;
-}
+// anno_msgs::ObjectInfo DecidePosition::get_box_position(double probability)
+// {
+//     UtilBase util;
+//     GazeboModelType output;
+//     if (probability <= util.random_float(0, 1))
+//     {
+//         double x = 0;
+//         double y = 0;
+//         double z = z_position_;
+//         tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
+//         output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
+//         output.object_info.object_name = "denso_box";
+//         output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
+//     }
+//     else
+//     {
+//         double x = 100;
+//         double y = 100;
+//         double z = z_position_;
+//         tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
+//         output.object_info.position = UtilBase::geo_trans_make(x, y, z, quat);
+//         output.object_info.object_name = "denso_box";
+//         output.gazebo_model = make_gazebo_model_state(output.object_info.object_name, output.object_info.position);
+//     }
+//     return output;
+// }
 
-GazeboModelType DecidePosition::get_phoxi_position(double angle_min, double angle_max, double distance)
+anno_msgs::ObjectInfo DecidePosition::get_sensor_position()
 {
     UtilBase util;
     GazeboModelType output;
@@ -164,20 +151,3 @@ GazeboModelType DecidePosition::get_phoxi_position(double angle_min, double angl
     return output;
 }
 
-/**
- * @brief gazebo_modelメッセージを生成する関数です。
- *
- * @param object_name Gazeboオブジェクトの名前
- * @param trans geometry_msgs::Transform型の姿勢データ
- * @return gazebo_msgs::ModelState
- */
-gazebo_msgs::ModelState DecidePosition::make_gazebo_model_state(std::string object_name, geometry_msgs::Transform trans)
-{
-    gazebo_msgs::ModelState model;
-    model.model_name = object_name;
-    model.pose.position.x = trans.translation.x;
-    model.pose.position.y = trans.translation.y;
-    model.pose.position.z = trans.translation.z;
-    tf2::convert(trans.rotation, model.pose.orientation);
-    return model;
-}
