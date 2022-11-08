@@ -6,6 +6,6 @@ int main(int argc, char** argv)
     // ros::WallDuration(10.0).sleep();
     ros::WallDuration(2.0).sleep();
     ros::NodeHandle nh;
-    ModelTf model(nh);
+    GazeboTfPublisher model(nh);
     ros::spin();
 }

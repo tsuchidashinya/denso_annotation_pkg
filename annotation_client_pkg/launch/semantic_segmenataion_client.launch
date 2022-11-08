@@ -3,6 +3,7 @@
 
     <node pkg="annotation_client_pkg" type="semseg" name="semseg" output="screen">
         <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
+        <rosparam file="$(find gazebo_model_package)/config/decide_object_position.yaml" command="load" />
     </node>
 
 </launch>        
