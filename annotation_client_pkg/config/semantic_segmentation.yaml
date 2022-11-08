@@ -1,3 +1,4 @@
 annotation_main:
   LEAF_SIZE: 0.003
   sensor_service_name: sensor_service
+  mesh_service_name: mesh_service

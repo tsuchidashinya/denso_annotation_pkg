@@ -1,6 +1,6 @@
 mesh_cloud:
   sample_points: 100000
   mesh_service_name: mesh_service
-  world_frame: world
+  world_frame: base_link
   sensor_frame: photoneo_center_optical_frame
   LEAF_SIZE: 0.002

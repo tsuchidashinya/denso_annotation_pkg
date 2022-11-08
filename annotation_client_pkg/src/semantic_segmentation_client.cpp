@@ -13,6 +13,7 @@ void SemanticSegmentation::set_paramenter()
 {
     pnh_.getParam("annotation_main", param_list);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
+    mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
 }
 
 void SemanticSegmentation::main()
@@ -34,7 +35,7 @@ void SemanticSegmentation::main()
     
     anno_srvs::MeshCloudService mesh_srv;
     mesh_srv.request.multi_object_info = multi_object;
-    UtilBase::client_request(mesh)
+    UtilBase::client_request(mesh_client_, mesh_srv, mesh_service_name_);
 
 }
 
