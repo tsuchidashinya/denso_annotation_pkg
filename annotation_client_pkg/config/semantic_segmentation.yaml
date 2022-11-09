@@ -1,5 +1,8 @@
 annotation_main:
-  LEAF_SIZE: 0.003
+  LEAF_SIZE: 0.002
   sensor_service_name: sensor_service
   mesh_service_name: mesh_service
   world_frame: base_link
+  sensor_frame: photoneo_center_optical_frame
+  visualize_pc_topic_name: client_pc_topic
+  nearest_radious: 0.002

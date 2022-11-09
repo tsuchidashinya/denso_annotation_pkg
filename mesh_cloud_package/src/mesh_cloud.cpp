@@ -12,7 +12,7 @@ MeshCloudServer::MeshCloudServer(ros::NodeHandle &nh)
 {
     set_parameter();
     server_ = nh_.advertiseService(mesh_service_name_, &MeshCloudServer::service_callback, this);
-    timer_ = nh_.createTimer(ros::Duration(0.1), &MeshCloudServer::visualize_callback, this);
+    timer_ = nh_.createTimer(ros::Duration(0.3), &MeshCloudServer::visualize_callback, this);
 }
 
 void MeshCloudServer::visualize_callback(const ros::TimerEvent &event)
@@ -67,10 +67,13 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
         world_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, world_frame_));
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], world_to_object);
         sensor_to_world = UtilBase::make_stamped_trans(tf_basic_.get_tf(world_frame_, sensor_frame_));
+        UtilBase::message_show(world_frame_, sensor_frame_);
+        TfBasic::tf_data_show(tf_basic_.get_tf(world_frame_, sensor_frame_), "tf_sensor_name");
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], sensor_to_world);
         sensor_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, sensor_frame_));
         out_data.pose_data[i] = stamped_to_pose(sensor_to_object);
         out_data.mesh_data[i] = UtilSensor::pcl_to_cloudmsg(mesh_pcl_clusters_[i]);
+        out_data.mesh_data[i].cloud_name = request.multi_object_info[i].tf_name;
     }   
     return out_data;
 }

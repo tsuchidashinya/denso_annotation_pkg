@@ -9,7 +9,7 @@ common_msgs::CloudData NearestPointExtractor::draw_initial_instance(common_msgs:
     return cloud;
 }
 
-common_msgs::CloudData NearestPointExtractor::extract_nearest_point(common_msgs::CloudData sensor_cloud, common_msgs::CloudData mesh_cloud, int instance, double radious = 0.003)
+common_msgs::CloudData NearestPointExtractor::extract_nearest_point(common_msgs::CloudData sensor_cloud, common_msgs::CloudData mesh_cloud, int instance, double radious = 0.004)
 {
     pcl::PointCloud<PclXyz> sensor_pcl, mesh_pcl;
     sensor_pcl = UtilSensor::cloudmsg_to_pcl(sensor_cloud);

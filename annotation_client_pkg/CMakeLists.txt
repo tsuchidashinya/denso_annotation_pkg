@@ -19,6 +19,8 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_model_package
   tf_package
   util_anno
+  labeling_package
+  data_convert_pkg
 )
 
 ## System dependencies are found with CMake's conventions

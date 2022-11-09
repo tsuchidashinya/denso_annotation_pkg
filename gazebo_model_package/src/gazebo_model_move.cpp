@@ -29,7 +29,7 @@ void GazeboModelMove::set_gazebo_model(anno_msgs::ObjectInfo object_info)
         gazebo_msgs::SetModelState gazebo_srv;
         gazebo_srv.request.model_state = make_gazebo_model_state(object_info);
         UtilBase::client_request(gazebo_client_, gazebo_srv, gazebo_service_name_);
-        ros::Duration(0.001).sleep();
+        ros::Duration(0.01).sleep();
     }
 }
 

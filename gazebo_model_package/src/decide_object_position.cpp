@@ -145,7 +145,7 @@ anno_msgs::ObjectInfo DecidePosition::get_sensor_position()
     tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, angle, 0);
     outdata.position = TfBasic::make_geo_transform(x, y, z, quaternion);
     outdata.object_name = sensor_name_;
-    outdata.object_name = sensor_name_;
+    outdata.tf_name = sensor_name_;
     return outdata;
 }
 

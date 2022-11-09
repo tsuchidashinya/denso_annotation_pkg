@@ -4,6 +4,9 @@
     <node pkg="annotation_client_pkg" type="semseg" name="semseg" output="screen">
         <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
         <rosparam file="$(find gazebo_model_package)/config/decide_object_position.yaml" command="load" />
+        <rosparam file="$(find util)/config/util_sensor_config.yaml" command="load" />
+        <rosparam file="$(find data_convert_pkg)/config/func_data_conversion.yaml" command="load" />
+        <rosparam file="$(find data_convert_pkg)/config/make_2Dinfo_by_3D.yaml" command="load" />
     </node>
 
 </launch>        
