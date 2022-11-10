@@ -137,3 +137,8 @@ target_link_libraries(gazebo_model_move
   ${catkin_LIBRARIES}
   decide_object_position
 )
+
+add_executable(gazebo_tf_publisher src/gazebo_tf_publisher.cpp src/gazebo_tf_publisher_node.cpp)
+target_link_libraries(gazebo_tf_publisher
+  ${catkin_LIBRARIES}
+)

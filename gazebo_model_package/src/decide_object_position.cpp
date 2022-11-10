@@ -87,8 +87,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
 
                     for (int j = check_point[map_index]; j < i; j++)
                     {
-                        double d1[2] = {x, y}, d2[2] = {object_info[j].position.translation.x, object_info[j].position.translation.y};
-                        if (UtilBase::distance(d1, d2) < object_radious_ * 2)
+                        if (UtilBase::distance(x, y, object_info[j].position.translation.x, object_info[j].position.translation.y) < object_radious_ * 2)
                             loop_ok = false;
                     }
 
@@ -109,11 +108,12 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
 
 std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
+    UtilBase util;
     for (int i = 0; i < object_info.size(); i++)
     {
-        double x = 100;
-        double y = 100;
-        double z = 100;
+        double x = util.random_float(10, 20);
+        double y = util.random_float(10, 20);
+        double z = util.random_float(0, 20);
         tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, 0, 0);
         object_info[i].position =  TfBasic::make_geo_transform(x, y, z, quaternion);
     }

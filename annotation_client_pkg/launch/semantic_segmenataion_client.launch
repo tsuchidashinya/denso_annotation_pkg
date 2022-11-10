@@ -7,6 +7,7 @@
         <rosparam file="$(find util)/config/util_sensor_config.yaml" command="load" />
         <rosparam file="$(find data_convert_pkg)/config/func_data_conversion.yaml" command="load" />
         <rosparam file="$(find data_convert_pkg)/config/make_2Dinfo_by_3D.yaml" command="load" />
+        <rosparam file="$(find labeling_package)/config/instance_label_drawer.yaml" command="load" />
     </node>
 
 </launch>        

@@ -6,7 +6,7 @@
 #include <gazebo_model_package/gazebo_model_move.hpp>
 #include <tf_package/tf_basic.hpp>
 #include <util/util_base.hpp>
-#include <labeling_package/nearest_point_extractor.hpp>
+#include <labeling_package/instance_label_drawer.hpp>
 #include <data_convert_pkg/make_2Dinfo_by_3D.hpp>
 #include <data_convert_pkg/get_3D_by_2D.hpp>
 #include <data_convert_pkg/func_data_convertion.hpp>
@@ -31,5 +31,6 @@ private:
     sensor_msgs::PointCloud2 pc_visualize_data_;
     UtilSensor util_sensor_;
     ros::Publisher pc_pub_;
+    InstanceLabelDrawer instance_drawer_;
     double nearest_radious_;
 };

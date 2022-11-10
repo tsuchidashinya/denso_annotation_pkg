@@ -109,7 +109,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES nearest_point_extractor
+ LIBRARIES instance_label_drawer
 #  CATKIN_DEPENDS anno_msgs anno_srvs common_srvs cv_bridge pcl_ros tf_package util
 #  DEPENDS system_lib
 )
@@ -209,7 +209,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_library(nearest_point_extractor src/nearest_point_extractor.cpp)
-target_link_libraries(nearest_point_extractor
+add_library(instance_label_drawer src/instance_label_drawer.cpp)
+target_link_libraries(instance_label_drawer
   ${catkin_LIBRARIES}
 )

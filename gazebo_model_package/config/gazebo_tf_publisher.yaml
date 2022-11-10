@@ -1,0 +1,2 @@
+gazebo_tf_publisher:
+  world_frame: base_link
