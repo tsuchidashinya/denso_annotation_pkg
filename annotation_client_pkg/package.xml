@@ -57,7 +57,7 @@
   <build_depend>pcl_ros</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>util</build_depend>
-  <build_depend>util_anno</build_depend>
+  <build_depend>annotation_common</build_depend>
   <build_depend>gazebo_model_package</build_depend>
   <build_depend>tf_package</build_depend>
   <build_depend>labeling_package</build_depend>

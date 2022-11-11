@@ -14,8 +14,6 @@
 #include <util/util_sensor.hpp>
 #include <tf_package/tf_basic.hpp>
 
-
-
 struct MeshOutType
 {
     std::vector<common_msgs::CloudData> mesh_data;
@@ -29,7 +27,6 @@ public:
     MeshOutType make_mesh(anno_srvs::MeshCloudServiceRequest);
     bool service_callback(anno_srvs::MeshCloudServiceRequest &, anno_srvs::MeshCloudServiceResponse &);
     void visualize_callback(const ros::TimerEvent &);
-    void visualize_data(int);
     void initialize(anno_srvs::MeshCloudServiceRequest);
     common_msgs::PoseData stamped_to_pose(tf::StampedTransform);
     XmlRpc::XmlRpcValue param_list;

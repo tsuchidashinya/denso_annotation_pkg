@@ -16,7 +16,7 @@ InstanceLabelDrawer::InstanceLabelDrawer() : pnh_("~")
 
 void InstanceLabelDrawer::set_parameter()
 {
-    pnh_.getParam("instance_label_drawer", param_list);
+    pnh_.getParam("common_parameter", param_list);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
 }
 

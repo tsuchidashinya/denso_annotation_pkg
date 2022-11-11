@@ -1,0 +1,6 @@
+record_server:
+  hdf5_record_service_name: hdf5_record_service
+  record_hdf5_file_dir: r
+  record_hdf5_file_name: f
+  hdf5_save_interval: f
+

@@ -19,6 +19,7 @@ private:
     ros::Subscriber model_state_sub_;
     std::vector<std::string> model_names_;
     std::vector<geometry_msgs::Pose> model_poses_;
+    std::string gazebo_tracked_frame_, rviz_following_frame_;
     TfBasic tf_basic_;
     void set_parameter();
 };

@@ -14,12 +14,12 @@
 DecidePosition::DecidePosition()
     : pnh_("~")
 {
-    pnh_.getParam("decide_object_position", param_list);
     set_parameter();
 }
 
 void DecidePosition::set_parameter()
 {
+    pnh_.getParam("decide_object_position", param_list);
     z_position_ = param_list["z_position"];
     box_height_ = param_list["box_height"];
     box_name_ = static_cast<std::string>(param_list["box_name"]);

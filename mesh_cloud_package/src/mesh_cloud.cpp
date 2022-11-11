@@ -91,21 +91,12 @@ common_msgs::PoseData MeshCloudServer::stamped_to_pose(tf::StampedTransform tf_s
     return out_data;
 }
 
-void MeshCloudServer::visualize_data(int the_number_of_mesh)
-{
-    for (int i = 0; i < the_number_of_mesh; i++)
-    {
-        sensor_msgs::PointCloud2 ros_pcl;
-        ros_pcl = UtilSensor::pcl_to_pc2(mesh_pcl_clusters_[i]);
-        ros_pcl.header.frame_id = sensor_frame_;
-        mesh_cluster_pub_[i].publish(ros_pcl);
-    }
-}
 
 void MeshCloudServer::set_parameter()
 {
     pnh_.getParam("mesh_cloud", param_list);
     sample_points = param_list["sample_points"];
+    pnh_.getParam("common_parameter", param_list);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);

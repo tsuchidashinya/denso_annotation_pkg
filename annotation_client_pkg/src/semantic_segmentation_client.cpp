@@ -13,12 +13,13 @@ SemanticSegmentation::SemanticSegmentation(ros::NodeHandle &nh):
 
 void SemanticSegmentation::set_paramenter()
 {
-    pnh_.getParam("annotation_main", param_list);
+    pnh_.getParam("common_parameter", param_list);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pc_visualize_data_.header.frame_id = sensor_frame_;
+    pnh_.getParam("annotation_main", param_list);
     pc_pub_topic_ = static_cast<std::string>(param_list["visualize_pc_topic_name"]);
     nearest_radious_ = param_list["nearest_radious"];
 }
