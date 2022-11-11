@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="mesh_cloud_package" type="mesh_cloud" name="mesh_cloud" output="screen">
+        <rosparam file="$(find mesh_cloud_package)/config/mesh_cloud.yaml" command="load" />
+        <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+    </node>
+</launch>

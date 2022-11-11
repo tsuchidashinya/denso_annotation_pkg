@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(anno_srvs)
+project(annotation_common)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,10 +8,14 @@ project(anno_srvs)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-    message_generation
-    anno_msgs
-    common_msgs 
-    sensor_msgs
+  anno_msgs
+  anno_srvs
+  common_msgs
+  common_srvs
+  cv_bridge
+  pcl_ros
+  roscpp
+  util
 )
 
 ## System dependencies are found with CMake's conventions
@@ -55,11 +59,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  RecordService.srv 
-  MeshCloudService.srv 
-)
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -69,10 +73,10 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  common_msgs anno_msgs sensor_msgs
-)
+# generate_messages(
+#   DEPENDENCIES
+#   anno_msgs#   common_msgs
+# )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,10 +107,13 @@ generate_messages(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
+catkin_python_setup()
+
+
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES anno_srvs
- CATKIN_DEPENDS message_runtime
+ INCLUDE_DIRS include
+ LIBRARIES util_anno
+#  CATKIN_DEPENDS anno_msgs anno_srvs common_msgs common_srvs cv_bridge pcl_ros roscpp util
 #  DEPENDS system_lib
 )
 
@@ -117,13 +124,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-# ${catkin_INCLUDE_DIRS}
+  include
+  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/anno_srvs.cpp
+#   src/${PROJECT_NAME}/annotation_common.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -134,7 +141,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/anno_srvs_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/annotation_common_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -198,10 +205,14 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_anno_srvs.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_annotation_common.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_library(util_anno src/util_anno.cpp)
+target_link_libraries(util_anno
+  ${catkin_LIBRARIES}
+)

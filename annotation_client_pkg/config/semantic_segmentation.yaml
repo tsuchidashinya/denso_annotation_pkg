@@ -1,3 +1,23 @@
 annotation_main:
-  LEAF_SIZE: 0.003
-  sensor_service_name: sensor_service
+  visualize_pc_topic_name: client_pc_topic
+  nearest_radious: 0.002
+  LEAF_SIZE: 0.002
+  radious: 0.05
+  
+decide_object_position:
+  sensor_name: phoxi_camera
+  sensor_angle_max: 0.087
+  sensor_angle_min: 0.087
+  distance: 1.1
+  z_position: 0.003
+  box_height: 0.01
+  box_name: denso_box
+
+data_convert_pkg:
+  f_scale: 0.5
+  cx_scale: 0.99
+  cy_scale: 0.9
+
+make_2Dinfo_by_3D:
+  radious_x: 0.05
+  radious_y: 0.05
