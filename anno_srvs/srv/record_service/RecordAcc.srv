@@ -2,9 +2,7 @@ common_msgs/CloudData cloud_data
 common_msgs/PoseData[] pose_datas
 sensor_msgs/Image image 
 sensor_msgs/CameraInfo camera_info
-int32 current_index
 int32 the_number_of_dataset
-string annotation_task
 int32 class_id
 ---
 bool ok

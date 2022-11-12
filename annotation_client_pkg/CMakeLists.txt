@@ -20,7 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf_package
   annotation_common
   labeling_package
-  data_convert_pkg
+  data_transform_pkg
 )
 
 ## System dependencies are found with CMake's conventions

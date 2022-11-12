@@ -96,8 +96,8 @@ void MeshCloudServer::set_parameter()
 {
     pnh_.getParam("mesh_cloud", param_list);
     sample_points = param_list["sample_points"];
-    pnh_.getParam("common_parameter", param_list);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
+    pnh_.getParam("common_parameter", param_list);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     LEAF_SIZE_ = param_list["LEAF_SIZE"];

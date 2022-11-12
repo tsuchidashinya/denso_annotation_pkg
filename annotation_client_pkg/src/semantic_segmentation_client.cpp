@@ -8,20 +8,19 @@ SemanticSegmentation::SemanticSegmentation(ros::NodeHandle &nh):
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
-    pc_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(pc_pub_topic_, 1);
+    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
 }
 
 void SemanticSegmentation::set_paramenter()
 {
     pnh_.getParam("common_parameter", param_list);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
-    mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
-    pc_visualize_data_.header.frame_id = sensor_frame_;
     pnh_.getParam("annotation_main", param_list);
-    pc_pub_topic_ = static_cast<std::string>(param_list["visualize_pc_topic_name"]);
     nearest_radious_ = param_list["nearest_radious"];
+    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
+    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
+    mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
 }
 
 void SemanticSegmentation::main()
@@ -74,9 +73,10 @@ void SemanticSegmentation::main()
         cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], i+1);
         sum_cloud = UtilSensor::concat_cloudmsg(sum_cloud, cloud_multi[i]);
     }
-    sum_cloud = UtilSensor::remove_ins_cloudmsg(sum_cloud, 20);
-    pcl::PointCloud<PclRgb> pclrgb = util_sensor_.cloudmsg_to_pclrgb(sum_cloud);
-    pc_visualize_data_ = util_sensor_.pclrgb_to_pc2_color(pclrgb);
+    
+    common_srvs::VisualizeCloud visualize_srv;
+    sum_cloud.cloud_name = "sum_cloud";
+    visualize_srv.request.cloud_data.push_back(sum_cloud);
     // InstanceLabelDrawer::draw_initial_instance(sensor_srv.response.cloud_data, 0);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[1], 2, nearest_radious_);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[0], 1, nearest_radious_);
@@ -84,11 +84,6 @@ void SemanticSegmentation::main()
     // pc_visualize_data_ = util_sensor_.pclrgb_to_pc2_color(pclrgb);
 }
 
-void SemanticSegmentation::visualize_publish()
-{
-    pc_visualize_data_.header.frame_id = sensor_frame_;
-    pc_pub_.publish(pc_visualize_data_);
-}
 
 int main(int argc, char** argv)
 {
@@ -97,7 +92,6 @@ int main(int argc, char** argv)
     SemanticSegmentation semseg(nh);
     for (int i = 0; i < 10; i++) {
         semseg.main();
-        semseg.visualize_publish();
         ros::Duration(1).sleep();
     }
     

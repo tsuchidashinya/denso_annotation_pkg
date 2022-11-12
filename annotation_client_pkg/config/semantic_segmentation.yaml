@@ -1,5 +1,7 @@
 annotation_main:
-  visualize_pc_topic_name: client_pc_topic
+  visualize_service_name: visualize_cloud_service
+  sensor_service_name: sensor_service
+  mesh_service_name: mesh_service
   nearest_radious: 0.002
   LEAF_SIZE: 0.002
   radious: 0.05
@@ -13,7 +15,7 @@ decide_object_position:
   box_height: 0.01
   box_name: denso_box
 
-data_convert_pkg:
+data_transform_pkg:
   f_scale: 0.5
   cx_scale: 0.99
   cy_scale: 0.9
