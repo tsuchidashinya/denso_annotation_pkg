@@ -60,13 +60,16 @@ class RecordServiceClass():
         return response
     
     def record_segmentation_service_callback(self, request):
+        self.hdf5_service_counter = self.hdf5_service_counter + 1
         index = self.hdf5_service_counter % self.hdf5_save_interval
-        if self.hdf5_service_counter == 0:
+        if self.hdf5_service_counter == 1:
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
-            self.hdf5_file_dir = os.path.join(self.hdf5_file_dir, "segmentation")
+            self.hdf5_file_dir = util_python.dir_join_and_make(self.hdf5_file_dir, "segmentation")
+            print(self.hdf5_file_dir)
+            print(self.hdf5_file_name)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        elif request.the_number_of_dataset == self.hdf5_service_counter + 1:
+        elif request.the_number_of_dataset == self.hdf5_service_counter:
             hdf5_function.close_hdf5(self.hdf5_object)
             hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif index == 0:
@@ -77,19 +80,20 @@ class RecordServiceClass():
         data_dict = {"Points": np_cloud, "masks": np_mask}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)
-        self.hdf5_service_counter = self.hdf5_service_counter + 1
+        
         response = RecordSegmentationResponse()
         response.ok = True
         return response
     
     def record_pose_estimation_service_callback(self, request):
+        self.hdf5_service_counter = self.hdf5_service_counter + 1
         index = self.hdf5_service_counter % self.hdf5_save_interval
-        if self.hdf5_service_counter == 0:
+        if self.hdf5_service_counter == 1:
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
             self.hdf5_file_dir = os.path.join(self.hdf5_file_dir, "pose_estimation")
             self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        elif request.the_number_of_dataset == self.hdf5_service_counter + 1:
+        elif request.the_number_of_dataset == self.hdf5_service_counter:
             hdf5_function.close_hdf5(self.hdf5_object)
             hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif index == 0:
@@ -102,7 +106,6 @@ class RecordServiceClass():
         data_dict = {"pcl": np_cloud, "pose": pose_mask}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)
-        self.hdf5_service_counter = self.hdf5_service_counter + 1
         response = RecordPoseEstimationResponse()
         response.ok = True
         return response

@@ -9,6 +9,7 @@ SemanticSegmentation::SemanticSegmentation(ros::NodeHandle &nh):
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
+    record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
 }
 
 void SemanticSegmentation::set_paramenter()
@@ -21,6 +22,7 @@ void SemanticSegmentation::set_paramenter()
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
+    record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
 }
 
 void SemanticSegmentation::main()
@@ -42,10 +44,7 @@ void SemanticSegmentation::main()
     multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(0.5).sleep();
-    // anno_srvs::MeshCloudService mesh_srv;
-    // mesh_srv.request.multi_object_info = multi_object;
-    // UtilBase::client_request(mesh_client_, mesh_srv, mesh_service_name_);
-    // std::vector<common_msgs::CloudData> mesh_clouds = mesh_srv.response.mesh;
+    
 
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
@@ -62,6 +61,10 @@ void SemanticSegmentation::main()
     // cv::resize(img, img, cv::Size(), 0.7, 0.7) ;
     // cv::imshow("window", img);
     // cv::waitKey(1000);
+    anno_srvs::MeshCloudService mesh_srv;
+    mesh_srv.request.multi_object_info = multi_object;
+    UtilBase::client_request(mesh_client_, mesh_srv, mesh_service_name_);
+    std::vector<common_msgs::CloudData> mesh_clouds = mesh_srv.response.mesh;
 
     Get3DBy2D get3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
@@ -70,13 +73,19 @@ void SemanticSegmentation::main()
     
     common_msgs::CloudData sum_cloud;
     for (int i = 0; i < cloud_multi.size(); i++) {
-        cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], i+1);
-        sum_cloud = UtilSensor::concat_cloudmsg(sum_cloud, cloud_multi[i]);
+        cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], 0);
+        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], i, 0.002);
     }
-    
+    for (int i = 0; i < cloud_multi.size(); i++) {
+        anno_srvs::RecordSegmentation record_srv;
+        record_srv.request.cloud_data = cloud_multi[i];
+        record_srv.request.the_number_of_dataset = 100;
+        UtilBase::client_request(record_client_, record_srv, record_service_name_);
+        ros::Duration(0.5).sleep();
+    }
     common_srvs::VisualizeCloud visualize_srv;
-    sum_cloud.cloud_name = "sum_cloud";
-    visualize_srv.request.cloud_data.push_back(sum_cloud);
+    visualize_srv.request.cloud_data = cloud_multi;
+    UtilBase::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     // InstanceLabelDrawer::draw_initial_instance(sensor_srv.response.cloud_data, 0);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[1], 2, nearest_radious_);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[0], 1, nearest_radious_);
@@ -92,7 +101,7 @@ int main(int argc, char** argv)
     SemanticSegmentation semseg(nh);
     for (int i = 0; i < 10; i++) {
         semseg.main();
-        ros::Duration(1).sleep();
+        ros::Duration(3).sleep();
     }
     
     return 0;

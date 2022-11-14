@@ -1,6 +1,10 @@
 record_server:
+  record_acc_service_name: record_acc_service
+  record_segmentation_service_name: record_segmentation_service
+  record_pose_estimation_service_name: record_pose_estimation_service
+  record_clustering_service_name: record_clustering_service
   hdf5_record_service_name: hdf5_record_service
-  record_hdf5_file_dir: r
-  record_hdf5_file_name: f
-  hdf5_save_interval: f
+  record_hdf5_file_dir: /home/ericlab/tsuchida/2022_11/annotation
+  record_hdf5_file_name: try.hdf5
+  hdf5_save_interval: 10
 
