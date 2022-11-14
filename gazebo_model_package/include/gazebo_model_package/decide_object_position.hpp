@@ -35,6 +35,6 @@ private:
     std::string box_name_, sensor_name_;
     double z_position_;
     double box_height_;
-    double object_radious_;
+    double object_radious_, object_height_;
     double sensor_angle_min_, sensor_angle_max_, sensor_distance_;
 };

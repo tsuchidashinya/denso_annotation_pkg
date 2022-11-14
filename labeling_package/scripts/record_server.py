@@ -66,8 +66,6 @@ class RecordServiceClass():
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
             self.hdf5_file_dir = util_python.dir_join_and_make(self.hdf5_file_dir, "segmentation")
-            print(self.hdf5_file_dir)
-            print(self.hdf5_file_name)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif request.the_number_of_dataset == self.hdf5_service_counter:
             hdf5_function.close_hdf5(self.hdf5_object)

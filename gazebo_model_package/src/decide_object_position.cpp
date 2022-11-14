@@ -28,6 +28,7 @@ void DecidePosition::set_parameter()
     sensor_angle_max_ = param_list["sensor_angle_max"];
     sensor_angle_min_ = param_list["sensor_angle_min"];
     sensor_distance_ = param_list["distance"];
+    object_height_ = param_list["object_height"];
 }
 
 

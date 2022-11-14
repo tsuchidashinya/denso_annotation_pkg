@@ -7,3 +7,4 @@ decide_object_position:
   sensor_angle_max: 0.087
   sensor_angle_min: 0.087
   distance: 1.1
+  object_height: 0.1

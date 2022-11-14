@@ -53,8 +53,7 @@ void SemanticSegmentation::main()
     cv::Mat img = UtilSensor::img_to_cv(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     Make2DInfoBy3D make_2d_3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
-    UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
-    sensor_cloud = sensor_srv.response.cloud_data;
+    
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::get_tf_frames_from_objectinfo(multi_object));
     // img = Make2DInfoBy3D::draw_b_box(img, box_pos);
@@ -66,6 +65,8 @@ void SemanticSegmentation::main()
     UtilBase::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_clouds = mesh_srv.response.mesh;
 
+    UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
+    sensor_cloud = sensor_srv.response.cloud_data;
     Get3DBy2D get3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     
@@ -74,7 +75,7 @@ void SemanticSegmentation::main()
     common_msgs::CloudData sum_cloud;
     for (int i = 0; i < cloud_multi.size(); i++) {
         cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], 0);
-        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], i, 0.002);
+        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], i+1, 0.002);
     }
     for (int i = 0; i < cloud_multi.size(); i++) {
         anno_srvs::RecordSegmentation record_srv;
@@ -103,6 +104,6 @@ int main(int argc, char** argv)
         semseg.main();
         ros::Duration(3).sleep();
     }
-    
+    ros::spin();
     return 0;
 }
