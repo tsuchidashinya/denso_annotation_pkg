@@ -11,44 +11,30 @@
 
 #pragma once
 #include <util/util_base.hpp>
+#include <tf_package/tf_basic.hpp>
 #include <gazebo_msgs/SetModelState.h>
 #include <gazebo_msgs/ModelState.h>
 #include <anno_msgs/ObjectInfo.h>
 
-enum Mode
-{
-    Random,
-    FullCustom
-};
 
-struct GazeboModelType
-{
-    gazebo_msgs::ModelState gazebo_model;
-    anno_msgs::ObjectInfo object_info;
-};
-struct GazeboModelMultiType
-{
-    std::vector<gazebo_msgs::ModelState> gazebo_models;
-    std::vector<anno_msgs::ObjectInfo> object_infoes;
-};
 class DecidePosition
 {
 public:
     DecidePosition();
-    anno_msgs::ObjectInfo register_object(int, std::string);
-    GazeboModelMultiType get_object_place_position(std::vector<anno_msgs::ObjectInfo>);
-    GazeboModelMultiType get_object_remove_position(std::vector<anno_msgs::ObjectInfo>);
-    GazeboModelType get_box_position(double);
-    GazeboModelType get_phoxi_position(double, double, double);
-    static gazebo_msgs::ModelState make_gazebo_model_state(std::string, geometry_msgs::Transform);
-    void change_mode(Mode);
+    anno_msgs::ObjectInfo make_object_info(int, std::string);
+    anno_msgs::ObjectInfo make_object_info(std::string, std::string);
+    std::vector<anno_msgs::ObjectInfo> get_randam_place_position(std::vector<anno_msgs::ObjectInfo>);
+    std::vector<anno_msgs::ObjectInfo> get_remove_position(std::vector<anno_msgs::ObjectInfo>);
+    anno_msgs::ObjectInfo get_box_position();
+    anno_msgs::ObjectInfo get_sensor_position();
     void set_parameter();
     XmlRpc::XmlRpcValue param_list;
-    Mode mode_;
 
 private:
     ros::NodeHandle pnh_;
+    std::string box_name_, sensor_name_;
     double z_position_;
     double box_height_;
     double object_radious_;
+    double sensor_angle_min_, sensor_angle_max_, sensor_distance_;
 };

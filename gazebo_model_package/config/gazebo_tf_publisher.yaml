@@ -1,0 +1,4 @@
+gazebo_tf_publisher:
+  world_frame: base_link
+  gazebo_tracked_frame: phoxi_camera
+  rviz_following_frame: photoneo_center

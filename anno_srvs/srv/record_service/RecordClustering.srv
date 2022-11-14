@@ -1,0 +1,5 @@
+common_msgs/CloudData cloud_data 
+int32 the_number_of_dataset
+int32 class_id
+---
+bool ok

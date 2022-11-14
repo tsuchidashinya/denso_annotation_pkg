@@ -57,8 +57,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
-  GazeboService.srv 
-  RecordService.srv 
+  record_service/RecordAcc.srv
+  record_service/RecordClustering.srv
+  record_service/RecordPoseEstimation.srv
+  record_service/RecordSegmentation.srv
   MeshCloudService.srv 
 )
 

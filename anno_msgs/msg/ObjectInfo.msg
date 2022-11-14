@@ -1,5 +1,3 @@
 string object_name
-int32 object_id
-string label_name
-int32 label_id
+string tf_name
 geometry_msgs/Transform position
