@@ -10,6 +10,9 @@ SemanticSegmentation::SemanticSegmentation(ros::NodeHandle &nh):
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
+    for (int i = 0; i < the_number_of_dataset_; i++) {
+        main();
+    }
 }
 
 void SemanticSegmentation::set_paramenter()
@@ -102,10 +105,10 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "semantic_segmentation");
     ros::NodeHandle nh;
     SemanticSegmentation semseg(nh);
-    for (int i = 0; i < 10; i++) {
-        semseg.main();
-        // ros::Duration(0.1).sleep();
-    }
+    // for (int i = 0; i < 10; i++) {
+    //     semseg.main();
+    //     // ros::Duration(0.1).sleep();
+    // }
     ros::spin();
     return 0;
 }
