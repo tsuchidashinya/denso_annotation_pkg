@@ -6,4 +6,5 @@ class UtilAnno
 {
 public:
     static std::vector<std::string> get_tf_frames_from_objectinfo(std::vector<anno_msgs::ObjectInfo>);
+    static std::vector<anno_msgs::
 };
