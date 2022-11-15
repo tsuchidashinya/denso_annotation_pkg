@@ -47,7 +47,6 @@ def write_hdf5(h5pyObject, data_dict, index):
 
 def open_writed_hdf5(file_path):
     file_path = str(file_path)
-    print(file_path)
     return h5py.File(file_path, "w")
 
 def close_hdf5(h5pyObject):

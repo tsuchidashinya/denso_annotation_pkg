@@ -68,7 +68,7 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], world_to_object);
         sensor_to_world = UtilBase::make_stamped_trans(tf_basic_.get_tf(world_frame_, sensor_frame_));
         UtilBase::message_show(world_frame_, sensor_frame_);
-        TfBasic::tf_data_show(tf_basic_.get_tf(world_frame_, sensor_frame_), "tf_sensor_name");
+        // TfBasic::tf_data_show(tf_basic_.get_tf(world_frame_, sensor_frame_), "tf_sensor_name");
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], sensor_to_world);
         sensor_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, sensor_frame_));
         out_data.pose_data[i] = stamped_to_pose(sensor_to_object);

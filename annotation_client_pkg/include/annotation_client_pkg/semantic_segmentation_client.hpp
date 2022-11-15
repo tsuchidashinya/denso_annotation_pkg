@@ -32,4 +32,5 @@ private:
     UtilSensor util_sensor_;
     InstanceLabelDrawer instance_drawer_;
     double nearest_radious_;
+    int the_number_of_dataset_;
 };

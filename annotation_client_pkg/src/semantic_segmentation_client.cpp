@@ -23,6 +23,8 @@ void SemanticSegmentation::set_paramenter()
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
+    the_number_of_dataset_ = param_list["the_number_of_dataset"];
+
 }
 
 void SemanticSegmentation::main()
@@ -75,14 +77,14 @@ void SemanticSegmentation::main()
     common_msgs::CloudData sum_cloud;
     for (int i = 0; i < cloud_multi.size(); i++) {
         cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], 0);
-        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], i+1, 0.002);
+        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], 1, 0.002);
     }
     for (int i = 0; i < cloud_multi.size(); i++) {
         anno_srvs::RecordSegmentation record_srv;
         record_srv.request.cloud_data = cloud_multi[i];
-        record_srv.request.the_number_of_dataset = 100;
+        record_srv.request.the_number_of_dataset = the_number_of_dataset_;
         UtilBase::client_request(record_client_, record_srv, record_service_name_);
-        ros::Duration(0.5).sleep();
+        ros::Duration(0.1).sleep();
     }
     common_srvs::VisualizeCloud visualize_srv;
     visualize_srv.request.cloud_data = cloud_multi;
@@ -102,7 +104,7 @@ int main(int argc, char** argv)
     SemanticSegmentation semseg(nh);
     for (int i = 0; i < 10; i++) {
         semseg.main();
-        ros::Duration(3).sleep();
+        // ros::Duration(0.1).sleep();
     }
     ros::spin();
     return 0;

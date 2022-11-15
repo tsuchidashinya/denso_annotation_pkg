@@ -65,7 +65,7 @@ class RecordServiceClass():
         if self.hdf5_service_counter == 1:
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
-            self.hdf5_file_dir = util_python.dir_join_and_make(self.hdf5_file_dir, "segmentation")
+            self.hdf5_file_dir = util_python.dir_join_and_make(self.hdf5_file_dir, "segmentation/" + util_python.get_time_str())
             self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif request.the_number_of_dataset == self.hdf5_service_counter:
             hdf5_function.close_hdf5(self.hdf5_object)
@@ -74,7 +74,10 @@ class RecordServiceClass():
             hdf5_function.close_hdf5(self.hdf5_object)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         np_cloud = util_python.make_npcloud_from_cloud(request.cloud_data)
+        # print(np_cloud.shape)
         np_cloud, np_mask = util_python.extract_mask_from_npcloud(np_cloud)
+        # print(np_cloud.shape)
+        # print(np_mask.shape)
         data_dict = {"Points": np_cloud, "masks": np_mask}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)

@@ -78,8 +78,9 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
                     loop_ok = true;
 
                     count++;
-                    if (count == 1000)
+                    if (count == 2000)
                     {
+                        ROS_WARN_STREAM("Over");
                         break;
                     }
                     // ros_print_parameter("loop_ok");
