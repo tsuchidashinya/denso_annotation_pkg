@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <node pkg="mesh_cloud_package" type="mesh_cloud" name="mesh_cloud">
+    <node pkg="mesh_cloud_package" type="mesh_cloud" name="mesh_cloud" output="screen">
         <rosparam file="$(find mesh_cloud_package)/config/mesh_cloud.yaml" command="load" />
         <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
     </node>
@@ -12,7 +12,7 @@
         <rosparam file="$(find visualize_package)/config/visualize_server.yaml" command="load" />
         <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
     </node>
-    <node pkg="labeling_package" type="record_server.py" name="record_server" output="screen">
+    <node pkg="labeling_package" type="record_server.py" name="record_server">
         <rosparam file="$(find labeling_package)/config/record_server.yaml" command="load" />
     </node>
 

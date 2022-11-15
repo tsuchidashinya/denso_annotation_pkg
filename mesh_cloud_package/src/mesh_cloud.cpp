@@ -58,18 +58,23 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
         std::string mesh_path = ros::package::getPath("mesh_cloud_package");
         mesh_path = UtilBase::join(mesh_path, "mesh");
         mesh_path = UtilBase::join(mesh_path, request.multi_object_info[i].object_name + ".stl");
+        UtilBase::message_show("load_poligon_before", "ok");
         pcl::io::loadPolygonFileSTL(mesh_path, mesh);
         vtkSmartPointer<vtkPolyData> polydata = vtkSmartPointer<vtkPolyData>::New();
+        UtilBase::message_show("mesh2vtk", "ok");
         pcl::io::mesh2vtk(mesh, polydata);
+        UtilBase::message_show("uniform_sampling", "ok");
         uniform_sampling(polydata, sample_points, mesh_pcl_clusters_[i]);
         tf::StampedTransform sensor_to_world, world_to_object, sensor_to_object;
         
         world_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, world_frame_));
+        UtilBase::message_show("pcl_ros_1", "ok");
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], world_to_object);
+        UtilBase::message_show("pcl_ros_2", "ok");
         sensor_to_world = UtilBase::make_stamped_trans(tf_basic_.get_tf(world_frame_, sensor_frame_));
-        UtilBase::message_show(world_frame_, sensor_frame_);
         // TfBasic::tf_data_show(tf_basic_.get_tf(world_frame_, sensor_frame_), "tf_sensor_name");
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], sensor_to_world);
+        UtilBase::message_show("make_stamped_trams", "ok");
         sensor_to_object = UtilBase::make_stamped_trans(tf_basic_.get_tf(request.multi_object_info[i].tf_name, sensor_frame_));
         out_data.pose_data[i] = stamped_to_pose(sensor_to_object);
         out_data.mesh_data[i] = UtilSensor::pcl_to_cloudmsg(mesh_pcl_clusters_[i]);
