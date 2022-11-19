@@ -53,24 +53,24 @@ void SemanticSegmentation::main()
 
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
-    UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
+    Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
-    cv::Mat img = UtilSensor::img_to_cv(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
+    cv::Mat img = UtilMsgData::img_to_cv(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     Make2DInfoBy3D make_2d_3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
     
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::get_tf_frames_from_objectinfo(multi_object));
+    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
     // img = Make2DInfoBy3D::draw_b_box(img, box_pos);
     // cv::resize(img, img, cv::Size(), 0.7, 0.7) ;
     // cv::imshow("window", img);
     // cv::waitKey(1000);
     anno_srvs::MeshCloudService mesh_srv;
     mesh_srv.request.multi_object_info = multi_object;
-    UtilBase::client_request(mesh_client_, mesh_srv, mesh_service_name_);
+    Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_clouds = mesh_srv.response.mesh;
 
-    UtilBase::client_request(sensor_client_, sensor_srv, sensor_service_name_);
+    Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
     Get3DBy2D get3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
@@ -86,17 +86,17 @@ void SemanticSegmentation::main()
         anno_srvs::RecordSegmentation record_srv;
         record_srv.request.cloud_data = cloud_multi[i];
         record_srv.request.the_number_of_dataset = the_number_of_dataset_;
-        UtilBase::client_request(record_client_, record_srv, record_service_name_);
+        Util::client_request(record_client_, record_srv, record_service_name_);
         ros::Duration(0.1).sleep();
     }
     common_srvs::VisualizeCloud visualize_srv;
     visualize_srv.request.cloud_data = cloud_multi;
-    UtilBase::client_request(visualize_client_, visualize_srv, visualize_service_name_);
+    Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     // InstanceLabelDrawer::draw_initial_instance(sensor_srv.response.cloud_data, 0);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[1], 2, nearest_radious_);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[0], 1, nearest_radious_);
-    // pcl::PointCloud<PclRgb> pclrgb = util_sensor_.cloudmsg_to_pclrgb(sensor_cloud);
-    // pc_visualize_data_ = util_sensor_.pclrgb_to_pc2_color(pclrgb);
+    // pcl::PointCloud<PclRgb> pclrgb = util_msg_data_.cloudmsg_to_pclrgb(sensor_cloud);
+    // pc_visualize_data_ = util_msg_data_.pclrgb_to_pc2_color(pclrgb);
 }
 
 

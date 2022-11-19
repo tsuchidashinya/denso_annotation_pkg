@@ -10,7 +10,7 @@
  */
 
 #pragma once
-#include <util/util_base.hpp>
+#include <util/util.hpp>
 #include "decide_object_position.hpp"
 
 class GazeboModelMove

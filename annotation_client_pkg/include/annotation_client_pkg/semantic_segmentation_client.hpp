@@ -7,7 +7,7 @@
 #include <gazebo_model_package/decide_object_position.hpp>
 #include <gazebo_model_package/gazebo_model_move.hpp>
 #include <tf_package/tf_basic.hpp>
-#include <util/util_base.hpp>
+#include <util/util.hpp>
 #include <labeling_package/instance_label_drawer.hpp>
 #include <data_transform_pkg/make_2Dinfo_by_3D.hpp>
 #include <data_transform_pkg/get_3D_by_2D.hpp>
@@ -29,7 +29,7 @@ private:
     std::string sensor_service_name_, mesh_service_name_, visualize_service_name_, record_service_name_;
     std::string world_frame_, sensor_frame_;
     TfBasic tf_basic_;
-    UtilSensor util_sensor_;
+    UtilMsgData util_msg_data_;
     InstanceLabelDrawer instance_drawer_;
     double nearest_radious_;
     int the_number_of_dataset_;

@@ -10,8 +10,8 @@
 #include <anno_srvs/MeshCloudService.h>
 #include <common_msgs/CloudData.h>
 #include <common_msgs/PoseData.h>
-#include <util/util_base.hpp>
-#include <util/util_sensor.hpp>
+#include <util/util.hpp>
+#include <util/util_msg_data.hpp>
 #include <tf_package/tf_basic.hpp>
 
 struct MeshOutType

@@ -7,8 +7,8 @@ from anno_srvs.srv import RecordSegmentation, RecordSegmentationResponse
 from anno_srvs.srv import RecordPoseEstimation, RecordPoseEstimationResponse
 import rospy
 import rosparam
-from util import util_python
-from annotation_common import hdf5_function
+from util import util
+from hdf5_package import hdf5_function
 from tqdm import tqdm
 
 
@@ -38,18 +38,18 @@ class RecordServiceClass():
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
             self.hdf5_file_dir = os.path.join(self.hdf5_file_dir, request.annotation_task)
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif request.the_number_of_dataset == self.hdf5_service_counter + 1:
             hdf5_function.close_hdf5(self.hdf5_object)
-            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cam = util_python.make_npcam_from_roscam(request.camera_info)
-        np_img = util_python.make_npimg_from_rosimg(request.image)
-        np_cloud = util_python.make_npcloud_from_cloud(request.cloud_data)
-        np_cloud, np_mask = util_python.extract_mask_from_npcloud(np_cloud)
-        translation, rotation = util_python.make_pose_data(request.pose_datas)
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+        np_cam = util.roscam_to_npcam(request.camera_info)
+        np_img = util.rosimg_to_npimg(request.image)
+        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud, np_mask = util.extract_mask_from_npcloud(np_cloud)
+        translation, rotation = util.msgposelist_to_trans_rotate(request.pose_datas)
         data_dict = {"Points": np_cloud, "masks": np_mask, "translation": translation,
             "rotation": rotation, "image": np_img, "camera_info": np_cam}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
@@ -65,17 +65,17 @@ class RecordServiceClass():
         if self.hdf5_service_counter == 1:
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
-            self.hdf5_file_dir = util_python.dir_join_and_make(self.hdf5_file_dir, "segmentation/" + util_python.get_time_str())
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            self.hdf5_file_dir = util.dir_join_and_make(self.hdf5_file_dir, "segmentation/" + util.get_time_str())
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif request.the_number_of_dataset == self.hdf5_service_counter:
             hdf5_function.close_hdf5(self.hdf5_object)
-            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cloud = util_python.make_npcloud_from_cloud(request.cloud_data)
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
         # print(np_cloud.shape)
-        np_cloud, np_mask = util_python.extract_mask_from_npcloud(np_cloud)
+        np_cloud, np_mask = util.extract_mask_from_npcloud(np_cloud)
         # print(np_cloud.shape)
         # print(np_mask.shape)
         data_dict = {"Points": np_cloud, "masks": np_mask}
@@ -93,17 +93,17 @@ class RecordServiceClass():
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
             self.hdf5_file_dir = os.path.join(self.hdf5_file_dir, "pose_estimation")
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif request.the_number_of_dataset == self.hdf5_service_counter:
             hdf5_function.close_hdf5(self.hdf5_object)
-            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cloud = util_python.make_npcloud_from_cloud(request.cloud_data)
-        np_cloud,  = util_python.extract_mask_from_npcloud(np_cloud)
-        translation, rotation = util_python.make_pose_data(request.pose_datas)
-        pose_mask = util_python.make_pose_mask(translation, rotation)
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud,  = util.extract_mask_from_npcloud(np_cloud)
+        translation, rotation = util.msgposelist_to_trans_rotate(request.pose_datas)
+        pose_mask = util.make_pose_mask(translation, rotation)
         data_dict = {"pcl": np_cloud, "pose": pose_mask}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)
@@ -117,15 +117,15 @@ class RecordServiceClass():
             self.bar = tqdm(total=request.the_number_of_dataset)
             self.bar.set_description("Progress rate")
             self.hdf5_file_dir = os.path.join(self.hdf5_file_dir, "clustering")
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif request.the_number_of_dataset == self.hdf5_service_counter + 1:
             hdf5_function.close_hdf5(self.hdf5_object)
-            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+            hdf5_function.concatenate_hdf5(self.hdf5_file_dir, util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
-            self.hdf5_object = hdf5_function.open_writed_hdf5(util_python.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cloud = util_python.make_npcloud_from_cloud(request.cloud_data)
-        np_cloud,  = util_python.extract_mask_from_npcloud(np_cloud)
+            self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
+        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud,  = util.extract_mask_from_npcloud(np_cloud)
         data_dict = {"pcl": np_cloud, "class": request.class_id}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)

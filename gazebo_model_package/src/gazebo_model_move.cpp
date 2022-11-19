@@ -16,7 +16,7 @@ void GazeboModelMove::set_multi_gazebo_model(std::vector<anno_msgs::ObjectInfo> 
         multi_gazebo.request.model_state = make_gazebo_model_state(multi_object_info[i]);
         for (int j = 0; j < 3; j++)
         {
-            UtilBase::client_request(gazebo_client_, multi_gazebo, gazebo_service_name_);
+            Util::client_request(gazebo_client_, multi_gazebo, gazebo_service_name_);
             ros::Duration(0.001).sleep();
         }
     }
@@ -28,7 +28,7 @@ void GazeboModelMove::set_gazebo_model(anno_msgs::ObjectInfo object_info)
     {
         gazebo_msgs::SetModelState gazebo_srv;
         gazebo_srv.request.model_state = make_gazebo_model_state(object_info);
-        UtilBase::client_request(gazebo_client_, gazebo_srv, gazebo_service_name_);
+        Util::client_request(gazebo_client_, gazebo_srv, gazebo_service_name_);
         ros::Duration(0.01).sleep();
     }
 }

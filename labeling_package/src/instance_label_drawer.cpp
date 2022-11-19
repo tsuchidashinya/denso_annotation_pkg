@@ -23,8 +23,8 @@ void InstanceLabelDrawer::set_parameter()
 common_msgs::CloudData InstanceLabelDrawer::extract_nearest_point(common_msgs::CloudData sensor_cloud, common_msgs::CloudData mesh_cloud, int instance, double radious = 0.004)
 {
     pcl::PointCloud<PclXyz> sensor_pcl, mesh_pcl;
-    sensor_pcl = UtilSensor::cloudmsg_to_pcl(sensor_cloud);
-    mesh_pcl = UtilSensor::cloudmsg_to_pcl(mesh_cloud);
+    sensor_pcl = UtilMsgData::cloudmsg_to_pcl(sensor_cloud);
+    mesh_pcl = UtilMsgData::cloudmsg_to_pcl(mesh_cloud);
     pcl::search::KdTree<PclXyz> kdtree;
     kdtree.setInputCloud(sensor_pcl.makeShared());
     std::vector<int> pointIndices;
@@ -103,7 +103,7 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
     for (int i = 0; i < tf_names.size(); i++) {
        geometry_msgs::Transform trans_get;
        
-       trans_get = tf_basic_.get_tf(tf_names[i], world_frame_);
+       trans_get = tf_basic_.tf_listen(tf_names[i], world_frame_);
        if (i == 0) {
         ObjectTfNameType object;
         object.trans = trans_get;
@@ -114,7 +114,7 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
         collision = 0;
         std::vector<int> delete_list;
         for (int k = 0; k < occluder_list.size(); k++) {
-            double dis = UtilBase::distance(trans_get.translation.x, trans_get.translation.y, occluder_list[k].trans.translation.x, occluder_list[k].trans.translation.y);
+            double dis = Util::distance(trans_get.translation.x, trans_get.translation.y, occluder_list[k].trans.translation.x, occluder_list[k].trans.translation.y);
             if (dis < 2 * radious) {
                 if (trans_get.translation.z > occluder_list[k].trans.translation.z) {
                     // occluder_list.erase(occluder_list.begin() + k);

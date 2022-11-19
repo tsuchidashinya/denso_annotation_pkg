@@ -3,7 +3,7 @@
 #include <anno_msgs/ObjectInfo.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/search/kdtree.h>
-#include <util/util_sensor.hpp>
+#include <util/util_msg_data.hpp>
 #include <tf_package/tf_basic.hpp>
 struct ObjectTfNameType
 {

@@ -62,7 +62,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
         check_point[map_index] = 0;
         bool loop_ok;
         double x, y, x_range = 0.08, y_range = 0.12;
-        UtilBase util;
+        Util util;
         for (int i = 0; i < object_info.size(); i++)
         {
             count = 0;
@@ -89,7 +89,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
 
                     for (int j = check_point[map_index]; j < i; j++)
                     {
-                        if (UtilBase::distance(x, y, object_info[j].position.translation.x, object_info[j].position.translation.y) < object_radious_ * 2)
+                        if (Util::distance(x, y, object_info[j].position.translation.x, object_info[j].position.translation.y) < object_radious_ * 2)
                             loop_ok = false;
                     }
 
@@ -110,7 +110,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
 
 std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
 {
-    UtilBase util;
+    Util util;
     for (int i = 0; i < object_info.size(); i++)
     {
         double x = util.random_float(10, 20);
@@ -124,7 +124,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vect
 
 anno_msgs::ObjectInfo DecidePosition::get_box_position()
 {
-    UtilBase util;
+    Util util;
     anno_msgs::ObjectInfo outdata;
     double x = 0;
     double y = 0;
@@ -138,7 +138,7 @@ anno_msgs::ObjectInfo DecidePosition::get_box_position()
 
 anno_msgs::ObjectInfo DecidePosition::get_sensor_position()
 {
-    UtilBase util;
+    Util util;
     anno_msgs::ObjectInfo outdata;
     double angle = util.random_float(sensor_angle_min_, sensor_angle_max_);
     double x = sensor_distance_ * sin(angle);
