@@ -13,15 +13,16 @@
 #include <data_transform_pkg/get_3D_by_2D.hpp>
 #include <data_transform_pkg/func_data_convertion.hpp>
 #include <annotation_common/util_anno.hpp>
+#include <opencv2/opencv.hpp>
 
-class SemanticSegmentation
+class AnnotationClient
 {
 public:
-    SemanticSegmentation(ros::NodeHandle &);
+    AnnotationClient(ros::NodeHandle &);
     void main();
     void set_paramenter();
-    void visualize_publish();
     XmlRpc::XmlRpcValue param_list;
+    int the_number_of_dataset_;
 
 private:
     ros::NodeHandle nh_, pnh_;
@@ -30,7 +31,7 @@ private:
     std::string world_frame_, sensor_frame_;
     TfBasic tf_basic_;
     UtilMsgData util_msg_data_;
+    Util util_;
     InstanceLabelDrawer instance_drawer_;
     double nearest_radious_;
-    int the_number_of_dataset_;
 };

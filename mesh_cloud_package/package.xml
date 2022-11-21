@@ -52,7 +52,6 @@
   <build_depend>roscpp</build_depend>
   <build_depend>pcl_ros</build_depend>
   <build_depend>anno_srvs</build_depend>
-  <build_depend>anno_msgs</build_depend>
   <build_depend>cv_bridge</build_depend>
   <build_depend>util</build_depend>
   <build_depend>tf_package</build_depend>

@@ -17,11 +17,11 @@ class GazeboModelMove
 {
 public:
     GazeboModelMove(ros::NodeHandle);
-    static gazebo_msgs::ModelState make_gazebo_model_state(anno_msgs::ObjectInfo);
+    static gazebo_msgs::ModelState make_gazebo_model_state(common_msgs::ObjectInfo);
     static gazebo_msgs::ModelState make_gazebo_model_state(std::string, geometry_msgs::Transform);
-    void set_multi_gazebo_model(std::vector<anno_msgs::ObjectInfo>);
-    void set_gazebo_model(anno_msgs::ObjectInfo);
-
+    void set_multi_gazebo_model(std::vector<common_msgs::ObjectInfo>);
+    void set_gazebo_model(common_msgs::ObjectInfo);
+    
 private:
     ros::NodeHandle nh_;
     ros::ServiceClient gazebo_client_;

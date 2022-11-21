@@ -1,46 +1,16 @@
-#include <annotation_client_pkg/semantic_segmentation_client.hpp>
-#include <opencv2/opencv.hpp>
+#include <annotation_client_pkg/annotation_client.hpp>
 
-SemanticSegmentation::SemanticSegmentation(ros::NodeHandle &nh):
-    nh_(nh),
-    pnh_("~")
-{
-    set_paramenter();
-    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
-    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
-    for (int i = 0; i < the_number_of_dataset_; i++) {
-        main();
-    }
-}
-
-void SemanticSegmentation::set_paramenter()
-{
-    pnh_.getParam("common_parameter", param_list);
-    world_frame_ = static_cast<std::string>(param_list["world_frame"]);
-    sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
-    pnh_.getParam("annotation_main", param_list);
-    nearest_radious_ = param_list["nearest_radious"];
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
-    mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
-    record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
-    the_number_of_dataset_ = param_list["the_number_of_dataset"];
-
-}
-
-void SemanticSegmentation::main()
+void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
     GazeboModelMove gazebo_model_move(nh_);
 
-    // anno_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
+    // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);
 
-    std::vector<anno_msgs::ObjectInfo> multi_object;
+    std::vector<common_msgs::ObjectInfo> multi_object;
     for (int i = 0; i < 10; i++) {
-        anno_msgs::ObjectInfo object;
+        common_msgs::ObjectInfo object;
         object = decide_gazebo_object.make_object_info(i, "HV8");
         multi_object.push_back(object);
     }
@@ -56,7 +26,8 @@ void SemanticSegmentation::main()
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::img_to_cv(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
-    Make2DInfoBy3D make_2d_3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
+    std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
+    Make2DInfoBy3D make_2d_3d(cinfo_list, UtilMsgData::get_image_size(img));
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
     
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
@@ -72,7 +43,7 @@ void SemanticSegmentation::main()
 
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
-    Get3DBy2D get3d(sensor_srv.response.camera_info, FuncDataConvertion::get_image_size(img));
+    Get3DBy2D get3d(cinfo_list, UtilMsgData::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     
     // cloud_multi = instance_drawer_.detect_occuluder(cloud_multi, 1, 20, 0.01);
@@ -90,7 +61,7 @@ void SemanticSegmentation::main()
         ros::Duration(0.1).sleep();
     }
     common_srvs::VisualizeCloud visualize_srv;
-    visualize_srv.request.cloud_data = cloud_multi;
+    visualize_srv.request.cloud_data_list = cloud_multi;
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     // InstanceLabelDrawer::draw_initial_instance(sensor_srv.response.cloud_data, 0);
     // sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_clouds[1], 2, nearest_radious_);
@@ -100,15 +71,3 @@ void SemanticSegmentation::main()
 }
 
 
-int main(int argc, char** argv)
-{
-    ros::init(argc, argv, "semantic_segmentation");
-    ros::NodeHandle nh;
-    SemanticSegmentation semseg(nh);
-    // for (int i = 0; i < 10; i++) {
-    //     semseg.main();
-    //     // ros::Duration(0.1).sleep();
-    // }
-    ros::spin();
-    return 0;
-}

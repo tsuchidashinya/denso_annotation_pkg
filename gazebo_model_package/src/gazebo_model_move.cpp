@@ -8,7 +8,7 @@ GazeboModelMove::GazeboModelMove(ros::NodeHandle nh) : nh_(nh)
 }
 
 
-void GazeboModelMove::set_multi_gazebo_model(std::vector<anno_msgs::ObjectInfo> multi_object_info)
+void GazeboModelMove::set_multi_gazebo_model(std::vector<common_msgs::ObjectInfo> multi_object_info)
 {
     for (int i = 0; i < multi_object_info.size(); i++)
     {
@@ -22,7 +22,7 @@ void GazeboModelMove::set_multi_gazebo_model(std::vector<anno_msgs::ObjectInfo> 
     }
 }
 
-void GazeboModelMove::set_gazebo_model(anno_msgs::ObjectInfo object_info)
+void GazeboModelMove::set_gazebo_model(common_msgs::ObjectInfo object_info)
 {
     for (int j = 0; j < 3; j++)
     {
@@ -51,7 +51,7 @@ gazebo_msgs::ModelState GazeboModelMove::make_gazebo_model_state(std::string obj
     return model;
 }
 
-gazebo_msgs::ModelState GazeboModelMove::make_gazebo_model_state(anno_msgs::ObjectInfo object_info)
+gazebo_msgs::ModelState GazeboModelMove::make_gazebo_model_state(common_msgs::ObjectInfo object_info)
 {
     gazebo_msgs::ModelState model;
     model.model_name = object_info.tf_name;

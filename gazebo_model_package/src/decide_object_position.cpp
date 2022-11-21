@@ -32,17 +32,17 @@ void DecidePosition::set_parameter()
 }
 
 
-anno_msgs::ObjectInfo DecidePosition::make_object_info(int object_id, std::string object_name)
+common_msgs::ObjectInfo DecidePosition::make_object_info(int object_id, std::string object_name)
 {
-    anno_msgs::ObjectInfo outdata;
+    common_msgs::ObjectInfo outdata;
     outdata.tf_name = object_name + "_" + std::to_string(object_id);
     outdata.object_name = object_name;
     return outdata;
 }
 
-anno_msgs::ObjectInfo DecidePosition::make_object_info(std::string object_name, std::string tf_name)
+common_msgs::ObjectInfo DecidePosition::make_object_info(std::string object_name, std::string tf_name)
 {
-    anno_msgs::ObjectInfo outdata;
+    common_msgs::ObjectInfo outdata;
     outdata.object_name = object_name;
     outdata.tf_name = tf_name;
     return outdata;
@@ -51,9 +51,9 @@ anno_msgs::ObjectInfo DecidePosition::make_object_info(std::string object_name, 
 /**
  * @brief オブジェクトの配置を決定する
  *
- * @return std::vector<anno_msgs::ObjectInfo>
+ * @return std::vector<common_msgs::ObjectInfo>
  */
-std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std::vector<anno_msgs::ObjectInfo> object_info)
+std::vector<common_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std::vector<common_msgs::ObjectInfo> object_info)
 {
     {
         int count = 0;
@@ -108,7 +108,7 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_randam_place_position(std
     return object_info;
 }
 
-std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vector<anno_msgs::ObjectInfo> object_info)
+std::vector<common_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vector<common_msgs::ObjectInfo> object_info)
 {
     Util util;
     for (int i = 0; i < object_info.size(); i++)
@@ -122,10 +122,10 @@ std::vector<anno_msgs::ObjectInfo> DecidePosition::get_remove_position(std::vect
     return object_info;
 }
 
-anno_msgs::ObjectInfo DecidePosition::get_box_position()
+common_msgs::ObjectInfo DecidePosition::get_box_position()
 {
     Util util;
-    anno_msgs::ObjectInfo outdata;
+    common_msgs::ObjectInfo outdata;
     double x = 0;
     double y = 0;
     double z = z_position_;
@@ -136,10 +136,10 @@ anno_msgs::ObjectInfo DecidePosition::get_box_position()
     return outdata;
 }
 
-anno_msgs::ObjectInfo DecidePosition::get_sensor_position()
+common_msgs::ObjectInfo DecidePosition::get_sensor_position()
 {
     Util util;
-    anno_msgs::ObjectInfo outdata;
+    common_msgs::ObjectInfo outdata;
     double angle = util.random_float(sensor_angle_min_, sensor_angle_max_);
     double x = sensor_distance_ * sin(angle);
     double y = 0;

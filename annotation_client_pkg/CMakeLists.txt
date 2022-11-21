@@ -8,7 +8,6 @@ project(annotation_client_pkg)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  anno_msgs
   anno_srvs
   common_msgs
   common_srvs
@@ -215,8 +214,11 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(semseg src/semantic_segmentation_client.cpp)
-
+add_executable(semseg src/semantic_segmentation_client.cpp src/annotation_client.cpp src/annotation_client_node.cpp)
 target_link_libraries(semseg
+  ${catkin_LIBRARIES}
+)
+add_executable(object_detection_2d src/object_detection_2d.cpp src/annotation_client.cpp src/annotation_client_node.cpp)
+target_link_libraries(object_detection_2d
   ${catkin_LIBRARIES}
 )

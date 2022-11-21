@@ -14,19 +14,19 @@
 #include <tf_package/tf_basic.hpp>
 #include <gazebo_msgs/SetModelState.h>
 #include <gazebo_msgs/ModelState.h>
-#include <anno_msgs/ObjectInfo.h>
+#include <common_msgs/ObjectInfo.h>
 
 
 class DecidePosition
 {
 public:
     DecidePosition();
-    anno_msgs::ObjectInfo make_object_info(int, std::string);
-    anno_msgs::ObjectInfo make_object_info(std::string, std::string);
-    std::vector<anno_msgs::ObjectInfo> get_randam_place_position(std::vector<anno_msgs::ObjectInfo>);
-    std::vector<anno_msgs::ObjectInfo> get_remove_position(std::vector<anno_msgs::ObjectInfo>);
-    anno_msgs::ObjectInfo get_box_position();
-    anno_msgs::ObjectInfo get_sensor_position();
+    common_msgs::ObjectInfo make_object_info(int, std::string);
+    common_msgs::ObjectInfo make_object_info(std::string, std::string);
+    std::vector<common_msgs::ObjectInfo> get_randam_place_position(std::vector<common_msgs::ObjectInfo>);
+    std::vector<common_msgs::ObjectInfo> get_remove_position(std::vector<common_msgs::ObjectInfo>);
+    common_msgs::ObjectInfo get_box_position();
+    common_msgs::ObjectInfo get_sensor_position();
     void set_parameter();
     XmlRpc::XmlRpcValue param_list;
 

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="annotation_client_pkg" type="object_detection_2d" name="object_detection_2d" output="screen">
+        <rosparam file="$(find annotation_client_pkg)/config/object_detection_2d.yaml" command="load" />
+        <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+    </node>
+</launch>  

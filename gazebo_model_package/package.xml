@@ -56,11 +56,9 @@
   <build_depend>common_srvs</build_depend>
   <build_depend>tf_package</build_depend>
   <build_depend>util</build_depend>
-  <build_depend>anno_msgs</build_depend>
   <build_depend>anno_srvs</build_depend>
   <build_export_depend>roscpp</build_export_depend>
   <exec_depend>roscpp</exec_depend>
-
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

@@ -78,9 +78,9 @@ std::vector<common_msgs::CloudData> InstanceLabelDrawer::extract_occuluder(std::
     return out_data;
 }
 
-std::vector<anno_msgs::ObjectInfo> InstanceLabelDrawer::extract_occuluder(std::vector<anno_msgs::ObjectInfo> object_info, double radious)
+std::vector<common_msgs::ObjectInfo> InstanceLabelDrawer::extract_occuluder(std::vector<common_msgs::ObjectInfo> object_info, double radious)
 {
-    std::vector<anno_msgs::ObjectInfo> out_data;
+    std::vector<common_msgs::ObjectInfo> out_data;
     std::vector<std::string> tf_names;
     for (int i = 0; i < object_info.size(); i++) {
         tf_names.push_back(object_info[i].tf_name);

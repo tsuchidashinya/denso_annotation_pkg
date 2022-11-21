@@ -13,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   common_msgs 
   common_srvs 
-  anno_msgs
   anno_srvs
   util
   tf_package
