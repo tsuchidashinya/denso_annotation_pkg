@@ -32,7 +32,7 @@ void AnnotationClient::set_paramenter()
 void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
-    GazeboModelMove gazebo_model_move(nh_);
+    GazeboMoveServer gazebo_model_move(nh_);
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_first;
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object.get_sensor_position();
@@ -74,6 +74,9 @@ void AnnotationClient::main()
     cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
     cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
     box_pos = InstanceLabelDrawer::set_object_class_name(box_pos, "HV8_occuluder");
+    for (int i = 0; i < box_pos.size(); i++) {
+        box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
+    }
     UtilAnno::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
     multi_object_first = decide_gazebo_object.get_remove_position(multi_object_first);
     gazebo_model_move.set_multi_gazebo_model(multi_object_first);

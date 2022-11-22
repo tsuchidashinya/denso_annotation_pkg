@@ -10,6 +10,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
+    gazebo_sensor_client_ = nh_.serviceClient<common_srvs::GazeboSensorMoveService>(gazebo_sensor_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -24,13 +25,13 @@ void AnnotationClient::set_paramenter()
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
-
+    gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
 }
 
 void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
-    GazeboModelMove gazebo_model_move(nh_);
+    GazeboMoveServer gazebo_model_move(nh_);
 
     // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);

@@ -12,18 +12,23 @@
 #pragma once
 #include <util/util.hpp>
 #include "decide_object_position.hpp"
+#include <common_srvs/GazeboSensorMoveService.h>
+#include <util/util_msg_data.hpp>
 
-class GazeboModelMove
+class GazeboMoveServer
 {
 public:
-    GazeboModelMove(ros::NodeHandle);
-    static gazebo_msgs::ModelState make_gazebo_model_state(common_msgs::ObjectInfo);
-    static gazebo_msgs::ModelState make_gazebo_model_state(std::string, geometry_msgs::Transform);
+    GazeboMoveServer(ros::NodeHandle);
+   
     void set_multi_gazebo_model(std::vector<common_msgs::ObjectInfo>);
     void set_gazebo_model(common_msgs::ObjectInfo);
-    
+    bool service_callback(common_srvs::GazeboSensorMoveServiceRequest&, common_srvs::GazeboSensorMoveServiceResponse&);
+    void set_parameter();
 private:
-    ros::NodeHandle nh_;
+    ros::NodeHandle nh_, pnh_;
     ros::ServiceClient gazebo_client_;
-    std::string gazebo_service_name_;
+    std::string gazebo_service_name_, world_frame_;
+    ros::ServiceServer server_;
+    XmlRpc::XmlRpcValue param_list;
+    TfBasic tf_basic_;
 };

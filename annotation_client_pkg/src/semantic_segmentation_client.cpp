@@ -30,7 +30,7 @@ void AnnotationClient::set_paramenter()
 void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
-    GazeboModelMove gazebo_model_move(nh_);
+    GazeboMoveServer gazebo_model_move(nh_);
 
     // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);
