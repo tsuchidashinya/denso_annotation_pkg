@@ -9,7 +9,6 @@ project(anno_srvs)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
     message_generation
-    anno_msgs
     common_msgs 
     sensor_msgs
 )
@@ -74,7 +73,7 @@ add_service_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  common_msgs anno_msgs sensor_msgs
+  common_msgs sensor_msgs
 )
 
 ################################################

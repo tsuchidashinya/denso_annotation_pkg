@@ -6,6 +6,7 @@ GazeboMoveServer::GazeboMoveServer(ros::NodeHandle nh) : nh_(nh), pnh_("~")
     gazebo_service_name_ = "/gazebo/set_model_state";
     gazebo_client_ = nh_.serviceClient<gazebo_msgs::SetModelState>(gazebo_service_name_);
     server_ = nh_.advertiseService(gazebo_service_name_, &GazeboMoveServer::service_callback, this);
+    gazebo_pub_ = nh_.advertise<gazebo_msgs::ModelState>("/gazebo/set_model_state", 10);
 }
 
 
@@ -17,7 +18,8 @@ void GazeboMoveServer::set_multi_gazebo_model(std::vector<common_msgs::ObjectInf
         multi_gazebo.request.model_state = UtilMsgData::make_gazebo_model_state(multi_object_info[i]);
         for (int j = 0; j < 3; j++)
         {
-            Util::client_request(gazebo_client_, multi_gazebo, gazebo_service_name_);
+            gazebo_pub_.publish(multi_gazebo.request.model_state);
+            // Util::client_request(gazebo_client_, multi_gazebo, gazebo_service_name_);
             ros::Duration(0.001).sleep();
         }
     }
@@ -29,7 +31,8 @@ void GazeboMoveServer::set_gazebo_model(common_msgs::ObjectInfo object_info)
     {
         gazebo_msgs::SetModelState gazebo_srv;
         gazebo_srv.request.model_state = UtilMsgData::make_gazebo_model_state(object_info);
-        Util::client_request(gazebo_client_, gazebo_srv, gazebo_service_name_);
+        // Util::client_request(gazebo_client_, gazebo_srv, gazebo_service_name_);
+        gazebo_pub_.publish(gazebo_srv.request.model_state);
         ros::Duration(0.01).sleep();
     }
 }

@@ -27,6 +27,7 @@ public:
 private:
     ros::NodeHandle nh_, pnh_;
     ros::ServiceClient gazebo_client_;
+    ros::Publisher gazebo_pub_;
     std::string gazebo_service_name_, world_frame_;
     ros::ServiceServer server_;
     XmlRpc::XmlRpcValue param_list;
