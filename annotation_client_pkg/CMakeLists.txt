@@ -214,11 +214,15 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(semseg src/semantic_segmentation_client.cpp src/annotation_client.cpp src/annotation_client_node.cpp)
+add_executable(semseg src/semantic_segmentation_client.cpp src/annotation_client_node.cpp)
 target_link_libraries(semseg
   ${catkin_LIBRARIES}
 )
-add_executable(object_detection_2d src/object_detection_2d.cpp src/annotation_client.cpp src/annotation_client_node.cpp)
+add_executable(semseg_randomizer src/semantic_segmentation_randomizer_client.cpp src/annotation_client_node.cpp)
+target_link_libraries(semseg_randomizer
+  ${catkin_LIBRARIES}
+)
+add_executable(object_detection_2d src/object_detection_2d_client.cpp src/annotation_client_node.cpp)
 target_link_libraries(object_detection_2d
   ${catkin_LIBRARIES}
 )

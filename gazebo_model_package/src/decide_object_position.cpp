@@ -27,7 +27,8 @@ void DecidePosition::set_parameter()
     sensor_name_ = static_cast<std::string>(param_list["sensor_name"]);
     sensor_angle_max_ = param_list["sensor_angle_max"];
     sensor_angle_min_ = param_list["sensor_angle_min"];
-    sensor_distance_ = param_list["distance"];
+    sensor_distance_min_ = param_list["sensor_distance_min"];
+    sensor_distance_max_ = param_list["sensor_distance_max"];
     object_height_ = param_list["object_height"];
 }
 
@@ -141,9 +142,10 @@ common_msgs::ObjectInfo DecidePosition::get_sensor_position()
     Util util;
     common_msgs::ObjectInfo outdata;
     double angle = util.random_float(sensor_angle_min_, sensor_angle_max_);
-    double x = sensor_distance_ * sin(angle);
+    double sensor_distance = util.random_float(sensor_distance_min_, sensor_distance_max_);
+    double x = sensor_distance * sin(angle);
     double y = 0;
-    double z = sensor_distance_ * cos(angle);
+    double z = sensor_distance * cos(angle);
     tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, angle, 0);
     outdata.position = TfBasic::make_geo_transform(x, y, z, quaternion);
     outdata.object_name = sensor_name_;

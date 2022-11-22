@@ -36,5 +36,5 @@ private:
     double z_position_;
     double box_height_;
     double object_radious_, object_height_;
-    double sensor_angle_min_, sensor_angle_max_, sensor_distance_;
+    double sensor_angle_min_, sensor_angle_max_, sensor_distance_min_, sensor_distance_max_;
 };

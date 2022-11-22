@@ -12,7 +12,8 @@ decide_object_position:
   sensor_name: phoxi_camera
   sensor_angle_max: 0.087
   sensor_angle_min: 0.087
-  distance: 1.1
+  sensor_distance_min: 0.8
+  sensor_distance_max: 1.5
   z_position: 0.003
   box_height: 0.01
   box_name: denso_box

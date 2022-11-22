@@ -141,3 +141,11 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
     }
     return occluder_list;
 }
+
+std::vector<common_msgs::BoxPosition> InstanceLabelDrawer::set_object_class_name(std::vector<common_msgs::BoxPosition> box_position_list, std::string class_name)
+{
+    for (int i = 0; i < box_position_list.size(); i++) {
+        box_position_list[i].object_class_name = class_name;
+    }
+    return box_position_list;
+}
