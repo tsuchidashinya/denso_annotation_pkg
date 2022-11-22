@@ -10,7 +10,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
-    gazebo_sensor_client_ = nh_.serviceClient<common_srvs::GazeboSensorMoveService>(gazebo_sensor_service_name_);
+    // gazebo_sensor_client_ = nh_.serviceClient<common_srvs::GazeboSensorMoveService>(gazebo_sensor_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -69,8 +69,8 @@ void AnnotationClient::main()
 
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
+    sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
     for (int i = 0; i < mesh_cloud_list.size(); i++) {
-        sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
         sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
     }
     Get3DBy2D get3d(cinfo_list, Util::get_image_size(img));

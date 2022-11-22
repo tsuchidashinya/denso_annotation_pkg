@@ -8,6 +8,7 @@ from anno_srvs.srv import RecordPoseEstimation, RecordPoseEstimationResponse
 import rospy
 import rosparam
 from util import util
+from util import util_msg_data
 from hdf5_package import hdf5_function
 from tqdm import tqdm
 
@@ -45,11 +46,11 @@ class RecordServiceClass():
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cam = util.roscam_to_npcam(request.camera_info)
-        np_img = util.rosimg_to_npimg(request.image)
-        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
-        np_cloud, np_mask = util.extract_mask_from_npcloud(np_cloud)
-        translation, rotation = util.msgposelist_to_trans_rotate(request.pose_datas)
+        np_cam = util_msg_data.roscam_to_npcam(request.camera_info)
+        np_img = util_msg_data.rosimg_to_npimg(request.image)
+        np_cloud = util_msg_data.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud, np_mask = util_msg_data.extract_mask_from_npcloud(np_cloud)
+        translation, rotation = util_msg_data.msgposelist_to_trans_rotate(request.pose_datas)
         data_dict = {"Points": np_cloud, "masks": np_mask, "translation": translation,
             "rotation": rotation, "image": np_img, "camera_info": np_cam}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
@@ -73,9 +74,9 @@ class RecordServiceClass():
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud = util_msg_data.msgcloud_to_npcloud(request.cloud_data)
         # print(np_cloud.shape)
-        np_cloud, np_mask = util.extract_mask_from_npcloud(np_cloud)
+        np_cloud, np_mask = util_msg_data.extract_mask_from_npcloud(np_cloud)
         # print(np_cloud.shape)
         # print(np_mask.shape)
         data_dict = {"Points": np_cloud, "masks": np_mask}
@@ -100,10 +101,10 @@ class RecordServiceClass():
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
-        np_cloud,  = util.extract_mask_from_npcloud(np_cloud)
-        translation, rotation = util.msgposelist_to_trans_rotate(request.pose_datas)
-        pose_mask = util.make_pose_mask(translation, rotation)
+        np_cloud = util_msg_data.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud,  = util_msg_data.extract_mask_from_npcloud(np_cloud)
+        translation, rotation = util_msg_data.msgposelist_to_trans_rotate(request.pose_datas)
+        pose_mask = util_msg_data.make_pose_mask(translation, rotation)
         data_dict = {"pcl": np_cloud, "pose": pose_mask}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)
@@ -124,8 +125,8 @@ class RecordServiceClass():
         elif index == 0:
             hdf5_function.close_hdf5(self.hdf5_object)
             self.hdf5_object = hdf5_function.open_writed_hdf5(util.decide_allpath(self.hdf5_file_dir, self.hdf5_file_name))
-        np_cloud = util.msgcloud_to_npcloud(request.cloud_data)
-        np_cloud,  = util.extract_mask_from_npcloud(np_cloud)
+        np_cloud = util_msg_data.msgcloud_to_npcloud(request.cloud_data)
+        np_cloud,  = util_msg_data.extract_mask_from_npcloud(np_cloud)
         data_dict = {"pcl": np_cloud, "class": request.class_id}
         hdf5_function.write_hdf5(self.hdf5_object, data_dict, index)
         self.bar.update(1)
