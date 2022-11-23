@@ -9,7 +9,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
+    record_client_ = nh_.serviceClient<anno_srvs::RecordAcc>(record_service_name_);
     // gazebo_sensor_client_ = nh_.serviceClient<common_srvs::GazeboSensorMoveService>(gazebo_sensor_service_name_);
 }
 
@@ -110,6 +110,7 @@ void AnnotationClient::main()
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = mesh_srv.response.pose;
     record_srv.request.cloud_data = sensor_cloud;
+    record_srv.request.the_number_of_dataset = the_number_of_dataset_;
     Util::client_request(record_client_, record_srv, record_service_name_);
 
     common_srvs::VisualizeCloud visualize_srv;
