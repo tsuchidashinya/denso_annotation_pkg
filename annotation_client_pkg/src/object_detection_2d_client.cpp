@@ -37,6 +37,13 @@ void AnnotationClient::main()
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
+    tf2::Quaternion quat = TfBasic::make_tf2_quaternion(sensor_object.position.rotation);
+    quat = TfBasic::rotate_quaternion_by_axis(quat, RotationOption::y, M_PI/2) * quat;
+    geometry_msgs::Transform trans = sensor_object.position;
+    trans.rotation = TfBasic::make_geo_quaternion(quat);
+    geometry_msgs::TransformStamped trans_stamp;
+    trans_stamp = TfBasic::make_geo_trans_stamped("photoneo_center", world_frame_, trans);
+    tf_basic_.static_broadcast(trans_stamp);
     ros::Duration(2.0);
     for (int i = 0; i < util_.random_int(1, 24); i++) {
         common_msgs::ObjectInfo object;
