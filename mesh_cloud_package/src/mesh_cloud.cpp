@@ -52,6 +52,7 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
     MeshOutType out_data;
     out_data.mesh_data.resize(tf_name_size);
     out_data.pose_data.resize(tf_name_size);
+    mesh_pcl_clusters_.resize(tf_name_size);
     for (int i = 0; i < tf_name_size; i++)
     {
         pcl::PolygonMesh mesh;
