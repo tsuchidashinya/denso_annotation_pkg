@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-    <node pkg="labeling_package" type="record_server.py" name="record_server" output="screen">
-        <rosparam file="$(find labeling_package)/config/record_server.yaml" command="load" />
-    </node>
-
-</launch>

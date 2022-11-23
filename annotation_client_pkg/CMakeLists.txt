@@ -226,3 +226,7 @@ add_executable(object_detection_2d src/object_detection_2d_client.cpp src/annota
 target_link_libraries(object_detection_2d
   ${catkin_LIBRARIES}
 )
+add_executable(acc_annotation src/acc_annotation.cpp src/annotation_client_node.cpp)
+target_link_libraries(acc_annotation
+  ${catkin_LIBRARIES}
+)

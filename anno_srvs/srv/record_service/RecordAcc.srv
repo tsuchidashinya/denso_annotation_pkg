@@ -1,8 +1,7 @@
 common_msgs/CloudData cloud_data 
-common_msgs/PoseData[] pose_datas
+common_msgs/PoseData[] pose_data_list
 sensor_msgs/Image image 
-sensor_msgs/CameraInfo camera_info
+float32[] camera_info
 int32 the_number_of_dataset
-int32 class_id
 ---
 bool ok

@@ -65,14 +65,16 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
         pcl::io::mesh2vtk(mesh, polydata);
         Util::message_show("uniform_sampling", "ok");
         uniform_sampling(polydata, sample_points, mesh_pcl_clusters_[i]);
+        Util::message_show("mesh_pcl_size", mesh_pcl_clusters_[i].points.size());
         tf::StampedTransform sensor_to_world, world_to_object, sensor_to_object;
-        
+        Util::message_show("make_stamped_trans", "ok");
         world_to_object = Util::make_stamped_trans(tf_basic_.tf_listen(request.multi_object_info[i].tf_name, world_frame_));
+        Util::message_show("tf_multi_name", request.multi_object_info[i].tf_name);
         Util::message_show("pcl_ros_1", "ok");
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], world_to_object);
         Util::message_show("pcl_ros_2", "ok");
         sensor_to_world = Util::make_stamped_trans(tf_basic_.tf_listen(world_frame_, sensor_frame_));
-        // TfBasic::tf_data_show(tf_basic_.tf_listen(world_frame_, sensor_frame_), "tf_sensor_name");
+        TfBasic::tf_data_show(tf_basic_.tf_listen(world_frame_, sensor_frame_), "tf_sensor_name");
         pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], sensor_to_world);
         Util::message_show("make_stamped_trams", "ok");
         sensor_to_object = Util::make_stamped_trans(tf_basic_.tf_listen(request.multi_object_info[i].tf_name, sensor_frame_));

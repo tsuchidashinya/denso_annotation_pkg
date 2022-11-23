@@ -37,14 +37,7 @@ void AnnotationClient::main()
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
-    tf2::Quaternion quat = TfBasic::make_tf2_quaternion(sensor_object.position.rotation);
-    quat = TfBasic::rotate_quaternion_by_axis(quat, RotationOption::y, M_PI/2) * quat;
-    geometry_msgs::Transform trans = sensor_object.position;
-    trans.rotation = TfBasic::make_geo_quaternion(quat);
-    geometry_msgs::TransformStamped trans_stamp;
-    trans_stamp = TfBasic::make_geo_trans_stamped("photoneo_center", world_frame_, trans);
-    tf_basic_.static_broadcast(trans_stamp);
-    ros::Duration(2.0);
+    ros::Duration(1.5);
     for (int i = 0; i < util_.random_int(1, 24); i++) {
         common_msgs::ObjectInfo object;
         object = decide_gazebo_object.make_object_info(i, "HV8");
@@ -66,10 +59,27 @@ void AnnotationClient::main()
     img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     Make2DInfoBy3D make_2d_3d(cinfo_list, Util::get_image_size(img));
-    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
-    
-    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
+    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
+    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
+    for (int i = 0; i < box_pos.size(); i++) {
+        YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
+        if (util_.random_float(0, 1) < 0.03) {
+            float scale_up = util_.random_float(1, 3);
+            yolo_data.w = scale_up * yolo_data.w;
+            yolo_data.h = scale_up * yolo_data.h;
+        }
+        if (util_.random_float(0, 1) < 0.005) {
+            do  {
+                yolo_data.x = yolo_data.x * util_.random_float(0.1, 1.5);
+            } while (yolo_data.x > 1);
+            do  {
+                yolo_data.y = yolo_data.y * util_.random_float(0.1, 1.5);
+            } while (yolo_data.y > 1);
+        }
+        
+        box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
+    }
     img = Make2DInfoBy3D::draw_b_box(img, box_pos);
     std::string image_dir_path = Util::join(save_dir_, "images");
     std::string box_dir_path = Util::join(save_dir_, "boxes");
@@ -87,5 +97,6 @@ void AnnotationClient::main()
     UtilAnno::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
     multi_object_first = decide_gazebo_object.get_remove_position(multi_object_first);
     gazebo_model_move.set_multi_gazebo_model(multi_object_first);
+    
 }
 

@@ -22,14 +22,11 @@ public:
    
     void set_multi_gazebo_model(std::vector<common_msgs::ObjectInfo>);
     void set_gazebo_model(common_msgs::ObjectInfo);
-    bool service_callback(common_srvs::GazeboSensorMoveServiceRequest&, common_srvs::GazeboSensorMoveServiceResponse&);
     void set_parameter();
 private:
     ros::NodeHandle nh_, pnh_;
-    ros::ServiceClient gazebo_client_;
     ros::Publisher gazebo_pub_;
-    std::string gazebo_service_name_, world_frame_;
-    ros::ServiceServer server_;
+    std::string world_frame_;
     XmlRpc::XmlRpcValue param_list;
     TfBasic tf_basic_;
 };

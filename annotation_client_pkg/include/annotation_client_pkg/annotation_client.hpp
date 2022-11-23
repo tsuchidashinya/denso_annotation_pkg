@@ -5,6 +5,7 @@
 #include <common_srvs/VisualizeCloud.h>
 #include <common_srvs/GazeboSensorMoveService.h>
 #include <anno_srvs/RecordSegmentation.h>
+#include <anno_srvs/RecordAcc.h>
 #include <gazebo_model_package/decide_object_position.hpp>
 #include <gazebo_model_package/gazebo_model_move.hpp>
 #include <tf_package/tf_basic.hpp>
