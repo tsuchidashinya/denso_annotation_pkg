@@ -1,7 +1,9 @@
 #pragma once
 #include <anno_srvs/MeshCloudService.h>
 // #include <anno_srvs/RecordService.h>
+#include <anno_srvs/RecordRealSensorData.h>
 #include <common_srvs/SensorService.h>
+#include <common_srvs/VisualizeImage.h>
 #include <common_srvs/VisualizeCloud.h>
 #include <common_srvs/GazeboSensorMoveService.h>
 #include <anno_srvs/RecordSegmentation.h>
@@ -28,8 +30,8 @@ public:
 
 private:
     ros::NodeHandle nh_, pnh_;
-    ros::ServiceClient sensor_client_, mesh_client_, visualize_client_, record_client_, gazebo_sensor_client_;
-    std::string sensor_service_name_, mesh_service_name_, visualize_service_name_, record_service_name_;
+    ros::ServiceClient sensor_client_, mesh_client_, visualize_client_, record_client_, gazebo_sensor_client_, vis_img_client_;
+    std::string sensor_service_name_, mesh_service_name_, visualize_service_name_, record_service_name_, vis_img_service_name_;
     std::string gazebo_sensor_service_name_;
     std::string world_frame_, sensor_frame_;
     std::string save_dir_, save_base_file_name_;

@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="sim_or_real" default="sim"/>
+    
     <node pkg="mesh_cloud_package" type="mesh_cloud" name="mesh_cloud">
         <rosparam file="$(find mesh_cloud_package)/config/mesh_cloud.yaml" command="load" />
         <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
     </node>
     <node pkg="sensor_package" type="SensorServer" name="sensor_server">
+        <param name="sim_or_real" value="$(arg sim_or_real)"/>
         <rosparam file="$(find sensor_package)/config/sensor_server.yaml" command="load"/>
         <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
     </node>

@@ -230,3 +230,7 @@ add_executable(acc_annotation src/acc_annotation.cpp src/annotation_client_node.
 target_link_libraries(acc_annotation
   ${catkin_LIBRARIES}
 )
+add_executable(real_cloud_dataset_get src/real_cloud_dataset_get.cpp)
+target_link_libraries(real_cloud_dataset_get
+  ${catkin_LIBRARIES}
+)

@@ -60,6 +60,7 @@ add_service_files(
   record_service/RecordClustering.srv
   record_service/RecordPoseEstimation.srv
   record_service/RecordSegmentation.srv
+  record_service/RecordRealSensorData.srv
   MeshCloudService.srv 
 )
 

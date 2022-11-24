@@ -1,0 +1,6 @@
+common_msgs/CloudData cloud_data 
+sensor_msgs/Image image 
+float32[] camera_info
+int32 the_number_of_dataset
+---
+bool ok
