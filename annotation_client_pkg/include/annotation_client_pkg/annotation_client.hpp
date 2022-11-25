@@ -39,5 +39,7 @@ private:
     UtilMsgData util_msg_data_;
     Util util_;
     InstanceLabelDrawer instance_drawer_;
+    double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;
+    double xyz_step_, qxyz_step_;
     double nearest_radious_;
 };

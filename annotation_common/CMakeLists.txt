@@ -9,11 +9,6 @@ project(annotation_common)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   anno_srvs
-  common_msgs
-  common_srvs
-  cv_bridge
-  pcl_ros
-  roscpp
   util
 )
 
@@ -112,7 +107,7 @@ catkin_python_setup()
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES util_anno
-#  CATKIN_DEPENDS anno_msgs anno_srvs common_msgs common_srvs cv_bridge pcl_ros roscpp util
+ CATKIN_DEPENDS anno_srvs util
 #  DEPENDS system_lib
 )
 
