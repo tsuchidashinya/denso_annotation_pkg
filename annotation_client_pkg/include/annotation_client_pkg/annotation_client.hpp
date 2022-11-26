@@ -35,6 +35,7 @@ private:
     std::string gazebo_sensor_service_name_;
     std::string world_frame_, sensor_frame_;
     std::string save_dir_, save_base_file_name_;
+    std::string object_name_;
     TfBasic tf_basic_;
     UtilMsgData util_msg_data_;
     Util util_;
