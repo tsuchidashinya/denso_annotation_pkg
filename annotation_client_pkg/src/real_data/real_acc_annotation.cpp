@@ -26,11 +26,7 @@ void AnnotationClient::set_paramenter()
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
-    q_x_para_ = param_list["q_x_para"];
-    q_y_para_ = param_list["q_y_para"];
-    q_z_para_ = param_list["q_z_para"];
-    x_para_ = param_list["x_para"];
-    object_name_ = static_cast<std::string>(param_list["obejct_name"]);
+    object_name_ = static_cast<std::string>(param_list["object_name"]);
 }
 
 void AnnotationClient::main()
@@ -64,11 +60,12 @@ void AnnotationClient::main()
         mesh_srv.request.multi_object_info.push_back(mesh_input);
         while (ros::ok())
         {
+            ano_copy_data = ano_data;
             KeyBoardTf key_tf = tf_basic_.get_keyboard_tf(xyz_step_, qxyz_step_);
             final_tf.transform = tf_basic_.add_keyboard_tf(final_tf.transform, key_tf);
             tf_basic_.static_broadcast(final_tf);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
-            ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, 0.002);
+            ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
             common_srvs::VisualizeCloud visual_srv;
             visual_srv.request.cloud_data_list.push_back(ano_copy_data);
             visual_srv.request.topic_name_list.push_back("ano_copy_data");

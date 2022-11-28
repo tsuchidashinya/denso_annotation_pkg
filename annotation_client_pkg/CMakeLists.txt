@@ -52,7 +52,7 @@ target_link_libraries(real_cloud_dataset_get
   ${catkin_LIBRARIES}
 )
 
-add_executable(real_cloud_annotation src/real_data/real_cloud_annotation.cpp src/annotation_client_node.cpp)
-target_link_libraries(real_cloud_annotation
+add_executable(real_acc_annotation src/real_data/real_acc_annotation.cpp src/annotation_client_node.cpp)
+target_link_libraries(real_acc_annotation
   ${catkin_LIBRARIES}
 )
