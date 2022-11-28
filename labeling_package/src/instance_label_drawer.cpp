@@ -103,7 +103,7 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
     for (int i = 0; i < tf_names.size(); i++) {
        geometry_msgs::Transform trans_get;
        
-       trans_get = tf_basic_.tf_listen(tf_names[i], world_frame_);
+       trans_get = tf_func_.tf_listen(tf_names[i], world_frame_);
        if (i == 0) {
         ObjectTfNameType object;
         object.trans = trans_get;

@@ -51,8 +51,8 @@ void AnnotationClient::main()
             is_same_element_exist = Util::is_same_element_exist(tf_name_list, i);
         } while (is_same_element_exist);
         geometry_msgs::TransformStamped final_tf;
-        final_tf = TfBasic::make_geo_trans_stamped(tf_name_list[i], sensor_frame_, tf_basic_.tf_listen(sensor_frame_, world_frame_));
-        tf_basic_.static_broadcast(final_tf);
+        final_tf = TfFunction::make_geo_trans_stamped(tf_name_list[i], sensor_frame_, tf_func_.tf_listen(sensor_frame_, world_frame_));
+        tf_func_.static_broadcast(final_tf);
         common_msgs::ObjectInfo mesh_input;
         mesh_input.object_name = object_name_;
         mesh_input.tf_name = tf_name_list[i];
@@ -61,9 +61,9 @@ void AnnotationClient::main()
         while (ros::ok())
         {
             ano_copy_data = ano_data;
-            KeyBoardTf key_tf = tf_basic_.get_keyboard_tf(xyz_step_, qxyz_step_);
-            final_tf.transform = tf_basic_.add_keyboard_tf(final_tf.transform, key_tf);
-            tf_basic_.static_broadcast(final_tf);
+            KeyBoardTf key_tf = tf_func_.get_keyboard_tf(xyz_step_, qxyz_step_);
+            final_tf.transform = tf_func_.add_keyboard_tf(final_tf.transform, key_tf);
+            tf_func_.static_broadcast(final_tf);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
             common_srvs::VisualizeCloud visual_srv;

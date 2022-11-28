@@ -36,7 +36,7 @@ private:
     std::string world_frame_, sensor_frame_;
     std::string save_dir_, save_base_file_name_;
     std::string object_name_;
-    TfBasic tf_basic_;
+    TfFunction tf_func_;
     UtilMsgData util_msg_data_;
     Util util_;
     InstanceLabelDrawer instance_drawer_;

@@ -26,6 +26,6 @@ private:
     ros::NodeHandle pnh_;
     std::string world_frame_;
     XmlRpc::XmlRpcValue param_list;
-    TfBasic tf_basic_;
+    TfFunction tf_func_;
     void set_parameter();
 };

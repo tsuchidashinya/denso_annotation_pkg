@@ -20,6 +20,6 @@ private:
     std::vector<std::string> model_names_;
     std::vector<geometry_msgs::Pose> model_poses_;
     std::string gazebo_tracked_frame_, rviz_following_frame_;
-    TfBasic tf_basic_;
+    TfFunction tf_func_;
     void set_parameter();
 };

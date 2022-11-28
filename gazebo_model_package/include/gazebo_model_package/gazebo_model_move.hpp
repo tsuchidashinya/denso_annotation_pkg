@@ -28,5 +28,5 @@ private:
     ros::Publisher gazebo_pub_;
     std::string world_frame_;
     XmlRpc::XmlRpcValue param_list;
-    TfBasic tf_basic_;
+    TfFunction tf_func_;
 };

@@ -103,7 +103,7 @@ std::vector<common_msgs::ObjectInfo> DecidePosition::get_randam_place_position(s
             }
 
             double z = z_position_ + box_height_ + map_index * 0.05;
-            object_info[i].position = TfBasic::make_geo_transform(x, y, z, TfBasic::rotate_xyz_make(0, 0, 0));
+            object_info[i].position = TfFunction::make_geo_transform(x, y, z, TfFunction::rotate_xyz_make(0, 0, 0));
         }
     }
     return object_info;
@@ -117,8 +117,8 @@ std::vector<common_msgs::ObjectInfo> DecidePosition::get_remove_position(std::ve
         double x = util.random_float(10, 20);
         double y = util.random_float(10, 20);
         double z = util.random_float(0, 20);
-        tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, 0, 0);
-        object_info[i].position =  TfBasic::make_geo_transform(x, y, z, quaternion);
+        tf2::Quaternion quaternion = TfFunction::rotate_xyz_make(0, 0, 0);
+        object_info[i].position =  TfFunction::make_geo_transform(x, y, z, quaternion);
     }
     return object_info;
 }
@@ -130,8 +130,8 @@ common_msgs::ObjectInfo DecidePosition::get_box_position()
     double x = 0;
     double y = 0;
     double z = z_position_;
-    tf2::Quaternion quat = TfBasic::rotate_xyz_make(0, 0, 0);
-    outdata.position = TfBasic::make_geo_transform(x, y, z, quat);
+    tf2::Quaternion quat = TfFunction::rotate_xyz_make(0, 0, 0);
+    outdata.position = TfFunction::make_geo_transform(x, y, z, quat);
     outdata.object_name = box_name_;
     outdata.tf_name = box_name_;
     return outdata;
@@ -146,8 +146,8 @@ common_msgs::ObjectInfo DecidePosition::get_sensor_position()
     double x = sensor_distance * sin(angle);
     double y = 0;
     double z = sensor_distance * cos(angle);
-    tf2::Quaternion quaternion = TfBasic::rotate_xyz_make(0, angle, 0);
-    outdata.position = TfBasic::make_geo_transform(x, y, z, quaternion);
+    tf2::Quaternion quaternion = TfFunction::rotate_xyz_make(0, angle, 0);
+    outdata.position = TfFunction::make_geo_transform(x, y, z, quaternion);
     outdata.object_name = sensor_name_;
     outdata.tf_name = sensor_name_;
     return outdata;

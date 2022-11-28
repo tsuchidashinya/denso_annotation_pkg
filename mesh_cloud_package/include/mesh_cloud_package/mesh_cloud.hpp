@@ -39,6 +39,6 @@ private:
     ros::Timer timer_;
     std::string world_frame_, mesh_service_name_, sensor_frame_;
     int sample_points;
-    TfBasic tf_basic_;
+    TfFunction tf_func_;
     double LEAF_SIZE_;
 };
