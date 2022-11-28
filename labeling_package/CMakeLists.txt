@@ -8,7 +8,6 @@ project(labeling_package)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  anno_msgs
   anno_srvs
   common_srvs
   common_msgs

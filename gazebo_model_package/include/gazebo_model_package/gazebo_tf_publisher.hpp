@@ -4,7 +4,7 @@
 #include <geometry_msgs/Pose.h>
 #include <gazebo_msgs/ModelStates.h>
 #include <tf2_ros/transform_broadcaster.h>
-#include <tf_package/tf_basic.hpp>
+#include <tf_package/tf_function.hpp>
 
 class GazeboTfPublisher
 {
