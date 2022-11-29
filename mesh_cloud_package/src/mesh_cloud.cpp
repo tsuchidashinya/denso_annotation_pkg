@@ -21,6 +21,7 @@ void MeshCloudServer::visualize_callback(const ros::TimerEvent &event)
     for (int i = 0; i < mesh_pcl_clusters_.size(); i++) {
         sensor_msgs::PointCloud2 pc = util_msg_data.pcl_to_pc2(mesh_pcl_clusters_[i]);
         pc.header.frame_id = sensor_frame_;
+        pc.header.stamp = ros::Time::now();
         mesh_cluster_pub_[i].publish(pc);
     }
 }

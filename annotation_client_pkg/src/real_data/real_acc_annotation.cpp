@@ -10,6 +10,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     record_client_ = nh_.serviceClient<anno_srvs::RecordAcc>(record_service_name_);
+    tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -23,6 +24,7 @@ void AnnotationClient::set_paramenter()
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
+    tf_br_service_name_ = static_cast<std::string>(param_list["tf_br_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
@@ -51,7 +53,9 @@ void AnnotationClient::main()
             is_same_element_exist = Util::is_same_element_exist(tf_name_list, i);
         } while (is_same_element_exist);
         geometry_msgs::TransformStamped final_tf;
-        final_tf = TfFunction::make_geo_trans_stamped(tf_name_list[i], sensor_frame_, tf_func_.tf_listen(sensor_frame_, world_frame_));
+        geometry_msgs::Transform zero_trans;
+        zero_trans.rotation = TfFunction::make_geo_quaternion(TfFunction::rotate_xyz_make(0, 0, 0));
+        final_tf = TfFunction::make_geo_trans_stamped(tf_name_list[i], world_frame_, zero_trans);
         tf_func_.static_broadcast(final_tf);
         common_msgs::ObjectInfo mesh_input;
         mesh_input.object_name = object_name_;
@@ -63,7 +67,11 @@ void AnnotationClient::main()
             ano_copy_data = ano_data;
             KeyBoardTf key_tf = tf_func_.get_keyboard_tf(xyz_step_, qxyz_step_);
             final_tf.transform = tf_func_.add_keyboard_tf(final_tf.transform, key_tf);
-            tf_func_.static_broadcast(final_tf);
+            common_srvs::TfBroadcastService tf_br_srv;
+            tf_br_srv.request.broadcast_tf = final_tf;
+            tf_br_srv.request.tf_name = final_tf.child_frame_id;
+            Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
+            // tf_func_.static_broadcast(final_tf);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
             common_srvs::VisualizeCloud visual_srv;

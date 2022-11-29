@@ -25,5 +25,4 @@
     <node pkg="hdf5_package" type="hdf5_record_server.py" name="hdf5_record_server">
         <rosparam file="$(find hdf5_package)/config/hdf5_record_server.yaml" command="load" />
     </node>
-
 </launch>
