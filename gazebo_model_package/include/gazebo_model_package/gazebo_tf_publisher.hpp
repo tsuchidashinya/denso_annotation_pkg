@@ -5,6 +5,8 @@
 #include <gazebo_msgs/ModelStates.h>
 #include <tf2_ros/transform_broadcaster.h>
 #include <tf_package/tf_function.hpp>
+#include <common_srvs/TfBroadcastService.h>
+#include <util/util.hpp>
 
 class GazeboTfPublisher
 {
@@ -21,5 +23,7 @@ private:
     std::vector<geometry_msgs::Pose> model_poses_;
     std::string gazebo_tracked_frame_, rviz_following_frame_;
     TfFunction tf_func_;
+    ros::ServiceClient tf_client_;
+    std::string tf_br_service_name_;
     void set_parameter();
 };

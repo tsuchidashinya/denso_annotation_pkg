@@ -12,7 +12,6 @@
 #pragma once
 #include <util/util.hpp>
 #include "decide_object_position.hpp"
-#include <common_srvs/GazeboSensorMoveService.h>
 #include <util/util_msg_data.hpp>
 
 class GazeboMoveServer
