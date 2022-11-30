@@ -48,7 +48,7 @@ void AnnotationClient::main()
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
-    ros::Duration(0.5).sleep();
+    ros::Duration(1).sleep();
     
 
     common_srvs::SensorService sensor_srv;
@@ -69,7 +69,7 @@ void AnnotationClient::main()
             yolo_data.w = scale_up * yolo_data.w;
             yolo_data.h = scale_up * yolo_data.h;
         }
-        if (util_.random_float(0, 1) < 0.005) {
+        if (util_.random_float(0, 1) < 0.2) {
             do  {
                 yolo_data.x = yolo_data.x * util_.random_float(0.1, 1.5);
             } while (yolo_data.x > 1);
