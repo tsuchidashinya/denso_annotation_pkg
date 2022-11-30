@@ -56,12 +56,6 @@ void AnnotationClient::main()
         geometry_msgs::Transform zero_trans;
         zero_trans.rotation = TfFunction::make_geo_quaternion(TfFunction::rotate_xyz_make(0, 0, 0));
         final_tf = TfFunction::make_geo_trans_stamped(tf_name_list[i], world_frame_, zero_trans);
-        tf_func_.static_broadcast(final_tf);
-        common_msgs::ObjectInfo mesh_input;
-        mesh_input.object_name = object_name_;
-        mesh_input.tf_name = tf_name_list[i];
-        anno_srvs::MeshCloudService mesh_srv;
-        mesh_srv.request.multi_object_info.push_back(mesh_input);
         while (ros::ok())
         {
             ano_copy_data = ano_data;
@@ -71,7 +65,11 @@ void AnnotationClient::main()
             tf_br_srv.request.broadcast_tf = final_tf;
             tf_br_srv.request.tf_name = final_tf.child_frame_id;
             Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
-            // tf_func_.static_broadcast(final_tf);
+            common_msgs::ObjectInfo mesh_input;
+            mesh_input.object_name = object_name_;
+            mesh_input.tf_name = tf_name_list[i];
+            anno_srvs::MeshCloudService mesh_srv;
+            mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
             common_srvs::VisualizeCloud visual_srv;

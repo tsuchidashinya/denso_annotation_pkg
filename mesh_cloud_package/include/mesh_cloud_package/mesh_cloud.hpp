@@ -26,16 +26,12 @@ public:
     void set_parameter();
     MeshOutType make_mesh(anno_srvs::MeshCloudServiceRequest);
     bool service_callback(anno_srvs::MeshCloudServiceRequest &, anno_srvs::MeshCloudServiceResponse &);
-    void visualize_callback(const ros::TimerEvent &);
-    void initialize(anno_srvs::MeshCloudServiceRequest);
     common_msgs::PoseData stamped_to_pose(tf::StampedTransform);
     XmlRpc::XmlRpcValue param_list;
 private:
     ros::NodeHandle nh_;
     ros::NodeHandle pnh_;
     ros::ServiceServer server_, visual_server_;
-    std::vector<ros::Publisher> mesh_cluster_pub_;
-    std::vector<pcl::PointCloud<PclXyz>> mesh_pcl_clusters_;
     ros::Timer timer_;
     std::string world_frame_, mesh_service_name_, sensor_frame_;
     int sample_points;

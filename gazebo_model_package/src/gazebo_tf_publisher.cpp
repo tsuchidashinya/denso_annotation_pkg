@@ -30,7 +30,6 @@ void GazeboTfPublisher::modelstatesCallback(const gazebo_msgs::ModelStates::Cons
         tf2::Quaternion quat = TfFunction::make_tf2_quaternion(model_poses_[i].orientation);
         trans = TfFunction::make_geo_transform(model_poses_[i].position.x, model_poses_[i].position.y, model_poses_[i].position.z, quat);
         tf_stamp = TfFunction::make_geo_trans_stamped(model_names_[i], world_frame_, trans);
-        // tf_func_.static_broadcast(tf_stamp);
         common_srvs::TfBroadcastService tf_br_srv;
         tf_br_srv.request.broadcast_tf = tf_stamp;
         tf_br_srv.request.tf_name = tf_stamp.child_frame_id;
@@ -41,7 +40,6 @@ void GazeboTfPublisher::modelstatesCallback(const gazebo_msgs::ModelStates::Cons
             tf_br_srv.request.broadcast_tf = tf_stamp;
             tf_br_srv.request.tf_name = tf_stamp.child_frame_id;
             Util::client_request(tf_client_, tf_br_srv, tf_br_service_name_);
-            // tf_func_.static_broadcast(tf_stamp);
         }
     }
 

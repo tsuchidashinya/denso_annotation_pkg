@@ -12,34 +12,10 @@ MeshCloudServer::MeshCloudServer(ros::NodeHandle &nh)
 {
     set_parameter();
     server_ = nh_.advertiseService(mesh_service_name_, &MeshCloudServer::service_callback, this);
-    timer_ = nh_.createTimer(ros::Duration(0.3), &MeshCloudServer::visualize_callback, this);
-}
-
-void MeshCloudServer::visualize_callback(const ros::TimerEvent &event)
-{
-    UtilMsgData util_msg_data;
-    for (int i = 0; i < mesh_pcl_clusters_.size(); i++) {
-        sensor_msgs::PointCloud2 pc = util_msg_data.pcl_to_pc2(mesh_pcl_clusters_[i]);
-        pc.header.frame_id = sensor_frame_;
-        pc.header.stamp = ros::Time::now();
-        mesh_cluster_pub_[i].publish(pc);
-    }
-}
-
-void MeshCloudServer::initialize(anno_srvs::MeshCloudServiceRequest request)
-{
-    int size = request.multi_object_info.size();
-    mesh_pcl_clusters_.resize(size);
-    mesh_cluster_pub_.resize(size);
-    for (int i = 0; i < size; i++)
-    {
-        mesh_cluster_pub_[i] = nh_.advertise<sensor_msgs::PointCloud2>(request.multi_object_info[i].object_name + "_" + std::to_string(i), 1);
-    }
 }
 
 bool MeshCloudServer::service_callback(anno_srvs::MeshCloudServiceRequest &request, anno_srvs::MeshCloudServiceResponse &response)
 {
-    initialize(request);
     MeshOutType out_data;
     out_data = make_mesh(request);
     response.mesh = out_data.mesh_data;
@@ -53,7 +29,8 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
     MeshOutType out_data;
     out_data.mesh_data.resize(tf_name_size);
     out_data.pose_data.resize(tf_name_size);
-    mesh_pcl_clusters_.resize(tf_name_size);
+    std::vector<pcl::PointCloud<PclXyz>> mesh_pcl_list;
+    mesh_pcl_list.resize(tf_name_size);
     for (int i = 0; i < tf_name_size; i++)
     {
         pcl::PolygonMesh mesh;
@@ -66,22 +43,22 @@ MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest reques
         Util::message_show("mesh2vtk", "ok");
         pcl::io::mesh2vtk(mesh, polydata);
         Util::message_show("uniform_sampling", "ok");
-        uniform_sampling(polydata, sample_points, mesh_pcl_clusters_[i]);
-        Util::message_show("mesh_pcl_size", mesh_pcl_clusters_[i].points.size());
+        uniform_sampling(polydata, sample_points, mesh_pcl_list[i]);
+        Util::message_show("mesh_pcl_size", mesh_pcl_list[i].points.size());
         tf::StampedTransform sensor_to_world, world_to_object, sensor_to_object;
         Util::message_show("make_stamped_trans", "ok");
         world_to_object = Util::make_stamped_trans(tf_func_.tf_listen(request.multi_object_info[i].tf_name, world_frame_));
         Util::message_show("tf_multi_name", request.multi_object_info[i].tf_name);
         Util::message_show("pcl_ros_1", "ok");
-        pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], world_to_object);
+        pcl_ros::transformPointCloud(mesh_pcl_list[i], mesh_pcl_list[i], world_to_object);
         Util::message_show("pcl_ros_2", "ok");
         sensor_to_world = Util::make_stamped_trans(tf_func_.tf_listen(world_frame_, sensor_frame_));
         TfFunction::tf_data_show(tf_func_.tf_listen(world_frame_, sensor_frame_), "tf_sensor_name");
-        pcl_ros::transformPointCloud(mesh_pcl_clusters_[i], mesh_pcl_clusters_[i], sensor_to_world);
+        pcl_ros::transformPointCloud(mesh_pcl_list[i], mesh_pcl_list[i], sensor_to_world);
         Util::message_show("make_stamped_trams", "ok");
         sensor_to_object = Util::make_stamped_trans(tf_func_.tf_listen(request.multi_object_info[i].tf_name, sensor_frame_));
         out_data.pose_data[i] = stamped_to_pose(sensor_to_object);
-        out_data.mesh_data[i] = UtilMsgData::pcl_to_cloudmsg(mesh_pcl_clusters_[i]);
+        out_data.mesh_data[i] = UtilMsgData::pcl_to_cloudmsg(mesh_pcl_list[i]);
         out_data.mesh_data[i].cloud_name = request.multi_object_info[i].tf_name;
     }   
     return out_data;
