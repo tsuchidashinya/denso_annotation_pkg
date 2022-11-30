@@ -54,12 +54,12 @@ void AnnotationClient::main()
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    Make2DInfoBy3D make_2d_3d(cinfo_list, Util::get_image_size(img));
+    Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
     
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
-    // img = Make2DInfoBy3D::draw_b_box(img, box_pos);
+    // img = Data3Dto2D::draw_b_box(img, box_pos);
     // cv::resize(img, img, cv::Size(), 0.7, 0.7) ;
     // cv::imshow("window", img);
     // cv::waitKey(1000);
@@ -70,7 +70,7 @@ void AnnotationClient::main()
 
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
-    Get3DBy2D get3d(cinfo_list, Util::get_image_size(img));
+    Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     
     // cloud_multi = instance_drawer_.detect_occuluder(cloud_multi, 1, 20, 0.01);

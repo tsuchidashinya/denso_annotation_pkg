@@ -58,7 +58,7 @@ void AnnotationClient::main()
     cv::Mat img_ori, img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    Make2DInfoBy3D make_2d_3d(cinfo_list, Util::get_image_size(img));
+    Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
@@ -80,7 +80,7 @@ void AnnotationClient::main()
         
         box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
     }
-    img = Make2DInfoBy3D::draw_b_box(img, box_pos);
+    img = Data3Dto2D::draw_b_box(img, box_pos);
     std::string image_dir_path = Util::join(save_dir_, "images");
     std::string box_dir_path = Util::join(save_dir_, "boxes");
     std::string label_dir_path = Util::join(save_dir_, "labels");

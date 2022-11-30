@@ -13,8 +13,8 @@
 #include <tf_package/tf_function.hpp>
 #include <util/util.hpp>
 #include <labeling_package/instance_label_drawer.hpp>
-#include <data_transform_pkg/make_2Dinfo_by_3D.hpp>
-#include <data_transform_pkg/get_3D_by_2D.hpp>
+#include <data_transform_pkg/data_3D_to_2D.hpp>
+#include <data_transform_pkg/data_2D_to_3D.hpp>
 #include <data_transform_pkg/func_data_convertion.hpp>
 #include <annotation_common/util_anno.hpp>
 #include <opencv2/opencv.hpp>

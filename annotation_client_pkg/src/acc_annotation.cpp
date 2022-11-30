@@ -62,7 +62,7 @@ void AnnotationClient::main()
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
     multi_object = Util::delete_empty_object_info(multi_object);
-    // Make2DInfoBy3D make_2d_3d(cinfo_list, Util::get_image_size(img));
+    // Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     // std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
     // for (int i = 0; i < box_pos.size(); i++) {
     //     YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
@@ -93,7 +93,7 @@ void AnnotationClient::main()
     for (int i = 0; i < mesh_cloud_list.size(); i++) {
         sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
     }
-    // Get3DBy2D get3d(cinfo_list, Util::get_image_size(img));
+    // Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     // std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     // std::vector<std::string> topic_list;
     // for (int i = 0; i < cloud_multi.size(); i++) {
