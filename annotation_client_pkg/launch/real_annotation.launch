@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <arg name="acc" default="true"/>
+    <group if="$(arg acc)">
+        <node pkg="annotation_client_pkg" type="real_acc_annotation" name="real_acc_annotation" output="screen">
+            <rosparam file="$(find annotation_client_pkg)/config/real_acc_annotation.yaml" command="load" ns="" />
+            <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+        </node>
+    </group>
+    <group unless="$(arg acc)">
+        <node pkg="annotation_client_pkg" type="real_cloud_dataset_get" name="real_cloud_dataset_get" output="screen">
+            <rosparam file="$(find annotation_client_pkg)/config/real_cloud_dataset_get.yaml" command="load" />
+            <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+        </node>
+    </group>
+    
+</launch>
