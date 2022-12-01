@@ -9,7 +9,7 @@ annotation_main:
   radious: 0.05
   xyz_step: 0.003
   qxyz_step: 0.01
-  object_name: HV8
+  main_object_name: HV8
   the_number_of_dataset: 1
   
 decide_object_position:
