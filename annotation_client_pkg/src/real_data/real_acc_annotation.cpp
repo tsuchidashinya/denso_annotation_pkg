@@ -28,7 +28,7 @@ void AnnotationClient::set_paramenter()
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
-    main_object_name_ = static_cast<std::string>(param_list["main_object_name"]);
+    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
 }
 
 void AnnotationClient::main()
@@ -66,7 +66,7 @@ void AnnotationClient::main()
             tf_br_srv.request.tf_name = final_tf.child_frame_id;
             Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
             common_msgs::ObjectInfo mesh_input;
-            mesh_input.object_name = main_object_name_;
+            mesh_input.object_name = object_list_[0];
             mesh_input.tf_name = tf_name_list[i];
             anno_srvs::MeshCloudService mesh_srv;
             mesh_srv.request.multi_object_info.push_back(mesh_input);
