@@ -35,12 +35,14 @@ private:
     std::string gazebo_sensor_service_name_;
     std::string world_frame_, sensor_frame_;
     std::string save_dir_, save_base_file_name_;
-    std::string object_name_;
+    std::vector<std::string> object_list_;
+    std::vector<int> quantity_of_object_list_;
+    std::vector<int> instance_of_object_list_;
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;
     Util util_;
     InstanceLabelDrawer instance_drawer_;
     double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;
     double xyz_step_, qxyz_step_;
-    double nearest_radious_;
+    double nearest_radious_, occlusion_object_radious_;
 };

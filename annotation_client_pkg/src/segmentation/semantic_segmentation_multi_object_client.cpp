@@ -25,6 +25,16 @@ void AnnotationClient::set_paramenter()
     record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
+    occlusion_object_radious_ = param_list["occlusion_object_radious"];
+    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
+    quantity_of_object_list_.push_back(static_cast<int>(param_list["quantity_of_main_object"]));
+    instance_of_object_list_.push_back(static_cast<int>(param_list["instance_of_main_object"]));
+    pnh_.getParam("annotation_main/other_object_list", param_list);
+    for (int i = 0; i < param_list.size(); i++) {
+        object_list_.push_back(static_cast<std::string>(param_list[i]["object_name"]));
+        quantity_of_object_list_.push_back(static_cast<int>(param_list[i]["quantity_of_the_object"]));
+        instance_of_object_list_.push_back(static_cast<int>(param_list[i]["instance_of_the_object"]));
+    }
 }
 
 void AnnotationClient::main()
@@ -39,28 +49,41 @@ void AnnotationClient::main()
     gazebo_model_move.set_gazebo_model(sensor_object);
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
-    for (int i = 0; i < 30; i++) {
-        common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, "HV8");
-        multi_object_all.push_back(object);
+    for (int i = 0; i < object_list_.size(); i++) {
+        for (int j = 0; j < quantity_of_object_list_[i]; j++) {
+            common_msgs::ObjectInfo object;
+            object = decide_gazebo_object.make_object_info(j, object_list_[i]);
+            multi_object_all.push_back(object);
+        }
     }
     multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
-    for (int i = 0; i < util_.random_int(1, 24); i++) {
+    for (int i = 0; i < util_.random_int(0, quantity_of_object_list_[0]); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, "HV8");
+        object = decide_gazebo_object.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
     }
+    if (util_.random_float(0, 1) < 0.02) {
+        for (int i = 1; i < object_list_.size(); i++) {
+            for (int j = 0; j < util_.random_int(1, quantity_of_object_list_[i]); j++) {
+                common_msgs::ObjectInfo object;
+                object = decide_gazebo_object.make_object_info(j, object_list_[i]);
+                multi_object.push_back(object);
+            }
+        }
+    }
     multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
-    gazebo_model_move.set_multi_gazebo_model(multi_object);
-    ros::Duration(0.5).sleep();
+    if (util_.random_float(0, 1) < 0.99) {
+        gazebo_model_move.set_multi_gazebo_model(multi_object);
+        ros::Duration(0.5).sleep();
+    }
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
+    multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
     multi_object = Util::delete_empty_object_info(multi_object);
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
@@ -91,7 +114,8 @@ void AnnotationClient::main()
     sensor_cloud = sensor_srv.response.cloud_data;
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
     for (int i = 0; i < mesh_cloud_list.size(); i++) {
-        sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
+        int object_index = Util::find_element_vector(object_list_, multi_object[i].object_name);
+        sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], instance_of_object_list_[object_index], 0.002);
     }
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);

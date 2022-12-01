@@ -56,3 +56,8 @@ add_executable(real_acc_annotation src/real_data/real_acc_annotation.cpp src/ann
 target_link_libraries(real_acc_annotation
   ${catkin_LIBRARIES}
 )
+
+add_executable(semantic_segmentation_multi_object_client src/segmentaion/semantic_segmentation_multi_object_client.cpp src/annotation_client_node.cpp)
+target_link_libraries(semantic_segmentation_multi_object_client
+  ${catkin_LIBRARIES}
+)
