@@ -63,8 +63,8 @@ std::vector<common_msgs::CloudData> InstanceLabelDrawer::extract_occuluder(std::
     std::vector<common_msgs::CloudData> out_data;
     std::vector<std::string> tf_names;
     for (int i = 0; i < cloud_multi.size(); i++) {
-        if (cloud_multi[i].cloud_name.size() != 0) {
-            tf_names.push_back(cloud_multi[i].cloud_name);
+        if (cloud_multi[i].tf_name.size() != 0) {
+            tf_names.push_back(cloud_multi[i].tf_name);
         }
     }
     std::vector<ObjectTfNameType> occluder_list = detect_occuluder(tf_names, radious);
@@ -104,6 +104,7 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
        geometry_msgs::Transform trans_get;
        
        trans_get = tf_func_.tf_listen(tf_names[i], world_frame_);
+    //    TfFunction::tf_data_show(trans_get, "tf_name_" + std::to_string(i));
        if (i == 0) {
         ObjectTfNameType object;
         object.trans = trans_get;
@@ -145,7 +146,7 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
 std::vector<common_msgs::BoxPosition> InstanceLabelDrawer::set_object_class_name(std::vector<common_msgs::BoxPosition> box_position_list, std::string class_name)
 {
     for (int i = 0; i < box_position_list.size(); i++) {
-        box_position_list[i].object_class_name = class_name;
+        box_position_list[i].object_name = class_name;
     }
     return box_position_list;
 }

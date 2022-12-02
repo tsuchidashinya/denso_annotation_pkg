@@ -41,7 +41,7 @@ void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
-
+    common_srvs::VisualizeCloud visualize_srv;
     // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);
     common_msgs::ObjectInfo sensor_object;
@@ -63,7 +63,7 @@ void AnnotationClient::main()
         object = decide_gazebo_object.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
     }
-    if (util_.random_float(0, 1) < 0.02) {
+    if (util_.random_float(0, 1) < 0.15) {
         for (int i = 1; i < object_list_.size(); i++) {
             for (int j = 0; j < util_.random_int(1, quantity_of_object_list_[i]); j++) {
                 common_msgs::ObjectInfo object;
@@ -73,10 +73,9 @@ void AnnotationClient::main()
         }
     }
     multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
-    if (util_.random_float(0, 1) < 0.99) {
-        gazebo_model_move.set_multi_gazebo_model(multi_object);
-        ros::Duration(0.5).sleep();
-    }
+    gazebo_model_move.set_multi_gazebo_model(multi_object);
+    ros::Duration(0.5).sleep();
+    
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
@@ -86,50 +85,62 @@ void AnnotationClient::main()
     multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
     multi_object = Util::delete_empty_object_info(multi_object);
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
-    for (int i = 0; i < box_pos.size(); i++) {
-        YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
-        if (util_.random_float(0, 1) < 0.03) {
-            float scale_up = util_.random_float(1, 3);
-            yolo_data.w = scale_up * yolo_data.w;
-            yolo_data.h = scale_up * yolo_data.h;
-        }
-        if (util_.random_float(0, 1) < 0.005) {
-            do  {
-                yolo_data.x = yolo_data.x * util_.random_float(0.1, 1.5);
-            } while (yolo_data.x > 1);
-            do  {
-                yolo_data.y = yolo_data.y * util_.random_float(0.1, 1.5);
-            } while (yolo_data.y > 1);
-        }
-        
-        box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
+    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
+    if (util_.random_float(0, 1) < 0.02) {
+        gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     }
     anno_srvs::MeshCloudService mesh_srv;
     mesh_srv.request.multi_object_info = multi_object;
     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_cloud_list = mesh_srv.response.mesh;
-
+    // for (int i = 0; i < mesh_cloud_list.size(); i++) {
+    //     visualize_srv.request.cloud_data = mesh_cloud_list[i]);
+    //     visualize_srv.request.topic_name_list.push_back(mesh_cloud_list[i].tf_name + "_mesh");
+    // }
+    // Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
-    for (int i = 0; i < mesh_cloud_list.size(); i++) {
-        int object_index = Util::find_element_vector(object_list_, multi_object[i].object_name);
-        sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], instance_of_object_list_[object_index], 0.002);
-    }
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
-    std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
-    std::vector<std::string> topic_list;
+    std::vector<common_msgs::CloudData> cloud_multi;
+    if (util_.random_float(0, 1) < 0.2) {
+        for (int i = 0; i < box_pos.size(); i++) {
+            YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
+            if (util_.random_float(0, 1) < 0.2) {
+                float scale_up = util_.random_float(1.5, 3);
+                yolo_data.w = scale_up * yolo_data.w;
+                yolo_data.h = scale_up * yolo_data.h;
+            }
+            box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
+        }
+        for (int i = 0; i < mesh_cloud_list.size(); i++) {
+            int object_index = Util::find_element_vector(object_list_, mesh_cloud_list[i].object_name);
+            sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], instance_of_object_list_[object_index], 0.002);
+        }
+        cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
+    }
+    else {
+        cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
+        for (int i = 0; i < cloud_multi.size(); i++) {
+            int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
+            int object_index = Util::find_element_vector(object_list_, cloud_multi[i].object_name);
+            cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
+        }
+    }
+    common_msgs::CloudData final_cloud;
+    
     for (int i = 0; i < cloud_multi.size(); i++) {
         anno_srvs::RecordSegmentation record_srv;
         record_srv.request.cloud_data = cloud_multi[i];
         record_srv.request.the_number_of_dataset = the_number_of_dataset_;
         Util::client_request(record_client_, record_srv, record_service_name_);
-        topic_list.push_back(cloud_multi[i].cloud_name + "cloud_multi");
+        visualize_srv.request.cloud_data_list.push_back(cloud_multi[i]);
+        visualize_srv.request.topic_name_list.push_back(cloud_multi[i].tf_name + "_visualize");
+        final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[i]);
         ros::Duration(0.1).sleep();
     }
-    common_srvs::VisualizeCloud visualize_srv;
-    visualize_srv.request.cloud_data_list = cloud_multi;
-    visualize_srv.request.topic_name_list = topic_list;
+    visualize_srv.request.cloud_data_list.push_back(final_cloud);
+    visualize_srv.request.topic_name_list.push_back("final_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
+    ros::Duration(1.5).sleep();
 }

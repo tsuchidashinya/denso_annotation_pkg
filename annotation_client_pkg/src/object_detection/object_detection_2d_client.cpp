@@ -27,13 +27,21 @@ void AnnotationClient::set_paramenter()
     save_base_file_name_ = static_cast<std::string>(param_list["save_base_file_name"]);
     save_dir_ = static_cast<std::string>(param_list["save_dir"]);
     save_dir_ = Util::join(save_dir_, save_base_file_name_);
+    occlusion_object_radious_ = param_list["occlusion_object_radious"];
 }
 
 void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
-    std::vector<common_msgs::ObjectInfo> multi_object, multi_object_first;
+    std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
+    for (int i = 0; i < 30; i++) {
+        common_msgs::ObjectInfo object;
+        object = decide_gazebo_object.make_object_info(i, "HV8");
+        multi_object_all.push_back(object);
+    }
+    multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
+    gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
@@ -43,9 +51,6 @@ void AnnotationClient::main()
         object = decide_gazebo_object.make_object_info(i, "HV8");
         multi_object.push_back(object);
     }
-    multi_object_first = multi_object;
-    multi_object = decide_gazebo_object.get_remove_position(multi_object);
-    gazebo_model_move.set_multi_gazebo_model(multi_object);
     multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(1).sleep();
@@ -59,24 +64,15 @@ void AnnotationClient::main()
     img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
-    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
-    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
+    multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
+    // multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
+    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
     for (int i = 0; i < box_pos.size(); i++) {
         YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
-        if (util_.random_float(0, 1) < 0.03) {
-            float scale_up = util_.random_float(1, 3);
-            yolo_data.w = scale_up * yolo_data.w;
-            yolo_data.h = scale_up * yolo_data.h;
-        }
-        if (util_.random_float(0, 1) < 0.2) {
-            do  {
-                yolo_data.x = yolo_data.x * util_.random_float(0.1, 1.5);
-            } while (yolo_data.x > 1);
-            do  {
-                yolo_data.y = yolo_data.y * util_.random_float(0.1, 1.5);
-            } while (yolo_data.y > 1);
-        }
+        
+        float scale_up = 1.2;
+        yolo_data.w = scale_up * yolo_data.w;
+        yolo_data.h = scale_up * yolo_data.h;
         
         box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
     }
@@ -95,8 +91,5 @@ void AnnotationClient::main()
         box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
     }
     UtilAnno::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
-    multi_object_first = decide_gazebo_object.get_remove_position(multi_object_first);
-    gazebo_model_move.set_multi_gazebo_model(multi_object_first);
-    
 }
 

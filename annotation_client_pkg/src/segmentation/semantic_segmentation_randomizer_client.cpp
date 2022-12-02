@@ -63,7 +63,7 @@ void AnnotationClient::main()
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
     multi_object = Util::delete_empty_object_info(multi_object);
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
+    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
     for (int i = 0; i < box_pos.size(); i++) {
         YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
         if (util_.random_float(0, 1) < 0.03) {
@@ -101,7 +101,7 @@ void AnnotationClient::main()
         record_srv.request.cloud_data = cloud_multi[i];
         record_srv.request.the_number_of_dataset = the_number_of_dataset_;
         Util::client_request(record_client_, record_srv, record_service_name_);
-        topic_list.push_back(cloud_multi[i].cloud_name + "cloud_multi");
+        topic_list.push_back(cloud_multi[i].tf_name + "cloud_multi");
         ros::Duration(0.1).sleep();
     }
     common_srvs::VisualizeCloud visualize_srv;

@@ -14,7 +14,7 @@ void UtilAnno::write_b_box_label(std::vector<common_msgs::BoxPosition> boxes, st
 {
     std::ofstream file(save_file_path);
     for (int i = 0; i < boxes.size(); i++) {
-        file << boxes[i].object_class_name;
+        file << boxes[i].object_name;
         file << " " << boxes[i].x_one << " " << boxes[i].y_one;
         file << " " << boxes[i].x_two << " " << boxes[i].y_two;
         file << std::endl;

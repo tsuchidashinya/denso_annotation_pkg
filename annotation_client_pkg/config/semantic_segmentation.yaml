@@ -7,9 +7,9 @@ annotation_main:
   LEAF_SIZE: 0.002
   radious: 0.05
   the_number_of_dataset: 2000
-  occlusion_object_radious: 0.0035
+  occlusion_object_radious: 0.035
   main_object_name: HV8 
-  quantity_of_main_object: 15
+  quantity_of_main_object: 20
   instance_of_main_object: 1
   other_object_list:
     - object_name: t_pipe

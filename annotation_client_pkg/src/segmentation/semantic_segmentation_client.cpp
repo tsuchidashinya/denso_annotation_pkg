@@ -58,7 +58,7 @@ void AnnotationClient::main()
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
     
     multi_object = instance_drawer_.extract_occuluder(multi_object, 0.04);
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
+    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
     // img = Data3Dto2D::draw_b_box(img, box_pos);
     // cv::resize(img, img, cv::Size(), 0.7, 0.7) ;
     // cv::imshow("window", img);
@@ -76,7 +76,9 @@ void AnnotationClient::main()
     // cloud_multi = instance_drawer_.detect_occuluder(cloud_multi, 1, 20, 0.01);
     
     common_msgs::CloudData sum_cloud;
+    std::vector<std::string> topic_name_list;
     for (int i = 0; i < cloud_multi.size(); i++) {
+        topic_name_list.push_back("cloud_multi_" + std::to_string(i));
         cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], 0);
         cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], 1, 0.002);
     }
