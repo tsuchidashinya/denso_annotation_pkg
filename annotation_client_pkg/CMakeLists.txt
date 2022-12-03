@@ -61,3 +61,8 @@ add_executable(semantic_segmentation_multi_object_client src/segmentation/semant
 target_link_libraries(semantic_segmentation_multi_object_client
   ${catkin_LIBRARIES}
 )
+
+add_executable(find_mesh_error src/find_mesh_error.cpp src/annotation_client_node.cpp)
+target_link_libraries(find_mesh_error
+  ${catkin_LIBRARIES}
+)
