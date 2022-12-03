@@ -10,6 +10,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
+    vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeCloudDelete>(vis_delete_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -20,6 +21,7 @@ void AnnotationClient::set_paramenter()
     pnh_.getParam("annotation_main", param_list);
     nearest_radious_ = param_list["nearest_radious"];
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
+    vis_delete_service_name_ = static_cast<std::string>(param_list["visualize_delete_service_name"]);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
@@ -42,6 +44,8 @@ void AnnotationClient::main()
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeCloud visualize_srv;
+    common_srvs::VisualizeCloudDelete vis_delete_srv;
+
     // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);
     common_msgs::ObjectInfo sensor_object;
@@ -54,6 +58,7 @@ void AnnotationClient::main()
             common_msgs::ObjectInfo object;
             object = decide_gazebo_object.make_object_info(j, object_list_[i]);
             multi_object_all.push_back(object);
+            vis_delete_srv.request.delete_cloud_topic_list.push_back(object.tf_name + "_visualize");
         }
     }
     multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
@@ -128,7 +133,6 @@ void AnnotationClient::main()
         }
     }
     common_msgs::CloudData final_cloud;
-    
     for (int i = 0; i < cloud_multi.size(); i++) {
         anno_srvs::RecordSegmentation record_srv;
         record_srv.request.cloud_data = cloud_multi[i];
@@ -137,10 +141,10 @@ void AnnotationClient::main()
         visualize_srv.request.cloud_data_list.push_back(cloud_multi[i]);
         visualize_srv.request.topic_name_list.push_back(cloud_multi[i].tf_name + "_visualize");
         final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[i]);
-        ros::Duration(0.1).sleep();
+        ros::Duration(0.01).sleep();
     }
+    Util::client_request(vis_delete_client_, vis_delete_srv, vis_delete_service_name_);
     visualize_srv.request.cloud_data_list.push_back(final_cloud);
     visualize_srv.request.topic_name_list.push_back("final_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
-    ros::Duration(1.5).sleep();
 }

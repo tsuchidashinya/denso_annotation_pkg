@@ -2,7 +2,7 @@
 <launch>
     <arg name="sim_or_real" default="sim"/>
     
-    <node pkg="mesh_cloud_package" type="mesh_cloud" name="mesh_cloud" output="screen">
+    <node pkg="mesh_cloud_package" type="mesh_cloud" name="mesh_cloud">
         <rosparam file="$(find mesh_cloud_package)/config/mesh_cloud.yaml" command="load" />
         <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
     </node>
@@ -18,7 +18,7 @@
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
-    <node pkg="visualize_package" type="visualize_server" name="visualize_server">
+    <node pkg="visualize_package" type="visualize_server" name="visualize_server" output="screen">
         <rosparam file="$(find visualize_package)/config/visualize_server.yaml" command="load" />
         <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
     </node>
