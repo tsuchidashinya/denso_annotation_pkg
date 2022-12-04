@@ -45,7 +45,7 @@ void AnnotationClient::main()
         DecidePosition decide_gazebo_object;
         GazeboMoveServer gazebo_model_move(nh_);
         std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             for (int i = 0; i < object_list_.size(); i++) {
                 for (int j = 0; j < quantity_of_object_list_[i]; j++) {
                     common_msgs::ObjectInfo object;
