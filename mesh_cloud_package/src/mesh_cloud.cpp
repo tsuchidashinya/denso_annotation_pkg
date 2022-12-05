@@ -16,53 +16,51 @@ MeshCloudServer::MeshCloudServer(ros::NodeHandle &nh)
 
 bool MeshCloudServer::service_callback(anno_srvs::MeshCloudServiceRequest &request, anno_srvs::MeshCloudServiceResponse &response)
 {
-    MeshOutType out_data;
-    out_data = make_mesh(request);
-    response.mesh = out_data.mesh_data;
-    response.pose = out_data.pose_data;
+    for (int i = 0; i < request.multi_object_info.size(); i++) {
+        pcl::PointCloud<PclXyz> mesh_data;
+        int index = Util::find_element_vector(mesh_name_list_, request.multi_object_info[i].object_name);
+        if (index == -1) {
+            mesh_data = create_mesh(request.multi_object_info[i].object_name);
+            mesh_name_list_.push_back(request.multi_object_info[i].object_name);
+            mesh_stack_list_.push_back(mesh_data);
+        }
+        else {
+            mesh_data = mesh_stack_list_[index];
+        }
+        mesh_data = transform_mesh(mesh_data, request.multi_object_info[i].tf_name);
+        common_msgs::CloudData mesh_cloud = UtilMsgData::pcl_to_cloudmsg(mesh_data);
+        mesh_cloud.object_name = request.multi_object_info[i].object_name;
+        mesh_cloud.tf_name = request.multi_object_info[i].tf_name;
+        response.mesh.push_back(mesh_cloud);
+        tf::StampedTransform sensor_to_object;
+        sensor_to_object = Util::make_stamped_trans(tf_func_.tf_listen(request.multi_object_info[i].tf_name, sensor_frame_));
+        response.pose.push_back(stamped_to_pose(sensor_to_object));
+    }
     return true;
 }
 
-MeshOutType MeshCloudServer::make_mesh(anno_srvs::MeshCloudServiceRequest request)
+pcl::PointCloud<PclXyz> MeshCloudServer::create_mesh(std::string object_name)
 {
-    int tf_name_size = request.multi_object_info.size();
-    MeshOutType out_data;
-    out_data.mesh_data.resize(tf_name_size);
-    out_data.pose_data.resize(tf_name_size);
-    std::vector<pcl::PointCloud<PclXyz>> mesh_pcl_list;
-    mesh_pcl_list.resize(tf_name_size);
-    for (int i = 0; i < tf_name_size; i++)
-    {
-        pcl::PolygonMesh mesh;
-        std::string mesh_path = ros::package::getPath("mesh_cloud_package");
-        mesh_path = Util::join(mesh_path, "mesh");
-        mesh_path = Util::join(mesh_path, request.multi_object_info[i].object_name + ".stl");
-        // Util::message_show("load_poligon_before", "ok");
-        pcl::io::loadPolygonFileSTL(mesh_path, mesh);
-        vtkSmartPointer<vtkPolyData> polydata = vtkSmartPointer<vtkPolyData>::New();
-        // Util::message_show("mesh2vtk", "ok");
-        pcl::io::mesh2vtk(mesh, polydata);
-        // Util::message_show("uniform_sampling", "ok");
-        uniform_sampling(polydata, sample_points, mesh_pcl_list[i]);
-        // Util::message_show("mesh_pcl_size", mesh_pcl_list[i].points.size());
-        tf::StampedTransform sensor_to_world, world_to_object, sensor_to_object;
-        // Util::message_show("make_stamped_trans", "ok");
-        world_to_object = Util::make_stamped_trans(tf_func_.tf_listen(request.multi_object_info[i].tf_name, world_frame_));
-        // Util::message_show("tf_multi_name", request.multi_object_info[i].tf_name);
-        // Util::message_show("pcl_ros_1", "ok");
-        pcl_ros::transformPointCloud(mesh_pcl_list[i], mesh_pcl_list[i], world_to_object);
-        // Util::message_show("pcl_ros_2", "ok");
-        sensor_to_world = Util::make_stamped_trans(tf_func_.tf_listen(world_frame_, sensor_frame_));
-        // TfFunction::tf_data_show(tf_func_.tf_listen(world_frame_, sensor_frame_), "tf_sensor_name");
-        pcl_ros::transformPointCloud(mesh_pcl_list[i], mesh_pcl_list[i], sensor_to_world);
-        // Util::message_show("make_stamped_trams", "ok");
-        sensor_to_object = Util::make_stamped_trans(tf_func_.tf_listen(request.multi_object_info[i].tf_name, sensor_frame_));
-        out_data.pose_data[i] = stamped_to_pose(sensor_to_object);
-        out_data.mesh_data[i] = UtilMsgData::pcl_to_cloudmsg(mesh_pcl_list[i]);
-        out_data.mesh_data[i].tf_name = request.multi_object_info[i].tf_name;
-        out_data.mesh_data[i].object_name = request.multi_object_info[i].object_name;
-    }   
-    return out_data;
+    pcl::PointCloud<PclXyz> outdata;
+    pcl::PolygonMesh mesh_polygon;
+    std::string mesh_path = ros::package::getPath("mesh_cloud_package");
+    mesh_path = Util::join(mesh_path, "mesh");
+    mesh_path = Util::join(mesh_path, object_name + ".stl");
+    pcl::io::loadPolygonFileSTL(mesh_path, mesh_polygon);
+    vtkSmartPointer<vtkPolyData> polydata = vtkSmartPointer<vtkPolyData>::New();
+    pcl::io::mesh2vtk(mesh_polygon, polydata);
+    uniform_sampling(polydata, sample_points, outdata);
+    return outdata;
+}
+
+pcl::PointCloud<PclXyz> MeshCloudServer::transform_mesh(pcl::PointCloud<PclXyz> mesh_data, std::string tf_name)
+{
+    tf::StampedTransform sensor_to_world, world_to_object;
+    world_to_object = Util::make_stamped_trans(tf_func_.tf_listen(tf_name, world_frame_));
+    pcl_ros::transformPointCloud(mesh_data, mesh_data, world_to_object);
+    sensor_to_world = Util::make_stamped_trans(tf_func_.tf_listen(world_frame_, sensor_frame_));
+    pcl_ros::transformPointCloud(mesh_data, mesh_data, sensor_to_world);
+    return mesh_data;
 }
 
 common_msgs::PoseData MeshCloudServer::stamped_to_pose(tf::StampedTransform tf_stamped)

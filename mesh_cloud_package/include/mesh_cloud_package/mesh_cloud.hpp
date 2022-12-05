@@ -24,7 +24,8 @@ class MeshCloudServer
 public:
     MeshCloudServer(ros::NodeHandle &);
     void set_parameter();
-    MeshOutType make_mesh(anno_srvs::MeshCloudServiceRequest);
+    pcl::PointCloud<PclXyz> create_mesh(std::string);
+    pcl::PointCloud<PclXyz> transform_mesh(pcl::PointCloud<PclXyz>, std::string);
     bool service_callback(anno_srvs::MeshCloudServiceRequest &, anno_srvs::MeshCloudServiceResponse &);
     common_msgs::PoseData stamped_to_pose(tf::StampedTransform);
     XmlRpc::XmlRpcValue param_list;
@@ -34,6 +35,8 @@ private:
     ros::ServiceServer server_, visual_server_;
     ros::Timer timer_;
     std::string world_frame_, mesh_service_name_, sensor_frame_;
+    std::vector<std::string> mesh_name_list_;
+    std::vector<pcl::PointCloud<PclXyz>> mesh_stack_list_;
     int sample_points;
     TfFunction tf_func_;
     double LEAF_SIZE_;
