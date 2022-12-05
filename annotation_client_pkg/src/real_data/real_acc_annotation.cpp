@@ -75,6 +75,8 @@ void AnnotationClient::main()
             common_srvs::VisualizeCloud visual_srv;
             visual_srv.request.cloud_data_list.push_back(ano_copy_data);
             visual_srv.request.topic_name_list.push_back("ano_copy_data");
+            visual_srv.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
+            visual_srv.request.topic_name_list.push_back("mesh_data");
             Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
             if (key_tf.quit) {
                 ano_data = ano_copy_data;
