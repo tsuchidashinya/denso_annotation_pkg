@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-    <node pkg="annotation_client_pkg" type="find_mesh_error" name="find_mesh_error" output="screen">
-        <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
-        <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
-    </node>
-
-</launch>
