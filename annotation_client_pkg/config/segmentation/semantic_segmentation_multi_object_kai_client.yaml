@@ -25,8 +25,8 @@ annotation_main:
   
 decide_object_position:
   sensor_name: phoxi_camera
-  sensor_angle_max: 0.087
-  sensor_angle_min: 0.087
+  sensor_angle_max: 0.3
+  sensor_angle_min: -0.3
   sensor_distance_min: 0.8
   sensor_distance_max: 1.5
   z_position: 0.003

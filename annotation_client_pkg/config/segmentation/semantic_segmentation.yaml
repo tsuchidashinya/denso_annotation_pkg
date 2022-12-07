@@ -1,0 +1,45 @@
+annotation_main:
+  visualize_service_name: visualize_cloud_service
+  visualize_delete_service_name: visualize_delete_service
+  sensor_service_name: sensor_service
+  mesh_service_name: mesh_service
+  record_service_name: record_segmentation_service
+  nearest_radious: 0.002
+  LEAF_SIZE: 0.002
+  radious: 0.05
+  the_number_of_dataset: 2000
+  occlusion_object_radious: 0.045
+  main_object_name: HV8 
+  quantity_of_main_object: 34
+  instance_of_main_object: 1
+  other_object_list:
+    - object_name: t_pipe
+      quantity_of_the_object: 2
+      instance_of_the_object: 2
+    - object_name: HV7
+      quantity_of_the_object: 2
+      instance_of_the_object: 3
+
+
+
+  
+decide_object_position:
+  sensor_name: phoxi_camera
+  sensor_angle_max: 0.3
+  sensor_angle_min: -0.3
+  sensor_distance_min: 0.8
+  sensor_distance_max: 1.2
+  z_position: 0.003
+  box_height: 0.01
+  box_name: denso_box
+  object_height: 0.15
+  radious: 0.05
+
+data_transform_pkg:
+  f_scale: 0.5
+  cx_scale: 0.99
+  cy_scale: 0.9
+
+data_3D_to_2D:
+  radious_x: 0.05
+  radious_y: 0.05
