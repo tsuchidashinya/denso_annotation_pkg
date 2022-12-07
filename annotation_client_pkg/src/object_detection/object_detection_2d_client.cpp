@@ -90,6 +90,6 @@ void AnnotationClient::main()
     for (int i = 0; i < box_pos.size(); i++) {
         box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
     }
-    UtilAnno::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
+    Util::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
 }
 
