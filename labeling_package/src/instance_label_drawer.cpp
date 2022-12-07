@@ -119,7 +119,7 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
             if (dis < 2 * radious) {
                 if (trans_get.translation.z > occluder_list[k].trans.translation.z) {
                     // occluder_list.erase(occluder_list.begin() + k);
-                    delete_list.push_back(k);
+                    delete_list.push_back(occluder_list[k].index);
                 }
                 else {
                     collision = 1;
@@ -127,10 +127,23 @@ std::vector<ObjectTfNameType> InstanceLabelDrawer::detect_occuluder(std::vector<
                 }
             }
         }
+        // std::cout << "occuluder_list: ";
+        // for (int i = 0; i < occluder_list.size(); i++) {
+        //        std::cout << occluder_list[i].index << " "; 
+        // }
+        // std::cout << std::endl;
+        // std::cout << "delete_list: ";
         for (int i = 0; i < delete_list.size(); i++) {
-            if (delete_list[i] < occluder_list.size() - 1)
-                occluder_list.erase(occluder_list.begin() + delete_list[i]);
+            // std::cout << delete_list[i] << " ";
+            for (int j = 0; j < occluder_list.size(); j++) {
+                int index = 0;
+                if (occluder_list[j].index == delete_list[i]) {
+                    occluder_list.erase(occluder_list.begin() + j);
+                    break;
+                }
+            }
         }
+        // std::cout << std::endl;
         
         if (collision == 0) {
             ObjectTfNameType object;

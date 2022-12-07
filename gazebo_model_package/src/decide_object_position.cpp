@@ -143,10 +143,15 @@ common_msgs::ObjectInfo DecidePosition::get_sensor_position()
     common_msgs::ObjectInfo outdata;
     double angle = util.random_float(sensor_angle_min_, sensor_angle_max_);
     double sensor_distance = util.random_float(sensor_distance_min_, sensor_distance_max_);
-    double x = sensor_distance * sin(angle);
-    double y = 0;
-    double z = sensor_distance * cos(angle);
-    tf2::Quaternion quaternion = TfFunction::rotate_xyz_make(0, angle, 0);
+    double x, y, z;
+    tf2::Quaternion quaternion;
+    
+    x = sensor_distance * sin(angle);
+    y = 0;
+    z = sensor_distance * cos(angle);
+    quaternion = TfFunction::rotate_xyz_make(0, angle, 0);
+    
+    
     outdata.position = TfFunction::make_geo_transform(x, y, z, quaternion);
     outdata.object_name = sensor_name_;
     outdata.tf_name = sensor_name_;
