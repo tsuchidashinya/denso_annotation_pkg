@@ -7,9 +7,9 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordAcc>(record_service_name_);
+    record_client_ = nh_.serviceClient<common_srvs::RecordAcc>(record_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -82,7 +82,7 @@ void AnnotationClient::main()
         
     //     box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
     // }
-    anno_srvs::MeshCloudService mesh_srv;
+    common_srvs::MeshCloudService mesh_srv;
     mesh_srv.request.multi_object_info = multi_object;
     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_cloud_list = mesh_srv.response.mesh;
@@ -97,14 +97,14 @@ void AnnotationClient::main()
     // std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     // std::vector<std::string> topic_list;
     // for (int i = 0; i < cloud_multi.size(); i++) {
-    //     anno_srvs::RecordSegmentation record_srv;
+    //     common_srvs::RecordSegmentation record_srv;
     //     record_srv.request.cloud_data = cloud_multi[i];
     //     record_srv.request.the_number_of_dataset = the_number_of_dataset_;
     //     Util::client_request(record_client_, record_srv, record_service_name_);
     //     topic_list.push_back(cloud_multi[i].cloud_name + "cloud_multi");
     //     ros::Duration(0.1).sleep();
     // }
-    anno_srvs::RecordAcc record_srv;
+    common_srvs::RecordAcc record_srv;
     record_srv.request.camera_info = cinfo_list;
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = mesh_srv.response.pose;

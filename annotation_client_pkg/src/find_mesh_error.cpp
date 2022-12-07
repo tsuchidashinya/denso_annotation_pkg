@@ -7,9 +7,9 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
+    record_client_ = nh_.serviceClient<common_srvs::RecordSegmentation>(record_service_name_);
     vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeCloudDelete>(vis_delete_service_name_);
 }
 
@@ -58,7 +58,7 @@ void AnnotationClient::main()
         
         
         multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
-        anno_srvs::MeshCloudService mesh_srv;
+        common_srvs::MeshCloudService mesh_srv;
         mesh_srv.request.multi_object_info = multi_object_all;
         Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     }

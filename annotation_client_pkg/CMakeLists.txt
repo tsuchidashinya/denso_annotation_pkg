@@ -20,7 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
 #  LIBRARIES annotation_client_pkg
-#  CATKIN_DEPENDS anno_msgs anno_srvs common_msgs common_srvs cv_bridge pcl_ros roscpp
+#  CATKIN_DEPENDS common_msgs common_srvs cv_bridge pcl_ros roscpp
 #  DEPENDS system_lib
 )
 

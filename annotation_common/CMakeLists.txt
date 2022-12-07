@@ -8,7 +8,7 @@ project(annotation_common)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  anno_srvs
+  common_srvs
   util
 )
 
@@ -18,8 +18,8 @@ catkin_python_setup()
 
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES util_anno
- CATKIN_DEPENDS anno_srvs util
+#  LIBRARIES util_anno
+ CATKIN_DEPENDS common_srvs util
 #  DEPENDS system_lib
 )
 

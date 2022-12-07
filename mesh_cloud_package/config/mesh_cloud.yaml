@@ -1,3 +1,0 @@
-mesh_cloud:
-  sample_points: 100000
-  mesh_service_name: mesh_service

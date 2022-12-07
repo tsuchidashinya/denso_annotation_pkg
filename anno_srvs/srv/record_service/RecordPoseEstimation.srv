@@ -1,5 +1,0 @@
-common_msgs/CloudData cloud_data 
-common_msgs/PoseData[] pose_datas
-int32 the_number_of_dataset
----
-bool ok

@@ -7,9 +7,9 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordRealSensorData>(record_service_name_);
+    record_client_ = nh_.serviceClient<common_srvs::RecordRealSensorData>(record_service_name_);
     vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
 }
 
@@ -35,7 +35,7 @@ void AnnotationClient::main()
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
-    anno_srvs::RecordRealSensorData record_srv;
+    common_srvs::RecordRealSensorData record_srv;
     record_srv.request.camera_info = cinfo_list;
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.cloud_data = sensor_cloud;

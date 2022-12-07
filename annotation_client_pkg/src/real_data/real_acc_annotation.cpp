@@ -7,9 +7,9 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordAcc>(record_service_name_);
+    record_client_ = nh_.serviceClient<common_srvs::RecordAcc>(record_service_name_);
     tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
 }
 
@@ -68,7 +68,7 @@ void AnnotationClient::main()
             common_msgs::ObjectInfo mesh_input;
             mesh_input.object_name = object_list_[0];
             mesh_input.tf_name = tf_name_list[i];
-            anno_srvs::MeshCloudService mesh_srv;
+            common_srvs::MeshCloudService mesh_srv;
             mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
@@ -83,7 +83,7 @@ void AnnotationClient::main()
             }
         }
     }
-    anno_srvs::RecordAcc record_srv;
+    common_srvs::RecordAcc record_srv;
     record_srv.request.camera_info = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = pose_list;
