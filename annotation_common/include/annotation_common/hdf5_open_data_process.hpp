@@ -4,8 +4,8 @@
 #include <common_srvs/VisualizeCloud.h>
 #include <common_srvs/VisualizeSensorPC2.h>
 #include <common_srvs/Hdf5OpenService.h>
-#include <common_srvs/RecordAcc.h>
-#include <common_srvs/RecordSegmentation.h>
+#include <common_srvs/Hdf5RecordAcc.h>
+#include <common_srvs/Hdf5RecordSegmentation.h>
 #include <tf_package/tf_function.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -22,9 +22,9 @@ public:
 private:
     ros::NodeHandle nh_, pnh_;
     ros::ServiceClient sensor_client_, object_detect_client_, visualize_client_, cloud_network_client_, accuracy_client_, 
-    hdf5_open_client_, vis_image_client_, hdf5_record_client_;
+    hdf5_open_client_, vis_image_client_, hdf5_hdf5_record_client_;
     std::string sensor_service_name_, object_detect_service_name_, visualize_service_name_,
-    cloud_network_service_name_, accuracy_service_name_, hdf5_open_service_name_, vis_image_service_name_, hdf5_record_service_name_;
+    cloud_network_service_name_, accuracy_service_name_, hdf5_open_service_name_, vis_image_service_name_, hdf5_hdf5_record_service_name_;
     std::string world_frame_, sensor_frame_;
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;

@@ -9,7 +9,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
     mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<common_srvs::RecordSegmentation>(record_service_name_);
+    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSegmentation>(hdf5_record_service_name_);
     vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeCloudDelete>(vis_delete_service_name_);
 }
 
@@ -24,7 +24,7 @@ void AnnotationClient::set_paramenter()
     vis_delete_service_name_ = static_cast<std::string>(param_list["visualize_delete_service_name"]);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
-    record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
+    hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
     occlusion_object_radious_ = param_list["occlusion_object_radious"];
@@ -134,10 +134,10 @@ void AnnotationClient::main()
 
     common_msgs::CloudData final_cloud;
     for (int i = 0; i < cloud_multi.size(); i++) {
-        common_srvs::RecordSegmentation record_srv;
+        common_srvs::Hdf5RecordSegmentation record_srv;
         record_srv.request.cloud_data = cloud_multi[i];
         record_srv.request.the_number_of_dataset = the_number_of_dataset_;
-        Util::client_request(record_client_, record_srv, record_service_name_);
+        Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
         visualize_srv.request.cloud_data_list.push_back(cloud_multi[i]);
         visualize_srv.request.topic_name_list.push_back(cloud_multi[i].tf_name + "_visualize");
         final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[i]);
