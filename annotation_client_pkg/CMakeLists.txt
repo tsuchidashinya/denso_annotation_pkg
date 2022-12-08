@@ -57,6 +57,15 @@ target_link_libraries(real_acc_annotation
   ${catkin_LIBRARIES}
 )
 
+add_executable(real_acc_annotation_from_hdf5_acc src/acc/real_acc_annotation_from_hdf5_acc.cpp src/annotation_client_node.cpp)
+target_link_libraries(real_acc_annotation_from_hdf5_acc
+  ${catkin_LIBRARIES}
+)
+
+add_executable(real_acc_annotation_from_hdf5_sensor src/acc/real_acc_annotation_from_hdf5_sensor.cpp src/annotation_client_node.cpp)
+target_link_libraries(real_acc_annotation_from_hdf5_sensor
+  ${catkin_LIBRARIES}
+)
 add_executable(semantic_segmentation_multi_object_client src/segmentation/semantic_segmentation_multi_object_client.cpp src/annotation_client_node.cpp)
 target_link_libraries(semantic_segmentation_multi_object_client
   ${catkin_LIBRARIES}

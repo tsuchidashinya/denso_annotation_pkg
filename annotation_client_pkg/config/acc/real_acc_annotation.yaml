@@ -5,8 +5,6 @@ annotation_main:
   hdf5_record_service_name: record_acc_service
   tf_br_service_name: tf_broadcast_service
   nearest_radious: 0.002
-  LEAF_SIZE: 0.001
-  radious: 0.05
   xyz_step: 0.003
   qxyz_step: 0.01
   main_object_name: HV8

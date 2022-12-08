@@ -11,7 +11,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
     tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
-    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenRealPhoxiService>(hdf5_open_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenService>(hdf5_open_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -37,16 +37,30 @@ void AnnotationClient::main()
     int the_number_of_object, data_index;
     ROS_INFO_STREAM("What index of hdf5 data do you want to get?");
     std::cin >> data_index;
-    common_srvs::Hdf5OpenRealPhoxiService hdf5_open_sensor_srv;
-    hdf5_open_sensor_srv.request.index = data_index;
-    Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
-    common_msgs::CloudData ano_data = hdf5_open_sensor_srv.response.cloud_data, ano_copy_data;
+    common_srvs::Hdf5OpenService hdf5_open_srv;
+    hdf5_open_srv.request.index = data_index;
+    Util::client_request(hdf5_open_client_, hdf5_open_srv, hdf5_open_service_name_);
+    common_msgs::CloudData ano_data = hdf5_open_srv.response.cloud_data, ano_copy_data;
     ano_copy_data = ano_data;
     ROS_INFO_STREAM("How many object do you set?");
     std::cin >> the_number_of_object;
     std::vector<std::string> tf_name_list;
     tf_name_list.resize(the_number_of_object);
-    std::vector<common_msgs::PoseData> pose_list;
+    std::vector<common_msgs::PoseData> pose_list, pose_hdf5_open_list;
+    pose_hdf5_open_list = hdf5_open_srv.response.pose_data;
+    for (int i = 0; i < pose_hdf5_open_list.size(); i++) {
+        geometry_msgs::TransformStamped trans_stamp;
+        geometry_msgs::Transform trans_ori, trans_add;
+        trans_ori = UtilMsgData::posedata_to_transform(pose_hdf5_open_list[i]);
+        trans_add = tf_func_.tf_listen(sensor_frame_, world_frame_);
+        trans_stamp.transform = TfFunction::change_tf_frame_by_rotate(trans_ori, trans_add);
+        trans_stamp.header.frame_id = world_frame_;
+        trans_stamp.child_frame_id = "tf_" + std::to_string(i);
+        common_srvs::TfBroadcastService tf_srv;
+        tf_srv.request.broadcast_tf = trans_stamp;
+        tf_srv.request.tf_name = trans_stamp.child_frame_id;
+        Util::client_request(tf_br_client_, tf_srv, tf_br_service_name_);
+    }
     pose_list.resize(the_number_of_object);
     for (int i = 0; i < the_number_of_object; i++) {
         ROS_INFO_STREAM("What tf name you move?");
@@ -87,8 +101,8 @@ void AnnotationClient::main()
         }
     }
     common_srvs::Hdf5RecordAcc record_srv;
-    record_srv.request.camera_info = hdf5_open_sensor_srv.response.camera_info;
-    record_srv.request.image = hdf5_open_sensor_srv.response.image;
+    record_srv.request.camera_info = hdf5_open_srv.response.camera_info;
+    record_srv.request.image = hdf5_open_srv.response.image;
     record_srv.request.pose_data_list = pose_list;
     record_srv.request.cloud_data = ano_data;
     record_srv.request.the_number_of_dataset = the_number_of_dataset_;
