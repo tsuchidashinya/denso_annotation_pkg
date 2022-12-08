@@ -11,6 +11,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
     tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenService>(hdf5_open_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -24,6 +25,7 @@ void AnnotationClient::set_paramenter()
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
+    hdf5_open_service_name_ = static_cast<std::string>(param_list["hdf5_open_service_name"]);
     tf_br_service_name_ = static_cast<std::string>(param_list["tf_br_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];

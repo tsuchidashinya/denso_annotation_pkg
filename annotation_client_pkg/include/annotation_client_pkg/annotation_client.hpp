@@ -9,6 +9,8 @@
 #include <common_srvs/VisualizeCloudDelete.h>
 #include <common_srvs/Hdf5RecordSegmentation.h>
 #include <common_srvs/Hdf5RecordAcc.h>
+#include <common_srvs/Hdf5OpenService.h>
+#include <common_srvs/Hdf5OpenRealPhoxiService.h>
 #include <gazebo_model_package/decide_object_position.hpp>
 #include <gazebo_model_package/gazebo_model_move.hpp>
 #include <tf_package/tf_function.hpp>
