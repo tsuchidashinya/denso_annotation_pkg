@@ -66,11 +66,6 @@ void AnnotationClient::main()
         object = decide_gazebo_object.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
     }
-    // for (int i = 0; i < 8; i++) {
-    //     common_msgs::ObjectInfo object;
-    //     object = decide_gazebo_object.make_object_info(i, object_list_[0]);
-    //     multi_object.push_back(object);
-    // }
     if (util_.random_float(0, 1) < 0.15) {
         for (int i = 1; i < object_list_.size(); i++) {
             for (int j = 0; j < util_.random_int(1, quantity_of_object_list_[i]); j++) {

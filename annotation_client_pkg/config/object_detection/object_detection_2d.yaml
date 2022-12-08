@@ -1,11 +1,5 @@
 annotation_main:
-  visualize_service_name: visualize_cloud_service
   sensor_service_name: sensor_service
-  mesh_service_name: mesh_service
-  record_service_name: record_segmentation_service
-  nearest_radious: 0.002
-  LEAF_SIZE: 0.002
-  radious: 0.05
   the_number_of_dataset: 1000
   save_base_file_name: object_bbox
   occlusion_object_radious: 0.038

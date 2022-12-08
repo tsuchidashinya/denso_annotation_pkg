@@ -25,4 +25,7 @@
     <node pkg="hdf5_package" type="hdf5_record_server.py" name="hdf5_record_server">
         <rosparam file="$(find annotation_server_pkg)/config/annotation_server.yaml" command="load" />
     </node>
+    <node pkg="tf_package" type="tf_broadcast_server" name="tf_broadcast_server">
+        <rosparam file="$(find tf_package)/config/tf_broadcast_server.yaml" command="load" ns="" />
+    </node>
 </launch>

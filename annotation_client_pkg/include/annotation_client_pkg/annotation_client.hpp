@@ -18,6 +18,7 @@
 #include <data_transform_pkg/data_2D_to_3D.hpp>
 #include <data_transform_pkg/func_data_convertion.hpp>
 #include <opencv2/opencv.hpp>
+#include <std_msgs/Empty.h>
 
 class AnnotationClient
 {
@@ -44,6 +45,7 @@ private:
     UtilMsgData util_msg_data_;
     Util util_;
     InstanceLabelDrawer instance_drawer_;
+    ros::Publisher domain_randomize_pub_;
     double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;
     double xyz_step_, qxyz_step_;
     double nearest_radious_, occlusion_object_radious_;
