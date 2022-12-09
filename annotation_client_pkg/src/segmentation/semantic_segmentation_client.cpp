@@ -7,9 +7,9 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordSegmentation>(record_service_name_);
+    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSegmentation>(hdf5_record_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -22,7 +22,7 @@ void AnnotationClient::set_paramenter()
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
-    record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
+    hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
 
 }
@@ -63,7 +63,7 @@ void AnnotationClient::main()
     // cv::resize(img, img, cv::Size(), 0.7, 0.7) ;
     // cv::imshow("window", img);
     // cv::waitKey(1000);
-    anno_srvs::MeshCloudService mesh_srv;
+    common_srvs::MeshCloudService mesh_srv;
     mesh_srv.request.multi_object_info = multi_object;
     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_clouds = mesh_srv.response.mesh;
@@ -83,10 +83,10 @@ void AnnotationClient::main()
         cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], 1, 0.002);
     }
     for (int i = 0; i < cloud_multi.size(); i++) {
-        anno_srvs::RecordSegmentation record_srv;
+        common_srvs::Hdf5RecordSegmentation record_srv;
         record_srv.request.cloud_data = cloud_multi[i];
         record_srv.request.the_number_of_dataset = the_number_of_dataset_;
-        Util::client_request(record_client_, record_srv, record_service_name_);
+        Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
         ros::Duration(0.1).sleep();
     }
     common_srvs::VisualizeCloud visualize_srv;

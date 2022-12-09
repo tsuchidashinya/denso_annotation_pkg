@@ -1,21 +1,27 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="mode" default="random_bbox"/>
-    <group if="$(eval mode=='plane')">
+    <group if="$(eval mode=='normal')">
         <node pkg="annotation_client_pkg" type="semseg" name="semseg" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
-    <group if="$(eval mode=='random_bbox')">
+    <group if="$(eval mode=='random_b_box')">
         <node pkg="annotation_client_pkg" type="semseg_randomizer" name="semseg_randomizer" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval mode=='multi_object')">
         <node pkg="annotation_client_pkg" type="semantic_segmentation_multi_object_client" name="semantic_segmentation_multi_object_client" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/semantic_segmentation.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
+            <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+        </node>
+    </group>
+    <group if="$(eval mode=='multi_object_kai')">
+        <node pkg="annotation_client_pkg" type="semantic_segmentation_multi_object_kai_client" name="semantic_segmentation_multi_object_client" output="screen">
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation_multi_object_kai_client.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>

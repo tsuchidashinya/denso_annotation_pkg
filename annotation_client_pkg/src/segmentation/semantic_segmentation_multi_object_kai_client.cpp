@@ -46,8 +46,6 @@ void AnnotationClient::main()
     common_srvs::VisualizeCloud visualize_srv;
     common_srvs::VisualizeCloudDelete vis_delete_srv;
 
-    // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
-    // gazebo_model_move.set_gazebo_model(sensor_pos_info);
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
@@ -79,7 +77,7 @@ void AnnotationClient::main()
     }
     multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
-    ros::Duration(1.5).sleep();
+    ros::Duration(0.5).sleep();
     
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
@@ -98,40 +96,42 @@ void AnnotationClient::main()
     mesh_srv.request.multi_object_info = multi_object;
     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_cloud_list = mesh_srv.response.mesh;
-    // for (int i = 0; i < mesh_cloud_list.size(); i++) {
-    //     visualize_srv.request.cloud_data = mesh_cloud_list[i]);
-    //     visualize_srv.request.topic_name_list.push_back(mesh_cloud_list[i].tf_name + "_mesh");
-    // }
-    // Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi;
-    if (util_.random_float(0, 1) < 0.2) {
-        for (int i = 0; i < box_pos.size(); i++) {
-            YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
-            if (util_.random_float(0, 1) < 0.2) {
-                float scale_up = util_.random_float(1.5, 3);
-                yolo_data.w = scale_up * yolo_data.w;
-                yolo_data.h = scale_up * yolo_data.h;
-            }
-            box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
+
+    for (int i = 0; i < box_pos.size(); i++) {
+        YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
+        if (util_.random_float(0, 1) < 0.2) {
+            float scale_up = util_.random_float(0.8, 1.2);
+            yolo_data.w = scale_up * yolo_data.w;
+            yolo_data.h = scale_up * yolo_data.h;
         }
-        for (int i = 0; i < mesh_cloud_list.size(); i++) {
-            int object_index = Util::find_element_vector(object_list_, mesh_cloud_list[i].object_name);
-            sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], instance_of_object_list_[object_index], 0.002);
-        }
-        cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
+        // if (util_.random_float(0, 1) < 1) {
+        //     float scale_up = util_.random_float(0.8, 1.2);
+        //     if (util_.random_float(0, 1) < 0.33) {
+        //         yolo_data.x = scale_up * yolo_data.x;
+        //     }
+        //     else if (util_.random_float(0, 1) < 0.67) {
+        //         yolo_data.y = scale_up * yolo_data.y;
+        //     }
+        //     else {
+        //         yolo_data.x = scale_up * yolo_data.x;
+        //         yolo_data.y = scale_up * yolo_data.y;
+        //     }
+
+        // }
+        box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
     }
-    else {
-        cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
-        for (int i = 0; i < cloud_multi.size(); i++) {
-            int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
-            int object_index = Util::find_element_vector(object_list_, cloud_multi[i].object_name);
-            cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
-        }
+    cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
+    for (int i = 0; i < cloud_multi.size(); i++) {
+        int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
+        int object_index = Util::find_element_vector(object_list_, cloud_multi[i].object_name);
+        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
     }
+
     common_msgs::CloudData final_cloud;
     for (int i = 0; i < cloud_multi.size(); i++) {
         common_srvs::Hdf5RecordSegmentation record_srv;

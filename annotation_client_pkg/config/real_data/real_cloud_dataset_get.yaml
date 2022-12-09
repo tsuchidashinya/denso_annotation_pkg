@@ -1,0 +1,7 @@
+annotation_main:
+  visualize_service_name: visualize_cloud_service
+  visualize_image_service_name: visualize_image_service
+  sensor_service_name: sensor_service
+  hdf5_record_service_name: record_real_sensor_data_service
+  radious: 0.05
+  the_number_of_dataset: 10  

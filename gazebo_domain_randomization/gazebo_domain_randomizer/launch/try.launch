@@ -1,6 +1,6 @@
 <launch>
-    <arg name="model_name"  default="object_box"/>
-    <arg name="event_mode" default="timer" />
+    <arg name="model_name"  default="denso_box"/>
+    <arg name="event_mode" default="trigger" />
     <arg name="gazebo_ns" default="/gazebo" />
     <arg name="gazebo_gui_ns" default="/gazebo_gui" />
     <group ns="randomizers">

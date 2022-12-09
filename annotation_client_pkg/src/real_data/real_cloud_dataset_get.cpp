@@ -7,9 +7,9 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<anno_srvs::MeshCloudService>(mesh_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    record_client_ = nh_.serviceClient<anno_srvs::RecordRealSensorData>(record_service_name_);
+    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordRealSensorData>(hdf5_record_service_name_);
     vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
 }
 
@@ -21,7 +21,7 @@ void AnnotationClient::set_paramenter()
     pnh_.getParam("annotation_main", param_list);
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
     sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
-    record_service_name_ = static_cast<std::string>(param_list["record_service_name"]);
+    hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     vis_img_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
 }
@@ -35,12 +35,12 @@ void AnnotationClient::main()
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
-    anno_srvs::RecordRealSensorData record_srv;
+    common_srvs::Hdf5RecordRealSensorData record_srv;
     record_srv.request.camera_info = cinfo_list;
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.cloud_data = sensor_cloud;
     record_srv.request.the_number_of_dataset = the_number_of_dataset_;
-    Util::client_request(record_client_, record_srv, record_service_name_);
+    Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
     common_srvs::VisualizeCloud visualize_srv;
     visualize_srv.request.cloud_data_list.push_back(sensor_cloud);
     visualize_srv.request.topic_name_list.push_back("acc_cloud");
