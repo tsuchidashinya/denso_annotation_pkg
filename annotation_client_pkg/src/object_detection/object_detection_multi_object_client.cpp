@@ -58,7 +58,7 @@ void AnnotationClient::main()
     }
     multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
-    for (int i = 0; i < util_.random_int(0, quantity_of_object_list_[0]); i++) {
+    for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[0]); i++) {
         common_msgs::ObjectInfo object;
         object = decide_gazebo_object.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
