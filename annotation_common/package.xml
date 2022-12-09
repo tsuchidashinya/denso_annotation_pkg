@@ -50,6 +50,7 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>common_srvs</build_depend>
+  <build_depend>tf_package</build_depend>
   <build_depend>util</build_depend>
   <build_export_depend>common_srvs</build_export_depend>
   <build_export_depend>util</build_export_depend>

@@ -40,7 +40,7 @@ void AnnotationClient::main()
     common_srvs::Hdf5OpenService hdf5_open_srv;
     hdf5_open_srv.request.index = data_index;
     Util::client_request(hdf5_open_client_, hdf5_open_srv, hdf5_open_service_name_);
-    common_msgs::CloudData ano_data = hdf5_open_srv.response.cloud_data, ano_copy_data;
+    common_msgs::CloudData ano_data = hdf5_open_srv.response.cloud_data, ano_copy_data, ano_visual_data;
     ano_copy_data = ano_data;
     std::vector<std::string> tf_name_list;
     std::vector<geometry_msgs::Transform> tf_transform_list;
@@ -90,6 +90,11 @@ void AnnotationClient::main()
         final_tf = TfFunction::make_geo_trans_stamped(key_tf_name, world_frame_, tf_transform_list[index]);
         while (ros::ok())
         {
+            ano_visual_data = ano_copy_data;
+            common_srvs::VisualizeCloud visual_srv;
+            visual_srv.request.cloud_data_list.push_back(ano_visual_data);
+            visual_srv.request.topic_name_list.push_back("ano_visual_data");
+            Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
             ano_copy_data = ano_data;
             KeyBoardTf key_tf = tf_func_.get_keyboard_tf(xyz_step_, qxyz_step_);
             final_tf.transform = tf_func_.add_keyboard_tf(final_tf.transform, key_tf);
@@ -104,10 +109,7 @@ void AnnotationClient::main()
             mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], index+1, nearest_radious_);
-            common_srvs::VisualizeCloud visual_srv;
-            visual_srv.request.cloud_data_list.push_back(ano_copy_data);
-            visual_srv.request.topic_name_list.push_back("ano_copy_data");
-            Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
+            
             if (key_tf.quit) {
                 ano_data = ano_copy_data;
                 pose_list[index] = mesh_srv.response.pose[0];

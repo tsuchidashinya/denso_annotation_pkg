@@ -4,6 +4,7 @@
 #include <common_srvs/VisualizeCloud.h>
 #include <common_srvs/VisualizeSensorPC2.h>
 #include <common_srvs/Hdf5OpenService.h>
+#include <common_srvs/Hdf5OpenSegmentationService.h>
 #include <common_srvs/Hdf5RecordAcc.h>
 #include <common_srvs/Hdf5RecordSegmentation.h>
 #include <tf_package/tf_function.hpp>

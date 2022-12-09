@@ -10,6 +10,7 @@ project(annotation_common)
 find_package(catkin REQUIRED COMPONENTS
   common_srvs
   util
+  tf_package
 )
 
 
@@ -26,6 +27,11 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(noize_make_client src/noize_make_client.cpp src/hdf5_open_data_process_client_node.cpp)
+target_link_libraries(noize_make_client
+  ${catkin_LIBRARIES}
 )
 
 

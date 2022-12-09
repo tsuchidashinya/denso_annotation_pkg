@@ -1,0 +1,9 @@
+noize_make_client:
+  hdf5_open_service_name: hdf5_segmentation_service
+  visualize_service_name: visualize_cloud_service
+
+hdf5_open_server:
+  hdf5_open_service_name: hdf5_open_service
+  hdf5_real_phoxi_open_service_name: hdf5_real_phoxi_open_service
+  hdf5_segmentation_service_name: hdf5_segmentation_service
+  hdf5_file_path: /home/ericlab/tsuchida/2022_12/annotation/Semseg/multi_object_kai/kai3228/kai_1.hdf5

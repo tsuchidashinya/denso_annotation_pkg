@@ -22,7 +22,7 @@
                 <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
             </node>
             <node pkg="hdf5_package" type="hdf5_open_server.py" name="hdf5_open_server" output="screen">
-                <rosparam file="$(find hdf5_package)/config/hdf5_open_server.yaml" command="load" ns="" />
+                <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_acc.yaml" command="load" ns="" />
             </node>
         </group>
         <group if="$(eval hdf5_mode=='hdf5_acc')">
@@ -31,7 +31,7 @@
                 <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
             </node>
             <node pkg="hdf5_package" type="hdf5_open_server.py" name="hdf5_open_server" output="screen">
-                <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_acc.yaml" command="load" ns="" />
+                <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_sensor.yaml" command="load" ns="" />
             </node>
 
         </group>
