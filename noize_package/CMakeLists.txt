@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(annotation_common)
+project(noize_package)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,32 +8,31 @@ project(annotation_common)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  common_srvs
+  roscpp
   util
-  tf_package
-  noize_package
-  sensor_package
+  
 )
-
-
-catkin_python_setup()
 
 
 catkin_package(
  INCLUDE_DIRS include
-#  LIBRARIES util_anno
- CATKIN_DEPENDS common_srvs util
+ LIBRARIES noize_cloud_make noize_cloud_transform
+#  CATKIN_DEPENDS roscpp util
 #  DEPENDS system_lib
 )
+
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(noize_make_client src/noize_make_client.cpp src/hdf5_open_data_process_client_node.cpp)
-target_link_libraries(noize_make_client
+add_library(noize_cloud_make src/noize_cloud_make.cpp)
+target_link_libraries(noize_cloud_make
   ${catkin_LIBRARIES}
 )
 
-
+add_library(noize_cloud_transform src/noize_cloud_transform.cpp)
+target_link_libraries(noize_cloud_transform
+  ${catkin_LIBRARIES}
+)

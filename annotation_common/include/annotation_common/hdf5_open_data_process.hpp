@@ -9,6 +9,9 @@
 #include <common_srvs/Hdf5RecordSegmentation.h>
 #include <tf_package/tf_function.hpp>
 #include <opencv2/opencv.hpp>
+#include <noize_package/noize_cloud_make.hpp>
+#include <noize_package/noize_cloud_transform.hpp>
+#include <sensor_package/cloud_process.hpp>
 
 class Hdf5OpenDataProcess
 {
@@ -29,4 +32,5 @@ private:
     std::string world_frame_, sensor_frame_;
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;
+    Util util_;
 };
