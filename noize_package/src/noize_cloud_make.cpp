@@ -29,3 +29,8 @@ common_msgs::CloudData NoizeCloudMake::cylinder_unit(float r, float z_max, int p
     }
     return cloud;
 }
+
+common_msgs::CloudData NoizeCloudMake::sphere_multi()
+{
+    
+}

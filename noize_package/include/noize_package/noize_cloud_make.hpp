@@ -8,6 +8,7 @@ class NoizeCloudMake
 public:
     common_msgs::CloudData sphere_unit(float, int);
     common_msgs::CloudData cylinder_unit(float, float, int);
+    common_msgs::CloudData sphere_multi();
 private:
     Util util_;
 };
