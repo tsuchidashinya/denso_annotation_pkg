@@ -102,7 +102,7 @@ void AnnotationClient::main()
             yolo_data.w = scale_up * yolo_data.w;
             yolo_data.h = scale_up * yolo_data.h;
         }
-        if (util_.random_float(0, 1) < 1) {
+        if (util_.random_float(0, 1) < 0.2) {
             float scale_up = util_.random_float(-0.015, 0.015);
             if (util_.random_float(0, 1) < 0.33) {
                 yolo_data.x = scale_up + yolo_data.x;
