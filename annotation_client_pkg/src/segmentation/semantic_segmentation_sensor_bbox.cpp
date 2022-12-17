@@ -76,9 +76,9 @@ void AnnotationClient::main()
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    if (util_.random_float(0, 1) < 0.4) {
-         multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
-        multi_object = Util::delete_empty_object_info(multi_object);
+    if (util_.random_float(0, 1) < 0.8) {
+    multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
+    multi_object = Util::delete_empty_object_info(multi_object);
     }
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
@@ -101,6 +101,19 @@ void AnnotationClient::main()
             float scale_up = util_.random_float(0.8, 1.2);
             yolo_data.w = scale_up * yolo_data.w;
             yolo_data.h = scale_up * yolo_data.h;
+        }
+        if (util_.random_float(0, 1) < 1) {
+            float scale_up = util_.random_float(-0.015, 0.015);
+            if (util_.random_float(0, 1) < 0.33) {
+                yolo_data.x = scale_up + yolo_data.x;
+            }
+            else if (util_.random_float(0, 1) < 0.67) {
+                yolo_data.y = scale_up + yolo_data.y;
+            }
+            else {
+                yolo_data.x = scale_up + yolo_data.x;
+                yolo_data.y = scale_up + yolo_data.y;
+            }
         }
         box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
     }
