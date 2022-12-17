@@ -82,7 +82,7 @@ void AnnotationClient::main()
     // }
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
-    if (util_.random_float(0, 1) < 0.15) {
+    if (util_.random_float(0, 1) < 0.1) {
         gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     }
     common_srvs::MeshCloudService mesh_srv;
@@ -97,12 +97,12 @@ void AnnotationClient::main()
 
     for (int i = 0; i < box_pos.size(); i++) {
         YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
-        if (util_.random_float(0, 1) < 0.4) {
-            float scale_up = util_.random_float(0.8, 1.2);
+        if (util_.random_float(0, 1) < 0.9) {
+            float scale_up = util_.random_float(0.95, 1.5);
             yolo_data.w = scale_up * yolo_data.w;
             yolo_data.h = scale_up * yolo_data.h;
         }
-        if (util_.random_float(0, 1) < 0.4) {
+        if (util_.random_float(0, 1) < 0.7) {
             float scale_up = util_.random_float(-0.015, 0.015);
             if (util_.random_float(0, 1) < 0.33) {
                 yolo_data.x = scale_up + yolo_data.x;
