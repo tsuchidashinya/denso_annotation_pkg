@@ -80,3 +80,18 @@ add_executable(real_cloud_dataset_get src/real_data/real_cloud_dataset_get.cpp)
 target_link_libraries(real_cloud_dataset_get
   ${catkin_LIBRARIES}
 )
+
+add_executable(semantic_segmentation_no_b_box src/segmentation/semantic_segmentation_no_b_box.cpp src/annotation_client_node.cpp)
+target_link_libraries(semantic_segmentation_no_b_box
+  ${catkin_LIBRARIES}
+)
+
+add_executable(semantic_segmentation_no_sensor src/segmentation/semantic_segmentation_no_sensor.cpp src/annotation_client_node.cpp)
+target_link_libraries(semantic_segmentation_no_sensor
+  ${catkin_LIBRARIES}
+)
+
+add_executable(semantic_segmentation_sensor_bbox src/segmentation/semantic_segmentation_sensor_bbox.cpp src/annotation_client_node.cpp)
+target_link_libraries(semantic_segmentation_sensor_bbox
+  ${catkin_LIBRARIES}
+)
