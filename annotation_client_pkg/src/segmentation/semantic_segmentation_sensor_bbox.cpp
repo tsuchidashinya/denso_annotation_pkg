@@ -89,9 +89,19 @@ void AnnotationClient::main()
     mesh_srv.request.multi_object_info = multi_object;
     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_cloud_list = mesh_srv.response.mesh;
+    common_msgs::CloudData sum_mesh_cloud;
+    for (int i = 0; i < mesh_cloud_list.size(); i++) {
+        visualize_srv.request.cloud_data_list.push_back(mesh_cloud_list[i]);
+        visualize_srv.request.topic_name_list.push_back("mesh_" + std::to_string(i));
+        sum_mesh_cloud = UtilMsgData::concat_cloudmsg(sum_mesh_cloud, mesh_cloud_list[i]);
+    }
+    visualize_srv.request.cloud_data_list.push_back(sum_mesh_cloud);
+    visualize_srv.request.topic_name_list.push_back("sum_mesh_cloud");
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
+    visualize_srv.request.cloud_data_list.push_back(sensor_cloud);
+    visualize_srv.request.topic_name_list.push_back("sensor_cloud");
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi;
 
