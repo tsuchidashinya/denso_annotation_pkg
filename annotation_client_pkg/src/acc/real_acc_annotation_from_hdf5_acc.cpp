@@ -35,6 +35,7 @@ void AnnotationClient::set_paramenter()
 void AnnotationClient::main()
 {
     int the_number_of_object, data_index;
+    common_srvs::VisualizeCloud visual_srv;
     ROS_INFO_STREAM("What index of hdf5 data do you want to get?");
     std::cin >> data_index;
     common_srvs::Hdf5OpenService hdf5_open_srv;
@@ -42,6 +43,9 @@ void AnnotationClient::main()
     Util::client_request(hdf5_open_client_, hdf5_open_srv, hdf5_open_service_name_);
     common_msgs::CloudData ano_data = hdf5_open_srv.response.cloud_data, ano_copy_data, ano_visual_data;
     ano_copy_data = ano_data;
+    visual_srv.request.cloud_data_list.push_back(ano_data);
+    visual_srv.request.topic_name_list.push_back("ano_visual_data");
+    Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
     std::vector<std::string> tf_name_list;
     std::vector<geometry_msgs::Transform> tf_transform_list;
     std::vector<common_msgs::PoseData> pose_list, pose_hdf5_open_list;
@@ -50,7 +54,10 @@ void AnnotationClient::main()
         geometry_msgs::TransformStamped trans_stamp;
         geometry_msgs::Transform trans_ori, trans_add;
         trans_ori = UtilMsgData::posedata_to_transform(pose_hdf5_open_list[i]);
+        // trans_stamp.transform = trans_ori;
+        // trans_stamp.header.frame_id = sensor_frame_;
         trans_add = tf_func_.tf_listen(sensor_frame_, world_frame_);
+        // TfFunction::tf_data_show(trans_add, "trans_add");
         trans_stamp.transform = TfFunction::change_tf_frame_by_rotate(trans_ori, trans_add);
         trans_stamp.header.frame_id = world_frame_;
         trans_stamp.child_frame_id = "tf_" + std::to_string(i);
@@ -84,6 +91,7 @@ void AnnotationClient::main()
             common_msgs::PoseData pose;
             pose_list.push_back(pose);
         }
+        ano_data = UtilMsgData::change_ins_cloudmsg(ano_data, index + 1, 0);
         geometry_msgs::TransformStamped final_tf;
         geometry_msgs::Transform zero_trans;
         zero_trans.rotation = TfFunction::make_geo_quaternion(TfFunction::rotate_xyz_make(0, 0, 0));
@@ -91,7 +99,6 @@ void AnnotationClient::main()
         while (ros::ok())
         {
             ano_visual_data = ano_copy_data;
-            common_srvs::VisualizeCloud visual_srv;
             visual_srv.request.cloud_data_list.push_back(ano_visual_data);
             visual_srv.request.topic_name_list.push_back("ano_visual_data");
             Util::client_request(visualize_client_, visual_srv, visualize_service_name_);

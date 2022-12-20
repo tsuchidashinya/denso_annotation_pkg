@@ -35,6 +35,7 @@ void AnnotationClient::set_paramenter()
 void AnnotationClient::main()
 {
     int the_number_of_object, data_index;
+    common_srvs::VisualizeCloud visual_srv;
     ROS_INFO_STREAM("What index of hdf5 data do you want to get?");
     std::cin >> data_index;
     common_srvs::Hdf5OpenRealPhoxiService hdf5_open_sensor_srv;
@@ -42,6 +43,9 @@ void AnnotationClient::main()
     Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
     common_msgs::CloudData ano_data = hdf5_open_sensor_srv.response.cloud_data, ano_copy_data;
     ano_copy_data = ano_data;
+    visual_srv.request.cloud_data_list.push_back(ano_data);
+    visual_srv.request.topic_name_list.push_back("ano_copy_data");
+    Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
     ROS_INFO_STREAM("How many object do you set?");
     std::cin >> the_number_of_object;
     std::vector<std::string> tf_name_list;
@@ -75,7 +79,6 @@ void AnnotationClient::main()
             mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
-            common_srvs::VisualizeCloud visual_srv;
             visual_srv.request.cloud_data_list.push_back(ano_copy_data);
             visual_srv.request.topic_name_list.push_back("ano_copy_data");
             Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
