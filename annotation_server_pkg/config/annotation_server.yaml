@@ -5,6 +5,6 @@ hdf5_record_server:
   record_clustering_service_name: record_clustering_service
   record_real_sensor_data_service_name: record_real_sensor_data_service
   hdf5_hdf5_record_service_name: hdf5_record_service
-  record_hdf5_file_dir: /home/dl-box/tsuchida/2022_12/annotation/Semseg
-  record_hdf5_file_name: sensor_b_box_para_kai_final.hdf5
+  record_hdf5_file_dir: /home/ericlab/tsuchida/2022_12/annotation/Semseg/try
+  record_hdf5_file_name: try.hdf5
   hdf5_save_interval: 100
