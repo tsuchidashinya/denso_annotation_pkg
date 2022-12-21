@@ -30,15 +30,33 @@ void AnnotationClient::set_paramenter()
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
     object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
+    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
+    hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);
 }
 
 void AnnotationClient::main()
 {
-    int the_number_of_object, data_index;
     common_srvs::VisualizeCloud visual_srv;
+    common_srvs::Hdf5OpenService hdf5_open_srv;
+    int data_size;
+    int i = 0;
+    while (1) {
+        hdf5_open_srv.request.index = i;
+        hdf5_open_srv.request.hdf5_open_file_path = hdf5_open_file_path_;
+        Util::client_request(hdf5_open_client_, hdf5_open_srv, hdf5_open_service_name_);
+        visual_srv.request.cloud_data_list.push_back(hdf5_open_srv.response.cloud_data);
+        visual_srv.request.topic_name_list.push_back("index_" + std::to_string(i));
+        Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
+        nh_.getParam("hdf5_data_size", data_size);
+        i++;
+        if (i >= data_size) {
+            break;
+        }
+    }
+    int the_number_of_object, data_index;
     ROS_INFO_STREAM("What index of hdf5 data do you want to get?");
     std::cin >> data_index;
-    common_srvs::Hdf5OpenService hdf5_open_srv;
+    
     hdf5_open_srv.request.index = data_index;
     Util::client_request(hdf5_open_client_, hdf5_open_srv, hdf5_open_service_name_);
     pcl::PointCloud<pcl::PointXYZL> pcl_data = UtilMsgData::cloudmsg_to_mypoint(hdf5_open_srv.response.cloud_data);
@@ -133,6 +151,8 @@ void AnnotationClient::main()
         }
     }
     common_srvs::Hdf5RecordAcc record_srv;
+    record_srv.request.record_file_path = hdf5_record_file_path__;
+    record_srv.request.index = index;
     record_srv.request.camera_info = hdf5_open_srv.response.camera_info;
     record_srv.request.image = hdf5_open_srv.response.image;
     record_srv.request.pose_data_list = pose_list;
