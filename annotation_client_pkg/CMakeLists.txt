@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   annotation_common
   labeling_package
   data_transform_pkg
+  sensor_package
 )
 
 

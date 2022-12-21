@@ -1,5 +1,6 @@
 #pragma once
 #include <common_srvs/MeshCloudService.h>
+#include <sensor_package/cloud_process.hpp>
 // #include <common_srvs/RecordService.h>
 #include <common_srvs/Hdf5RecordRealSensorData.h>
 #include <common_srvs/SensorService.h>
@@ -47,6 +48,7 @@ private:
     UtilMsgData util_msg_data_;
     Util util_;
     InstanceLabelDrawer instance_drawer_;
+    CloudProcess cloud_process_;
     ros::Publisher domain_randomize_pub_;
     double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;
     double xyz_step_, qxyz_step_;

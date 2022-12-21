@@ -41,7 +41,10 @@ void AnnotationClient::main()
     common_srvs::Hdf5OpenRealPhoxiService hdf5_open_sensor_srv;
     hdf5_open_sensor_srv.request.index = data_index;
     Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
-    common_msgs::CloudData ano_data = hdf5_open_sensor_srv.response.cloud_data, ano_copy_data;
+    pcl::PointCloud<PclXyz> pcl_data = UtilMsgData::cloudmsg_to_pcl(hdf5_open_sensor_srv.response.cloud_data);
+    cloud_process_.set_crop_frame(sensor_frame_, world_frame_);
+    pcl_data = cloud_process_.cropbox_segmenter(pcl_data);
+    common_msgs::CloudData ano_data = UtilMsgData::pcl_to_cloudmsg(pcl_data), ano_copy_data;
     ano_copy_data = ano_data;
     visual_srv.request.cloud_data_list.push_back(ano_data);
     visual_srv.request.topic_name_list.push_back("ano_copy_data");
@@ -81,6 +84,8 @@ void AnnotationClient::main()
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
             visual_srv.request.cloud_data_list.push_back(ano_copy_data);
             visual_srv.request.topic_name_list.push_back("ano_copy_data");
+            visual_srv.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
+            visual_srv.request.topic_name_list.push_back("mesh_cloud");
             Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
             if (key_tf.quit) {
                 ano_data = ano_copy_data;

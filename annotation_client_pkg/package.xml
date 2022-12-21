@@ -55,6 +55,7 @@
   <build_depend>tf_package</build_depend>
   <build_depend>labeling_package</build_depend>
   <build_depend>data_transform_pkg</build_depend>
+  <build_depend>sensor_package</build_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

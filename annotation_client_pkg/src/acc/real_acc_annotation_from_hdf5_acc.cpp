@@ -41,7 +41,10 @@ void AnnotationClient::main()
     common_srvs::Hdf5OpenService hdf5_open_srv;
     hdf5_open_srv.request.index = data_index;
     Util::client_request(hdf5_open_client_, hdf5_open_srv, hdf5_open_service_name_);
-    common_msgs::CloudData ano_data = hdf5_open_srv.response.cloud_data, ano_copy_data, ano_visual_data;
+    pcl::PointCloud<pcl::PointXYZL> pcl_data = UtilMsgData::cloudmsg_to_mypoint(hdf5_open_srv.response.cloud_data);
+    cloud_process_.set_crop_frame(sensor_frame_, world_frame_);
+    pcl_data = cloud_process_.cropbox_segmenter(pcl_data);
+    common_msgs::CloudData ano_data = UtilMsgData::mypoint_to_cloudmsg(pcl_data), ano_copy_data, ano_visual_data;
     ano_copy_data = ano_data;
     visual_srv.request.cloud_data_list.push_back(ano_data);
     visual_srv.request.topic_name_list.push_back("ano_visual_data");
@@ -49,11 +52,11 @@ void AnnotationClient::main()
     std::vector<std::string> tf_name_list;
     std::vector<geometry_msgs::Transform> tf_transform_list;
     std::vector<common_msgs::PoseData> pose_list, pose_hdf5_open_list;
-    pose_hdf5_open_list = hdf5_open_srv.response.pose_data;
-    for (int i = 0; i < pose_hdf5_open_list.size(); i++) {
+    pose_list = hdf5_open_srv.response.pose_data;
+    for (int i = 0; i < pose_list.size(); i++) {
         geometry_msgs::TransformStamped trans_stamp;
         geometry_msgs::Transform trans_ori, trans_add;
-        trans_ori = UtilMsgData::posedata_to_transform(pose_hdf5_open_list[i]);
+        trans_ori = UtilMsgData::posedata_to_transform(pose_list[i]);
         // trans_stamp.transform = trans_ori;
         // trans_stamp.header.frame_id = sensor_frame_;
         trans_add = tf_func_.tf_listen(sensor_frame_, world_frame_);
@@ -116,9 +119,14 @@ void AnnotationClient::main()
             mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], index+1, nearest_radious_);
-            
+            visual_srv.request.cloud_data_list.push_back(ano_visual_data);
+            visual_srv.request.topic_name_list.push_back("ano_visual_data");
+            visual_srv.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
+            visual_srv.request.topic_name_list.push_back("mesh_cloud");
+            Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
             if (key_tf.quit) {
                 ano_data = ano_copy_data;
+                Util::message_show("pose_list_size" + std::to_string(index), pose_list.size());
                 pose_list[index] = mesh_srv.response.pose[0];
                 break;
             }
