@@ -28,6 +28,7 @@ void AnnotationClient::set_paramenter()
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
     occlusion_object_radious_ = param_list["occlusion_object_radious"];
+    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
     object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
     quantity_of_object_list_.push_back(static_cast<int>(param_list["quantity_of_main_object"]));
     instance_of_object_list_.push_back(static_cast<int>(param_list["instance_of_main_object"]));
@@ -135,6 +136,7 @@ void AnnotationClient::main()
     common_msgs::CloudData final_cloud;
     for (int i = 0; i < cloud_multi.size(); i++) {
         common_srvs::Hdf5RecordSegmentation record_srv;
+        record_srv.request.record_file_path = hdf5_record_file_path__;
         record_srv.request.cloud_data = cloud_multi[i];
         record_srv.request.the_number_of_dataset = the_number_of_dataset_;
         Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);

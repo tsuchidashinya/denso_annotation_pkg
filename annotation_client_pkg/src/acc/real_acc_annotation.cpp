@@ -29,6 +29,7 @@ void AnnotationClient::set_paramenter()
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
     object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
+    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
 }
 
 void AnnotationClient::main()
@@ -65,6 +66,7 @@ void AnnotationClient::main()
             tf_br_srv.request.broadcast_tf = final_tf;
             tf_br_srv.request.tf_name = final_tf.child_frame_id;
             Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
+            ros::Duration(0.09);
             common_msgs::ObjectInfo mesh_input;
             mesh_input.object_name = object_list_[0];
             mesh_input.tf_name = tf_name_list[i];
@@ -86,6 +88,8 @@ void AnnotationClient::main()
         }
     }
     common_srvs::Hdf5RecordAcc record_srv;
+    record_srv.request.record_file_path = hdf5_record_file_path__;
+    record_srv.request.index = 0;
     record_srv.request.camera_info = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = pose_list;

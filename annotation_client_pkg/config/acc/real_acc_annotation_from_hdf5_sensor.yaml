@@ -9,8 +9,8 @@ annotation_main:
   hdf5_record_service_name: record_acc_service
   hdf5_open_service_name: hdf5_real_phoxi_open_service
   tf_br_service_name: tf_broadcast_service
-  hdf5_open_file_path: /media/ericlab/DE59-9C00/test/acc_real.hdf5
-  hdf5_record_file_path_: /media/ericlab/DE59-9C00/test/acc_real.hdf5
+  hdf5_open_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5
+  hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5
   nearest_radious: 0.002
   the_number_of_dataset: 1
   xyz_step: 0.003

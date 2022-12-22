@@ -30,7 +30,8 @@ void AnnotationClient::set_paramenter()
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
     object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
-    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path_"]);
+    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
+    hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);
 }
 
 void AnnotationClient::main()
@@ -93,6 +94,7 @@ void AnnotationClient::main()
             tf_br_srv.request.broadcast_tf = final_tf;
             tf_br_srv.request.tf_name = final_tf.child_frame_id;
             Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
+            ros::Duration(0.1);
             common_msgs::ObjectInfo mesh_input;
             mesh_input.object_name = object_list_[0];
             mesh_input.tf_name = tf_name_list[i];
@@ -100,11 +102,12 @@ void AnnotationClient::main()
             mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], i+1, nearest_radious_);
-            visual_srv.request.cloud_data_list.push_back(ano_copy_data);
-            visual_srv.request.topic_name_list.push_back("ano_copy_data");
-            visual_srv.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
-            visual_srv.request.topic_name_list.push_back("mesh_cloud");
-            Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
+            common_srvs::VisualizeCloud visual_srv1;
+            visual_srv1.request.cloud_data_list.push_back(ano_copy_data);
+            visual_srv1.request.topic_name_list.push_back("ano_copy_data");
+            visual_srv1.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
+            visual_srv1.request.topic_name_list.push_back("mesh_cloud");
+            Util::client_request(visualize_client_, visual_srv1, visualize_service_name_);
             if (key_tf.quit) {
                 ano_data = ano_copy_data;
                 pose_list[i] = mesh_srv.response.pose[0];

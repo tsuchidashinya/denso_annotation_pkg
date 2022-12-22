@@ -21,25 +21,25 @@
     </group>
     <group if="$(eval mode=='multi_object_kai')">
         <node pkg="annotation_client_pkg" type="semantic_segmentation_multi_object_kai_client" name="semantic_segmentation_multi_object_client" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation_multi_object_kai_client.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval mode=='sensor_b_box')">
         <node pkg="annotation_client_pkg" type="semantic_segmentation_sensor_bbox" name="semantic_segmentation_sensor_bbox" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation_multi_object_kai_client.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval mode=='no_sensor')">
         <node pkg="annotation_client_pkg" type="semantic_segmentation_no_sensor" name="semantic_segmentation_no_sensor" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation_multi_object_kai_client.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval mode=='no_b_box')">
         <node pkg="annotation_client_pkg" type="semantic_segmentation_no_b_box" name="semantic_segmentation_no_b_box" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation_multi_object_kai_client.yaml" command="load" />
+            <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />
             <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
         </node>
     </group>

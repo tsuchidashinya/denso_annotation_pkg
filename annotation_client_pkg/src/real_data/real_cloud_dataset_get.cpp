@@ -24,6 +24,7 @@ void AnnotationClient::set_paramenter()
     hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     vis_img_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
+    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
 }
 
 void AnnotationClient::main()
@@ -36,6 +37,7 @@ void AnnotationClient::main()
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
     common_srvs::Hdf5RecordRealSensorData record_srv;
+    record_srv.request.record_file_path = hdf5_record_file_path__;
     record_srv.request.camera_info = cinfo_list;
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.cloud_data = sensor_cloud;

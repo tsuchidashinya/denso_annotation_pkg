@@ -4,21 +4,25 @@ annotation_main:
   sensor_service_name: sensor_service
   mesh_service_name: mesh_service
   hdf5_record_service_name: record_segmentation_service
+  hdf5_record_file_path: /home/ericlab/tsuchida/2022_12/annotation/Semseg/t_pipe/sensor_b_box_3000.hdf5
   nearest_radious: 0.002
   LEAF_SIZE: 0.002
   radious: 0.05
-  the_number_of_dataset: 2000
-  occlusion_object_radious: 0.045
-  main_object_name: HV8 
+  the_number_of_dataset: 3000
+  occlusion_object_radious: 0.035
+  main_object_name: t_pipe
   quantity_of_main_object: 34
   instance_of_main_object: 1
   other_object_list:
-    - object_name: t_pipe
-      quantity_of_the_object: 2
+    - object_name: HV8
+      quantity_of_the_object: 34
       instance_of_the_object: 2
     - object_name: HV7
-      quantity_of_the_object: 2
+      quantity_of_the_object: 6
       instance_of_the_object: 3
+    - object_name: HV6
+      quantity_of_the_object: 6
+      instance_of_the_object: 4
 
 
 
@@ -28,7 +32,7 @@ decide_object_position:
   sensor_angle_max: 0.3
   sensor_angle_min: -0.3
   sensor_distance_min: 0.8
-  sensor_distance_max: 1.2
+  sensor_distance_max: 1.5
   z_position: 0.003
   box_height: 0.01
   box_name: denso_box

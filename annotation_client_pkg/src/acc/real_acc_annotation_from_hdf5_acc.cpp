@@ -130,6 +130,7 @@ void AnnotationClient::main()
             tf_br_srv.request.broadcast_tf = final_tf;
             tf_br_srv.request.tf_name = final_tf.child_frame_id;
             Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
+            ros::Duration(0.09);
             common_msgs::ObjectInfo mesh_input;
             mesh_input.object_name = object_list_[0];
             mesh_input.tf_name = key_tf_name;
@@ -137,11 +138,12 @@ void AnnotationClient::main()
             mesh_srv.request.multi_object_info.push_back(mesh_input);
             Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
             ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], index+1, nearest_radious_);
-            visual_srv.request.cloud_data_list.push_back(ano_visual_data);
-            visual_srv.request.topic_name_list.push_back("ano_visual_data");
-            visual_srv.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
-            visual_srv.request.topic_name_list.push_back("mesh_cloud");
-            Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
+            common_srvs::VisualizeCloud visual_srv1;
+            visual_srv1.request.cloud_data_list.push_back(ano_visual_data);
+            visual_srv1.request.topic_name_list.push_back("ano_visual_data");
+            visual_srv1.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
+            visual_srv1.request.topic_name_list.push_back("mesh_cloud");
+            Util::client_request(visualize_client_, visual_srv1, visualize_service_name_);
             if (key_tf.quit) {
                 ano_data = ano_copy_data;
                 Util::message_show("pose_list_size" + std::to_string(index), pose_list.size());
