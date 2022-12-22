@@ -30,7 +30,7 @@ void AnnotationClient::set_paramenter()
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
     object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
-    hdf5_record_file_path__ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
+    hdf5_record_file_path_ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
     hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);
 }
 
@@ -117,7 +117,7 @@ void AnnotationClient::main()
     }
     common_srvs::Hdf5RecordAcc record_srv;
     record_srv.request.index = 0;
-    record_srv.request.record_file_path = hdf5_record_file_path__;
+    record_srv.request.record_file_path = hdf5_record_file_path_;
     record_srv.request.camera_info = hdf5_open_sensor_srv.response.camera_info;
     record_srv.request.image = hdf5_open_sensor_srv.response.image;
     record_srv.request.pose_data_list = pose_list;

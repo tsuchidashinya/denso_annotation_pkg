@@ -53,5 +53,5 @@ private:
     double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;
     double xyz_step_, qxyz_step_;
     double nearest_radious_, occlusion_object_radious_;
-    std::string hdf5_record_file_path__, hdf5_open_file_path_;
+    std::string hdf5_record_file_path_, hdf5_open_file_path_;
 };
