@@ -35,11 +35,28 @@ void AnnotationClient::set_paramenter()
 
 void AnnotationClient::main()
 {
-    int the_number_of_object, data_index;
     common_srvs::VisualizeCloud visual_srv;
+    common_srvs::Hdf5OpenRealPhoxiService hdf5_open_sensor_srv;
+    int data_size;
+    int i = 0;
+    while (1) {
+        hdf5_open_sensor_srv.request.index = i;
+        hdf5_open_sensor_srv.request.hdf5_open_file_path = hdf5_open_file_path_;
+        Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
+        visual_srv.request.cloud_data_list.push_back(hdf5_open_sensor_srv.response.cloud_data);
+        visual_srv.request.topic_name_list.push_back("index_" + std::to_string(i));
+        Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
+        nh_.getParam("hdf5_data_size", data_size);
+        i++;
+        if (i >= data_size) {
+            break;
+        }
+    }
+    int the_number_of_object, data_index;
+    
     ROS_INFO_STREAM("What index of hdf5 data do you want to get?");
     std::cin >> data_index;
-    common_srvs::Hdf5OpenRealPhoxiService hdf5_open_sensor_srv;
+    
     hdf5_open_sensor_srv.request.index = data_index;
     Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
     pcl::PointCloud<PclXyz> pcl_data = UtilMsgData::cloudmsg_to_pcl(hdf5_open_sensor_srv.response.cloud_data);
