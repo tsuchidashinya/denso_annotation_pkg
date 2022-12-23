@@ -10,6 +10,10 @@
         </node>
     </group>
     <group if="$(eval sim_or_real=='real')">
+        <node pkg="calibration_pkg" type="calibrate_tf_broadcaster" name="calibrate_tf_broadcaster">
+            <rosparam file="$(find calibration_pkg)/config/calibrate_tf_broadcaster.yaml" command="load" ns="" />
+            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+        </node>
         <group if="$(eval hdf5_mode=='None')">
             <node pkg="annotation_client_pkg" type="real_acc_annotation" name="real_acc_annotation" output="screen">
                 <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation.yaml" command="load" ns="" />

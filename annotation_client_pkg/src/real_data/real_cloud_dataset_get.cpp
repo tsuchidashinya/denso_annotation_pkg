@@ -41,7 +41,7 @@ void AnnotationClient::main()
     record_srv.request.camera_info = cinfo_list;
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.cloud_data = sensor_cloud;
-    record_srv.request.the_number_of_dataset = the_number_of_dataset_;
+    record_srv.request.is_end = the_number_of_dataset_;
     Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
     common_srvs::VisualizeCloud visualize_srv;
     visualize_srv.request.cloud_data_list.push_back(sensor_cloud);

@@ -94,6 +94,6 @@ void AnnotationClient::main()
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = pose_list;
     record_srv.request.cloud_data = ano_data;
-    record_srv.request.the_number_of_dataset = the_number_of_dataset_;
+    record_srv.request.is_end = 1;
     Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
 }

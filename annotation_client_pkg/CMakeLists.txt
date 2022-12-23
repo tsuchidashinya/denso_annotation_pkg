@@ -48,7 +48,7 @@ add_executable(object_detection_multi_object src/object_detection/object_detecti
 target_link_libraries(object_detection_multi_object
   ${catkin_LIBRARIES}
 )
-add_executable(acc_annotation src/acc/acc_annotation.cpp src/annotation_client_node.cpp)
+add_executable(acc_annotation src/acc/acc_annotation.cpp)
 target_link_libraries(acc_annotation
   ${catkin_LIBRARIES}
 )

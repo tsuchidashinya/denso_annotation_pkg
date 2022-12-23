@@ -84,7 +84,7 @@ void AnnotationClient::main()
             tf_name_list.push_back(trans_stamp.child_frame_id);
             tf_transform_list.push_back(trans_stamp.transform);
             Util::client_request(tf_br_client_, tf_srv, tf_br_service_name_);
-            ins_list.push_back(pose_list[i].instance);
+            ins_list.push_back(i + 1);
         }
         int index = 0;
         
@@ -136,13 +136,13 @@ void AnnotationClient::main()
                     ros::Duration(0.09);
                     common_msgs::ObjectInfo mesh_input;
                     mesh_input.object_name = object_list_[0];
-                    mesh_input.tf_name = key_tf_name;
+                    mesh_input.tf_name = tf_name;
                     common_srvs::MeshCloudService mesh_srv;
                     mesh_srv.request.multi_object_info.push_back(mesh_input);
                     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
                     ano_copy_data = InstanceLabelDrawer::extract_nearest_point(ano_copy_data, mesh_srv.response.mesh[0], index+1, nearest_radious_);
                     common_srvs::VisualizeCloud visual_srv1;
-                    visual_srv1.request.cloud_data_list.push_back(crop_cloudmsg(ano_visual_data)));
+                    visual_srv1.request.cloud_data_list.push_back(crop_cloudmsg(ano_visual_data));
                     visual_srv1.request.topic_name_list.push_back("ano_visual_data");
                     visual_srv1.request.cloud_data_list.push_back(mesh_srv.response.mesh[0]);
                     visual_srv1.request.topic_name_list.push_back("mesh_cloud");
@@ -151,18 +151,28 @@ void AnnotationClient::main()
                         ano_data = ano_copy_data;
                         Util::message_show("pose_list_size" + std::to_string(index), pose_list.size());
                         pose_list[index] = mesh_srv.response.pose[0];
+                        pose_list[index].instance = ins_list[index];
                         break;
                     }
                 }
                 
             }
             else if (key_input == "d") {
-
+                ;
             }
             else {
-                ROS_ERROR_STREAM("Key input error!! Please a or d or q")
+                ROS_ERROR_STREAM("Key input error!! Please a or d or q");
             }
             
+        }
+        for (int i = 0; i < tf_name_list.size(); i++) {
+            common_msgs::ObjectInfo mesh_input1;
+            mesh_input1.object_name = object_list_[0];
+            mesh_input1.tf_name = tf_name_list[i];
+            common_srvs::MeshCloudService mesh_srv1;
+            mesh_srv1.request.multi_object_info.push_back(mesh_input1);
+            Util::client_request(mesh_client_, mesh_srv1, mesh_service_name_);
+            ano_data = InstanceLabelDrawer::extract_nearest_point(ano_data, mesh_srv1.response.mesh[0], ins_list[i], nearest_radious_);
         }
         common_srvs::Hdf5RecordAcc record_srv;
         record_srv.request.record_file_path = hdf5_record_file_path_;
