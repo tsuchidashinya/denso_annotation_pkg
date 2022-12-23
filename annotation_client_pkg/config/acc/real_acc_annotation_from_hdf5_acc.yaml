@@ -1,13 +1,10 @@
-hdf5_open_server:
-  hdf5_open_service_name: hdf5_open_service
-  hdf5_real_phoxi_open_service_name: hdf5_real_phoxi_open_service
-  hdf5_segmentation_service_name: hdf5_segmentation_service
+
 
 annotation_main:
   visualize_service_name: visualize_cloud_service
   mesh_service_name: mesh_service
   hdf5_record_service_name: record_acc_service
-  hdf5_open_service_name: hdf5_open_service
+  hdf5_open_acc_service_name: hdf5_open_acc_service
   tf_br_service_name: tf_broadcast_service
   hdf5_open_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5
   hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5

@@ -50,7 +50,6 @@
   <!--   <doc_depend>doxygen</doc_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>util</build_depend>
-  <build_depend>annotation_common</build_depend>
   <build_depend>gazebo_model_package</build_depend>
   <build_depend>tf_package</build_depend>
   <build_depend>labeling_package</build_depend>

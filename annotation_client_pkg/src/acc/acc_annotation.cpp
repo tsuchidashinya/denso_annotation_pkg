@@ -27,7 +27,7 @@ void AnnotationClient::set_paramenter()
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
 }
 
-void AnnotationClient::main()
+void AnnotationClient::acc_main(int count)
 {
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
@@ -109,11 +109,34 @@ void AnnotationClient::main()
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = mesh_srv.response.pose;
     record_srv.request.cloud_data = sensor_cloud;
-    record_srv.request.the_number_of_dataset = the_number_of_dataset_;
+    if (count >= the_number_of_dataset_ - 1) {
+        record_srv.request.is_end = 1;
+    }
+    else {
+        record_srv.request.is_end = 0;
+    }
     Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
 
     common_srvs::VisualizeCloud visualize_srv;
     visualize_srv.request.cloud_data_list.push_back(sensor_cloud);
     visualize_srv.request.topic_name_list.push_back("acc_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
+}
+
+int main(int argc, char** argv)
+{
+    ros::init(argc, argv, "semantic_segmentation");
+    ros::NodeHandle nh;
+    AnnotationClient annotation_main(nh);
+    int counter;
+    for (int i = 0; i < annotation_main.the_number_of_dataset_; i++) {
+        annotation_main.acc_main(i);
+        // ros::Duration(0.1).sleep();
+        Util::message_show("Progress rate", std::to_string(i + 1) + "/" + std::to_string(annotation_main.the_number_of_dataset_));
+        nh.getParam("record_counter", counter);
+        if (counter >= annotation_main.the_number_of_dataset_) {
+            break;
+        }
+    }
+    return 0;
 }

@@ -6,34 +6,27 @@
     <group if="$(eval sim_or_real=='sim')">
         <node pkg="annotation_client_pkg" type="acc_annotation" name="acc_annotation" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/acc/acc_annotation.yaml" command="load" />
-            <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval sim_or_real=='real')">
         <group if="$(eval hdf5_mode=='None')">
             <node pkg="annotation_client_pkg" type="real_acc_annotation" name="real_acc_annotation" output="screen">
                 <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation.yaml" command="load" ns="" />
-                <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+                <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
             </node>
         </group>
         <group if="$(eval hdf5_mode=='hdf5_sensor')">
             <node pkg="annotation_client_pkg" type="real_acc_annotation_from_hdf5_sensor" name="real_acc_annotation_from_hdf5_sensor" output="screen">
                 <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_sensor.yaml" command="load" ns="" />
-                <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
-            </node>
-            <node pkg="hdf5_package" type="hdf5_open_server.py" name="hdf5_open_server" output="screen">
-                <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_sensor.yaml" command="load" ns="" />
+                <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
             </node>
         </group>
         <group if="$(eval hdf5_mode=='hdf5_acc')">
             <node pkg="annotation_client_pkg" type="real_acc_annotation_from_hdf5_acc" name="rreal_acc_annotation_from_hdf5_acc" output="screen">
                 <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_acc.yaml" command="load" ns="" />
-                <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+                <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
             </node>
-            <node pkg="hdf5_package" type="hdf5_open_server.py" name="hdf5_open_server" output="screen">
-                <rosparam file="$(find annotation_client_pkg)/config/acc/real_acc_annotation_from_hdf5_acc.yaml" command="load" ns="" />
-            </node>
-
         </group>
     </group>
 

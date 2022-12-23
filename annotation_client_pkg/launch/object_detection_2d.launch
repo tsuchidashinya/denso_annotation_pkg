@@ -4,13 +4,13 @@
     <group if="$(eval mode=='normal')">
         <node pkg="annotation_client_pkg" type="object_detection_2d" name="object_detection_2d" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_2d.yaml" command="load" />
-            <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval mode=='latest')">
         <node pkg="annotation_client_pkg" type="object_detection_multi_object" name="object_detection_multi_object" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_multi_object.yaml" command="load" />
-            <rosparam file="$(find annotation_common)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
         </node>
         <arg name="model_name"  default="denso_box"/>
         <arg name="event_mode" default="timer" />

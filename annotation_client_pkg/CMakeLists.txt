@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   util
   gazebo_model_package
   tf_package
-  annotation_common
+  
   labeling_package
   data_transform_pkg
   sensor_package

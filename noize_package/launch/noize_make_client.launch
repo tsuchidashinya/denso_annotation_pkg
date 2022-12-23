@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="noize_package" type="noize_make_client" name="noize_make_client">
+        <rosparam file="$(find noize_package)/config/noize_make_client.yaml" command="load" ns="" />
+    </node>
+    <node pkg="hdf5_package" type="hdf5_open_server.py" name="hdf5_open_server" output="screen">
+        <rosparam file="$(find noize_package)/config/noize_make_client.yaml" command="load" ns="" />
+    </node>
+
+</launch>

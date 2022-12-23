@@ -10,8 +10,8 @@
 #include <common_srvs/VisualizeCloudDelete.h>
 #include <common_srvs/Hdf5RecordSegmentation.h>
 #include <common_srvs/Hdf5RecordAcc.h>
-#include <common_srvs/Hdf5OpenService.h>
-#include <common_srvs/Hdf5OpenRealPhoxiService.h>
+#include <common_srvs/Hdf5OpenAccService.h>
+#include <common_srvs/Hdf5OpenSensorDataService.h>
 #include <gazebo_model_package/decide_object_position.hpp>
 #include <gazebo_model_package/gazebo_model_move.hpp>
 #include <tf_package/tf_function.hpp>
@@ -28,7 +28,14 @@ class AnnotationClient
 public:
     AnnotationClient(ros::NodeHandle &);
     void main();
+    void acc_main(int);
     void set_paramenter();
+    common_msgs::CloudData crop_cloudmsg(common_msgs::CloudData input_cloud) {
+        pcl::PointCloud<pcl::PointXYZL> pcl_data = UtilMsgData::cloudmsg_to_pclLabel(input_cloud);
+        cloud_process_.set_crop_frame(sensor_frame_, world_frame_);
+        pcl_data = cloud_process_.cropbox_segmenter(pcl_data);
+        return UtilMsgData::pclLabel_to_cloudmsg(pcl_data);
+    };
     XmlRpc::XmlRpcValue param_list;
     int the_number_of_dataset_;
 
@@ -37,7 +44,7 @@ private:
     ros::ServiceClient sensor_client_, mesh_client_, visualize_client_, hdf5_record_client_, gazebo_sensor_client_, 
             vis_img_client_, tf_br_client_, vis_delete_client_, hdf5_open_client_;
     std::string sensor_service_name_, mesh_service_name_, visualize_service_name_, hdf5_record_service_name_, 
-            vis_img_service_name_, tf_br_service_name_, vis_delete_service_name_, hdf5_open_service_name_;
+            vis_img_service_name_, tf_br_service_name_, vis_delete_service_name_, hdf5_open_acc_service_name_;
     std::string gazebo_sensor_service_name_;
     std::string world_frame_, sensor_frame_;
     std::string save_dir_, save_base_file_name_;

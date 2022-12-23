@@ -11,7 +11,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
     tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
-    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenRealPhoxiService>(hdf5_open_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenSensorDataService>(hdf5_open_acc_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -24,7 +24,7 @@ void AnnotationClient::set_paramenter()
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
     mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
     hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
-    hdf5_open_service_name_ = static_cast<std::string>(param_list["hdf5_open_service_name"]);
+    hdf5_open_acc_service_name_ = static_cast<std::string>(param_list["hdf5_open_acc_service_name"]);
     tf_br_service_name_ = static_cast<std::string>(param_list["tf_br_service_name"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];
@@ -37,13 +37,13 @@ void AnnotationClient::set_paramenter()
 void AnnotationClient::main()
 {
     common_srvs::VisualizeCloud visual_srv;
-    common_srvs::Hdf5OpenRealPhoxiService hdf5_open_sensor_srv;
+    common_srvs::Hdf5OpenSensorDataService hdf5_open_sensor_srv;
     int data_size;
     int i = 0;
     while (1) {
         hdf5_open_sensor_srv.request.index = i;
         hdf5_open_sensor_srv.request.hdf5_open_file_path = hdf5_open_file_path_;
-        Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
+        Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_acc_service_name_);
         visual_srv.request.cloud_data_list.push_back(hdf5_open_sensor_srv.response.cloud_data);
         visual_srv.request.topic_name_list.push_back("index_" + std::to_string(i));
         Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
@@ -59,7 +59,7 @@ void AnnotationClient::main()
     std::cin >> data_index;
     
     hdf5_open_sensor_srv.request.index = data_index;
-    Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_service_name_);
+    Util::client_request(hdf5_open_client_, hdf5_open_sensor_srv, hdf5_open_acc_service_name_);
     pcl::PointCloud<PclXyz> pcl_data = UtilMsgData::cloudmsg_to_pcl(hdf5_open_sensor_srv.response.cloud_data);
     cloud_process_.set_crop_frame(sensor_frame_, world_frame_);
     pcl_data = cloud_process_.cropbox_segmenter(pcl_data);
