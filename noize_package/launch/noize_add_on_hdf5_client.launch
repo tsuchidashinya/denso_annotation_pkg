@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="noize_package" type="noize_add_on_hdf5_client" name="noize_add_on_hdf5_client">
+        <rosparam file="$(find noize_package)/config/noize_add_on_hdf5_client.yaml" command="load" ns="" />
+        <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+    </node>
+
+</launch>

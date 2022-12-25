@@ -2,7 +2,6 @@
 #include <util/util.hpp>
 #include <util/util_msg_data.hpp>
 #include <common_srvs/VisualizeCloud.h>
-#include <common_srvs/VisualizeSensorPC2.h>
 #include <common_srvs/Hdf5OpenAccService.h>
 #include <common_srvs/Hdf5OpenSegmentationService.h>
 #include <common_srvs/Hdf5RecordAcc.h>
@@ -30,6 +29,7 @@ private:
     std::string sensor_service_name_, object_detect_service_name_, visualize_service_name_,
     cloud_network_service_name_, accuracy_service_name_, hdf5_open_acc_service_name_, vis_image_service_name_, hdf5_hdf5_record_service_name_;
     std::string world_frame_, sensor_frame_;
+    std::string hdf5_open_file_path_;
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;
     Util util_;

@@ -1,4 +1,4 @@
-#include <noize_package/hdf5_open_data_process.hpp>
+#include <noize_package/noize_add_on_hdf5_client.hpp>
 
 Hdf5OpenDataProcess::Hdf5OpenDataProcess(ros::NodeHandle &nh) :
 nh_(nh),
@@ -11,9 +11,13 @@ pnh_("~")
 
 void Hdf5OpenDataProcess::set_parameter()
 {
-    pnh_.getParam("noize_make_client", param_list);
+    pnh_.getParam("noize_add_on_hdf5_client", param_list);
     hdf5_open_acc_service_name_ = static_cast<std::string>(param_list["hdf5_open_acc_service_name"]);
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
+    hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);
+    pnh_.getParam("common_parameter", param_list);
+    world_frame_ = static_cast<std::string>(param_list["world_frame"]);
+    sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
 }
 
 void Hdf5OpenDataProcess::main()
@@ -44,7 +48,8 @@ void Hdf5OpenDataProcess::main()
         noize_add = NoizeCloudTransform::translation_noize(noize_cloud, translation);
         sum_cloud = UtilMsgData::concat_cloudmsg(sum_cloud, noize_add);
     }
-    sum_cloud = UtilMsgData::pcl_to_cloudmsg(CloudProcess::downsample_by_voxelgrid(UtilMsgData::cloudmsg_to_pcl(sum_cloud), 0.0015));
+    sum_cloud = UtilMsgData::pclLabel_to_cloudmsg(CloudProcess::downsample_by_voxelgrid(UtilMsgData::cloudmsg_to_pclLabel(sum_cloud), 0.0015));
+    sum_cloud.frame_id = world_frame_;
     common_srvs::VisualizeCloud visual_srv;
     visual_srv.request.cloud_data_list.push_back(sum_cloud);
     visual_srv.request.topic_name_list.push_back("noize_cloud");

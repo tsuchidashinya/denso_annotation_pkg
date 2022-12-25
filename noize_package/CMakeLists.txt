@@ -10,7 +10,9 @@ project(noize_package)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   util
-  
+  common_srvs
+  tf_package
+  sensor_package
 )
 
 
@@ -34,5 +36,12 @@ target_link_libraries(noize_cloud_make
 
 add_library(noize_cloud_transform src/noize_cloud_transform.cpp)
 target_link_libraries(noize_cloud_transform
+  ${catkin_LIBRARIES}
+)
+
+add_executable(noize_add_on_hdf5_client src/noize_add_on_hdf5_client.cpp src/noize_add_on_hdf5_client_node.cpp)
+target_link_libraries(noize_add_on_hdf5_client
+  noize_cloud_make
+  noize_cloud_transform
   ${catkin_LIBRARIES}
 )

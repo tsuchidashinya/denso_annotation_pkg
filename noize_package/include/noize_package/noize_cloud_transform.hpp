@@ -9,4 +9,5 @@ class NoizeCloudTransform
 {
 public:
     static common_msgs::CloudData translation_noize(common_msgs::CloudData, geometry_msgs::Vector3);
+    
 };

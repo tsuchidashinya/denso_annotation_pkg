@@ -1,9 +1,0 @@
-noize_make_client:
-  hdf5_open_acc_service_name: hdf5_open_segmentation_service
-  visualize_service_name: visualize_cloud_service
-
-hdf5_open_server:
-  hdf5_open_acc_service_name: hdf5_open_acc_service
-  hdf5_open_sensor_data_service_name: hdf5_open_sensor_data_service
-  hdf5_open_segmentation_service_name: hdf5_open_segmentation_service
-  hdf5_open_file_path: /home/ericlab/Downloads/real_data.hdf5

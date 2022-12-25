@@ -51,6 +51,9 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>util</build_depend>
+  <build_depend>common_srvs</build_depend>
+  <build_depend>tf_package</build_depend>
+  <build_depend>sensor_package</build_depend>
   
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>util</build_export_depend>
