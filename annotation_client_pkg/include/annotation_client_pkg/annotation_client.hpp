@@ -2,12 +2,13 @@
 #include <common_srvs/MeshCloudService.h>
 #include <sensor_package/cloud_process.hpp>
 // #include <common_srvs/RecordService.h>
-#include <common_srvs/Hdf5RecordRealSensorData.h>
+#include <common_srvs/Hdf5RecordSensorData.h>
 #include <common_srvs/SensorService.h>
 #include <common_srvs/VisualizeImage.h>
 #include <common_srvs/VisualizeCloud.h>
 #include <common_srvs/TfBroadcastService.h>
-#include <common_srvs/VisualizeCloudDelete.h>
+#include <common_srvs/TfDeleteService.h>
+#include <common_srvs/VisualizeDeleteService.h>
 #include <common_srvs/Hdf5RecordSegmentation.h>
 #include <common_srvs/Hdf5RecordAcc.h>
 #include <common_srvs/Hdf5OpenAccService.h>
@@ -16,6 +17,7 @@
 #include <gazebo_model_package/gazebo_model_move.hpp>
 #include <tf_package/tf_function.hpp>
 #include <util/util.hpp>
+#include <util/common_header.hpp>
 #include <labeling_package/instance_label_drawer.hpp>
 #include <data_transform_pkg/data_3D_to_2D.hpp>
 #include <data_transform_pkg/data_2D_to_3D.hpp>
@@ -30,21 +32,20 @@ public:
     void main();
     void acc_main(int);
     void set_paramenter();
-    common_msgs::CloudData crop_cloudmsg(common_msgs::CloudData input_cloud) {
-        pcl::PointCloud<pcl::PointXYZL> pcl_data = UtilMsgData::cloudmsg_to_pclLabel(input_cloud);
-        cloud_process_.set_crop_frame(sensor_frame_, world_frame_);
-        pcl_data = cloud_process_.cropbox_segmenter(pcl_data);
-        return UtilMsgData::pclLabel_to_cloudmsg(pcl_data);
-    };
+    common_msgs::CloudData nearest_extractor(common_msgs::CloudData, common_srvs::MeshCloudService, int);
+    common_srvs::MeshCloudService mesh_request(std::string);
+    void visualize_request(common_msgs::CloudData, std::string);
+    void tf_broadcast_request(geometry_msgs::TransformStamped);
+    common_msgs::CloudData crop_cloudmsg(common_msgs::CloudData);
     XmlRpc::XmlRpcValue param_list;
     int the_number_of_dataset_;
 
 private:
     ros::NodeHandle nh_, pnh_;
     ros::ServiceClient sensor_client_, mesh_client_, visualize_client_, hdf5_record_client_, gazebo_sensor_client_, 
-            vis_img_client_, tf_br_client_, vis_delete_client_, hdf5_open_client_;
-    std::string sensor_service_name_, mesh_service_name_, visualize_service_name_, hdf5_record_service_name_, 
-            vis_img_service_name_, tf_br_service_name_, vis_delete_service_name_, hdf5_open_acc_service_name_;
+            vis_img_client_, tf_br_client_, vis_delete_client_, hdf5_open_client_, tf_delete_client_, hdf5_record_2_client_;
+    std::string sensor_service_name_, mesh_service_name_, visualize_service_name_, hdf5_record_service_name_, hdf5_record_2_service_name_,
+            vis_img_service_name_, tf_br_service_name_, vis_delete_service_name_, hdf5_open_acc_service_name_, tf_delete_service_name_;
     std::string gazebo_sensor_service_name_;
     std::string world_frame_, sensor_frame_;
     std::string save_dir_, save_base_file_name_;

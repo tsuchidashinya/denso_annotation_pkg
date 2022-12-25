@@ -6,8 +6,10 @@ annotation_main:
   hdf5_record_service_name: record_acc_service
   hdf5_open_acc_service_name: hdf5_open_acc_service
   tf_br_service_name: tf_broadcast_service
-  hdf5_open_file_path: /home/ericlab/Desktop/tsuchida_screen/acc_real.hdf5
-  hdf5_record_file_path: /home/ericlab/Desktop/tsuchida_screen/acc_real.hdf5
+  visualize_delete_service_name: visualize_delete_service
+  tf_delete_service_name: tf_delete_service
+  hdf5_open_file_path: /media/ericlab/DE59-9C00/test/result/acc_real.hdf5
+  hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/acc_real.hdf5
   nearest_radious: 0.002
   the_number_of_dataset: 1
   xyz_step: 0.003

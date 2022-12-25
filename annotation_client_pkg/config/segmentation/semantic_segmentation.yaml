@@ -8,7 +8,7 @@ annotation_main:
   nearest_radious: 0.002
   LEAF_SIZE: 0.002
   radious: 0.05
-  the_number_of_dataset: 3000
+  the_number_of_dataset: 10
   occlusion_object_radious: 0.02
   main_object_name: t_pipe
   quantity_of_main_object: 34

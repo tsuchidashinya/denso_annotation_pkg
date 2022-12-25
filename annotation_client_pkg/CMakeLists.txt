@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(annotation_client_pkg)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -58,12 +58,12 @@ target_link_libraries(real_acc_annotation
   ${catkin_LIBRARIES}
 )
 
-add_executable(real_acc_annotation_from_hdf5_acc src/acc/real_acc_annotation_from_hdf5_acc.cpp src/annotation_client_node.cpp)
+add_executable(real_acc_annotation_from_hdf5_acc src/acc/real_acc_annotation_from_hdf5_acc.cpp src/annotation_client_node.cpp src/annotation_client_func.cpp)
 target_link_libraries(real_acc_annotation_from_hdf5_acc
   ${catkin_LIBRARIES}
 )
 
-add_executable(real_acc_annotation_from_hdf5_sensor src/acc/real_acc_annotation_from_hdf5_sensor.cpp src/annotation_client_node.cpp)
+add_executable(real_acc_annotation_from_hdf5_sensor src/acc/real_acc_annotation_from_hdf5_sensor.cpp src/annotation_client_node.cpp src/annotation_client_func.cpp)
 target_link_libraries(real_acc_annotation_from_hdf5_sensor
   ${catkin_LIBRARIES}
 )

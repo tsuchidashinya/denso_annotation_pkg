@@ -10,7 +10,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
     hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSegmentation>(hdf5_record_service_name_);
-    vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeCloudDelete>(vis_delete_service_name_);
+    vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeDeleteService>(vis_delete_service_name_);
 }
 
 void AnnotationClient::set_paramenter()
@@ -45,7 +45,7 @@ void AnnotationClient::main()
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeCloud visualize_srv;
-    common_srvs::VisualizeCloudDelete vis_delete_srv;
+    common_srvs::VisualizeDeleteService vis_delete_srv;
 
     // common_msgs::ObjectInfo sensor_object;
     // sensor_object = decide_gazebo_object.get_sensor_position();

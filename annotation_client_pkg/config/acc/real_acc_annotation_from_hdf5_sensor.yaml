@@ -1,11 +1,13 @@
 annotation_main:
   visualize_service_name: visualize_cloud_service
+  visualize_delete_service_name: visualize_delete_service
   mesh_service_name: mesh_service
   hdf5_record_service_name: record_acc_service
+  hdf5_record_2_service_name: record_real_sensor_data_service
   hdf5_open_acc_service_name: hdf5_open_sensor_data_service
   tf_br_service_name: tf_broadcast_service
-  hdf5_open_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5
-  hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5
+  hdf5_open_file_path: /media/ericlab/DE59-9C00/test/concate/real_HV8_data.hdf5
+  hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/acc_real.hdf5
   nearest_radious: 0.002
   the_number_of_dataset: 1
   xyz_step: 0.003
