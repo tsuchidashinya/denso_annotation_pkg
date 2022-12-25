@@ -35,13 +35,14 @@ void Hdf5OpenDataProcess::main()
     // }
     NoizeCloudMake noize;
     common_msgs::CloudData noize_cloud, sum_cloud, noize_add;
+    geometry_msgs::Transform transl;
     // noize_cloud = noize.sphere_unit(0.01, 1000);
     noize_cloud = noize.cylinder_unit(0.002, 0.005, 30);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 1000; i++) {
         geometry_msgs::Vector3 translation;
-        float x = 0.04;
+        float x = 0.2;
         float y = 0.001;
-        float z = 0.03;
+        float z = 0.3;
         translation.x = util_.random_float(-x, x);
         translation.y = util_.random_float(-y, y);
         translation.z = util_.random_float(-z, z);
@@ -53,5 +54,9 @@ void Hdf5OpenDataProcess::main()
     common_srvs::VisualizeCloud visual_srv;
     visual_srv.request.cloud_data_list.push_back(sum_cloud);
     visual_srv.request.topic_name_list.push_back("noize_cloud");
+    auto rotate_quat = TfFunction::rotate_xyz_make(M_PI/4, 0, 0);
+    sum_cloud = NoizeCloudTransform::rotate_noize(sum_cloud, TfFunction::tf2_quat_to_geo_quat(rotate_quat));
+    visual_srv.request.cloud_data_list.push_back(sum_cloud);
+    visual_srv.request.topic_name_list.push_back("noize_cloud_rotate");
     Util::client_request(visualize_client_, visual_srv, visualize_service_name_);
 }
