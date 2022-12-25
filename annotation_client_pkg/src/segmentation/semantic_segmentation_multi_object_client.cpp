@@ -105,7 +105,7 @@ void AnnotationClient::main()
     // Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
-    sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
+    sensor_cloud = UtilMsgData::draw_all_ins_cloudmsg(sensor_cloud, 0);
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi;
     if (util_.random_float(0, 1) < 0.2) {
@@ -120,7 +120,7 @@ void AnnotationClient::main()
         }
         for (int i = 0; i < mesh_cloud_list.size(); i++) {
             int object_index = Util::find_element_vector(object_list_, mesh_cloud_list[i].object_name);
-            sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], instance_of_object_list_[object_index], 0.002);
+            sensor_cloud = SpaceHandlingLibrary::search_nearest_point(sensor_cloud, mesh_cloud_list[i], instance_of_object_list_[object_index], 0.002);
         }
         cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     }
@@ -129,7 +129,7 @@ void AnnotationClient::main()
         for (int i = 0; i < cloud_multi.size(); i++) {
             int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
             int object_index = Util::find_element_vector(object_list_, cloud_multi[i].object_name);
-            cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
+            cloud_multi[i] = SpaceHandlingLibrary::search_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
         }
     }
     common_msgs::CloudData final_cloud;

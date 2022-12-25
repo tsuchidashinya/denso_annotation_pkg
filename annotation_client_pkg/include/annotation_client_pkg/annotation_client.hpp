@@ -18,7 +18,7 @@
 #include <tf_package/tf_function.hpp>
 #include <util/util.hpp>
 #include <util/common_header.hpp>
-#include <labeling_package/instance_label_drawer.hpp>
+#include <space_handling_pkg/space_handling_library.hpp>
 #include <data_transform_pkg/data_3D_to_2D.hpp>
 #include <data_transform_pkg/data_2D_to_3D.hpp>
 #include <data_transform_pkg/func_data_convertion.hpp>
@@ -55,7 +55,7 @@ private:
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;
     Util util_;
-    InstanceLabelDrawer instance_drawer_;
+    SpaceHandlingLibrary instance_drawer_;
     CloudProcess cloud_process_;
     ros::Publisher domain_randomize_pub_;
     double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;

@@ -79,8 +79,8 @@ void AnnotationClient::main()
     std::vector<std::string> topic_name_list;
     for (int i = 0; i < cloud_multi.size(); i++) {
         topic_name_list.push_back("cloud_multi_" + std::to_string(i));
-        cloud_multi[i] = InstanceLabelDrawer::draw_instance_all(cloud_multi[i], 0);
-        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_clouds[i], 1, 0.002);
+        cloud_multi[i] = UtilMsgData::draw_all_ins_cloudmsg(cloud_multi[i], 0);
+        cloud_multi[i] = SpaceHandlingLibrary::search_nearest_point(cloud_multi[i], mesh_clouds[i], 1, 0.002);
     }
     for (int i = 0; i < cloud_multi.size(); i++) {
         common_srvs::Hdf5RecordSegmentation record_srv;

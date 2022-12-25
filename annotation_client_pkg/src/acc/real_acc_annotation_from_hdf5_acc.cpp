@@ -122,7 +122,7 @@ void AnnotationClient::main()
                     tf_name_list.push_back(tf_name);
                     ins_list.push_back(ins);
                     geometry_msgs::Transform zero_trans;
-                    zero_trans.rotation = TfFunction::make_geo_quaternion(TfFunction::rotate_xyz_make(0, 0, 0));
+                    zero_trans.rotation = TfFunction::tf2_quat_to_geo_quat(TfFunction::rotate_xyz_make(0, 0, 0));
                     tf_transform_list.push_back(zero_trans);
                     index = tf_name_list.size() - 1;
                     common_msgs::PoseData pose;
@@ -132,7 +132,7 @@ void AnnotationClient::main()
                 final_tf = TfFunction::make_geo_trans_stamped(tf_name_list[index], world_frame_, tf_transform_list[index]);
                 tf_broadcast_request(final_tf);
                 ins_list[index] = ins;
-                ano_data = InstanceLabelDrawer::draw_instance_all(ano_data, 0);
+                ano_data = UtilMsgData::draw_all_ins_cloudmsg(ano_data, 0);
                 for (int i = 0; i < tf_name_list.size(); i++) {
                     mesh_srv = mesh_request(tf_name_list[i]);
                     if (i == index) {
@@ -178,7 +178,7 @@ void AnnotationClient::main()
                     tf_delete_srv.request.delete_tf_name = delete_tf_name;
                     Util::client_request(tf_delete_client_, tf_delete_srv, tf_delete_service_name_);
                 }
-                ano_data = InstanceLabelDrawer::draw_instance_all(ano_data, 0);
+                ano_data = UtilMsgData::draw_all_ins_cloudmsg(ano_data, 0);
                 for (int i = 0; i < tf_name_list.size(); i++) {
                     mesh_srv = mesh_request(tf_name_list[i]);
                     ano_data = nearest_extractor(ano_data, mesh_srv, ins_list[i]);

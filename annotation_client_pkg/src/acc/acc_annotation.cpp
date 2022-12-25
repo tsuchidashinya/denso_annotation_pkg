@@ -89,9 +89,9 @@ void AnnotationClient::acc_main(int count)
 
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
-    sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
+    sensor_cloud = UtilMsgData::draw_all_ins_cloudmsg(sensor_cloud, 0);
     for (int i = 0; i < mesh_cloud_list.size(); i++) {
-        sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
+        sensor_cloud = SpaceHandlingLibrary::search_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
     }
     // Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     // std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);

@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_model_package
   tf_package
   
-  labeling_package
+  space_handling_pkg
   data_transform_pkg
   sensor_package
 )

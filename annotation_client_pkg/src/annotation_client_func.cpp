@@ -21,7 +21,7 @@ common_srvs::MeshCloudService AnnotationClient::mesh_request(std::string tf_name
 
 common_msgs::CloudData AnnotationClient::nearest_extractor(common_msgs::CloudData cloud, common_srvs::MeshCloudService mesh_srv, int instance)
 {
-    return InstanceLabelDrawer::extract_nearest_point(cloud, mesh_srv.response.mesh[0], instance, nearest_radious_);
+    return SpaceHandlingLibrary::search_nearest_point(cloud, mesh_srv.response.mesh[0], instance, nearest_radious_);
 }
 
 void AnnotationClient::tf_broadcast_request(geometry_msgs::TransformStamped trans_stamp)

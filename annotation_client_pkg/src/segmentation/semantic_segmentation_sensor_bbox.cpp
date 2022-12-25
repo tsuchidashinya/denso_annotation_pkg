@@ -100,7 +100,7 @@ void AnnotationClient::main()
     visualize_srv.request.topic_name_list.push_back("sum_mesh_cloud");
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
-    sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
+    sensor_cloud = UtilMsgData::draw_all_ins_cloudmsg(sensor_cloud, 0);
     visualize_srv.request.cloud_data_list.push_back(sensor_cloud);
     visualize_srv.request.topic_name_list.push_back("sensor_cloud");
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
@@ -140,7 +140,7 @@ void AnnotationClient::main()
     for (int i = 0; i < cloud_multi.size(); i++) {
         int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
         int object_index = Util::find_element_vector(object_list_, cloud_multi[i].object_name);
-        cloud_multi[i] = InstanceLabelDrawer::extract_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
+        cloud_multi[i] = SpaceHandlingLibrary::search_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
     }
 
     common_msgs::CloudData final_cloud;

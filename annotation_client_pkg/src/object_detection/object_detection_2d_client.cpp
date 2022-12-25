@@ -79,7 +79,7 @@ void AnnotationClient::main()
     std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
     cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
     cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
-    box_pos = InstanceLabelDrawer::set_object_class_name(box_pos, "HV8_occuluder");
+    box_pos = UtilMsgData::set_classname_on_boxposition(box_pos, "HV8_occuluder");
     for (int i = 0; i < box_pos.size(); i++) {
         box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
     }

@@ -35,7 +35,7 @@ void AnnotationClient::main()
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
+    sensor_cloud = UtilMsgData::draw_all_ins_cloudmsg(sensor_cloud, 0);
     common_srvs::Hdf5RecordSensorData record_srv;
     record_srv.request.record_file_path = hdf5_record_file_path_;
     record_srv.request.camera_info = cinfo_list;
