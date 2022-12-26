@@ -1,4 +1,4 @@
-#include <noize_package/noize_add_on_hdf5_client.hpp>
+#include <noize_package/noize_client.hpp>
 
 Hdf5OpenDataProcess::Hdf5OpenDataProcess(ros::NodeHandle &nh) :
 nh_(nh),
@@ -11,7 +11,7 @@ pnh_("~")
 
 void Hdf5OpenDataProcess::set_parameter()
 {
-    pnh_.getParam("noize_add_on_hdf5_client", param_list);
+    pnh_.getParam("noize_client", param_list);
     hdf5_open_acc_service_name_ = static_cast<std::string>(param_list["hdf5_open_acc_service_name"]);
     visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
     hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);

@@ -1,4 +1,4 @@
-noize_add_on_hdf5_client:
+noize_client:
   hdf5_open_acc_service_name: hdf5_open_segmentation_service
   visualize_service_name: visualize_cloud_service
   hdf5_open_file_path: /home/ericlab/Downloads/real_data.hdf5

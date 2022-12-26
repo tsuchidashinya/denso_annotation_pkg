@@ -1,4 +1,4 @@
-#include <noize_package/noize_add_on_hdf5_client.hpp>
+#include <noize_package/noize_client.hpp>
 
 int main(int argc, char** argv)
 {
