@@ -1,6 +1,6 @@
-#include <noize_package/noize_client.hpp>
+#include <noize_package/cloud/noize_cloud_client.hpp>
 
-NoizeClient::NoizeClient(ros::NodeHandle &nh) :
+NoizeCloudClient::NoizeCloudClient(ros::NodeHandle &nh) :
 nh_(nh),
 pnh_("~")
 {
@@ -9,7 +9,7 @@ pnh_("~")
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
 }
 
-void NoizeClient::set_parameter()
+void NoizeCloudClient::set_parameter()
 {
     pnh_.getParam("noize_client", param_list);
     hdf5_open_acc_service_name_ = static_cast<std::string>(param_list["hdf5_open_acc_service_name"]);
@@ -20,7 +20,7 @@ void NoizeClient::set_parameter()
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
 }
 
-void NoizeClient::main()
+void NoizeCloudClient::main()
 {
     // int data_size;
     // nh_.getParam("hdf5_data_size", data_size);

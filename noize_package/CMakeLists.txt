@@ -18,7 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
  INCLUDE_DIRS include
- LIBRARIES noize_cloud_make noize_cloud_transform
+ LIBRARIES noize_cloud_make noize_cloud_transform noize_cloud_client noize_image_client
 #  CATKIN_DEPENDS roscpp util
 #  DEPENDS system_lib
 )
@@ -44,15 +44,27 @@ target_link_libraries(noize_image_make
   ${catkin_LIBRARIES}
 )
 
-add_executable(noize_cloud_client src/noize_cloud_client.cpp src/noize_client_node.cpp)
+add_library(noize_cloud_client src/cloud/noize_cloud_client.cpp)
 target_link_libraries(noize_cloud_client
   noize_cloud_make
   noize_cloud_transform
   ${catkin_LIBRARIES}
 )
 
-add_executable(noize_image_client src/noize_image_client.cpp src/noize_client_node.cpp)
+add_library(noize_image_client src/image/noize_image_client.cpp)
 target_link_libraries(noize_image_client
   noize_image_make
+  ${catkin_LIBRARIES}
+)
+
+add_executable(noize_image_client_node src/image/noize_image_client_node.cpp)
+target_link_libraries(noize_image_client_node
+  noize_image_client
+  ${catkin_LIBRARIES}
+)
+
+add_executable(noize_cloud_client_node src/cloud/noize_cloud_client_node.cpp)
+target_link_libraries(noize_cloud_client_node
+  noize_cloud_client
   ${catkin_LIBRARIES}
 )
