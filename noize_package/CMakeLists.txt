@@ -39,8 +39,8 @@ target_link_libraries(noize_cloud_transform
   ${catkin_LIBRARIES}
 )
 
-add_executable(noize_add_on_hdf5_client src/noize_add_on_hdf5_client.cpp src/noize_add_on_hdf5_client_node.cpp)
-target_link_libraries(noize_add_on_hdf5_client
+add_executable(noize_client src/noize_client.cpp src/noize_client_node.cpp)
+target_link_libraries(noize_client
   noize_cloud_make
   noize_cloud_transform
   ${catkin_LIBRARIES}
