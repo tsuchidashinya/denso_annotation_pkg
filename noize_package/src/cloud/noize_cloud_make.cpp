@@ -1,4 +1,4 @@
-#include <noize_package/noize_cloud_make.hpp>
+#include <noize_package/cloud/noize_cloud_make.hpp>
 
 common_msgs::CloudData NoizeCloudMake::sphere_unit(float r, int point_num)
 {
@@ -30,7 +30,7 @@ common_msgs::CloudData NoizeCloudMake::cylinder_unit(float r, float z_max, int p
     return cloud;
 }
 
-common_msgs::CloudData NoizeCloudMake::sphere_multi()
-{
+// common_msgs::CloudData NoizeCloudMake::sphere_multi()
+// {
     
-}
+// }

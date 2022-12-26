@@ -2,20 +2,22 @@
 #include <util/util.hpp>
 #include <util/util_msg_data.hpp>
 #include <common_srvs/VisualizeCloud.h>
+#include <common_srvs/VisualizeImage.h>
 #include <common_srvs/Hdf5OpenAccService.h>
 #include <common_srvs/Hdf5OpenSegmentationService.h>
 #include <common_srvs/Hdf5RecordAcc.h>
 #include <common_srvs/Hdf5RecordSegmentation.h>
 #include <tf_package/tf_function.hpp>
 #include <opencv2/opencv.hpp>
-#include <noize_package/noize_cloud_make.hpp>
-#include <noize_package/noize_cloud_transform.hpp>
+#include <noize_package/cloud/noize_cloud_make.hpp>
+#include <noize_package/cloud/noize_cloud_transform.hpp>
+#include <noize_package/image/noize_image_make.hpp>
 #include <sensor_package/cloud_process.hpp>
 
-class Hdf5OpenDataProcess
+class NoizeClient
 {
 public:
-    Hdf5OpenDataProcess(ros::NodeHandle&);
+    NoizeClient(ros::NodeHandle&);
     void main();
     void acc_main(int);
     void set_parameter();

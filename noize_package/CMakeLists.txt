@@ -29,19 +29,30 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(noize_cloud_make src/noize_cloud_make.cpp)
+add_library(noize_cloud_make src/cloud/noize_cloud_make.cpp)
 target_link_libraries(noize_cloud_make
   ${catkin_LIBRARIES}
 )
 
-add_library(noize_cloud_transform src/noize_cloud_transform.cpp)
+add_library(noize_cloud_transform src/cloud/noize_cloud_transform.cpp)
 target_link_libraries(noize_cloud_transform
   ${catkin_LIBRARIES}
 )
 
-add_executable(noize_client src/noize_client.cpp src/noize_client_node.cpp)
-target_link_libraries(noize_client
+add_library(noize_image_make src/image/noize_image_make.cpp)
+target_link_libraries(noize_image_make
+  ${catkin_LIBRARIES}
+)
+
+add_executable(noize_cloud_client src/noize_cloud_client.cpp src/noize_client_node.cpp)
+target_link_libraries(noize_cloud_client
   noize_cloud_make
   noize_cloud_transform
+  ${catkin_LIBRARIES}
+)
+
+add_executable(noize_image_client src/noize_image_client.cpp src/noize_client_node.cpp)
+target_link_libraries(noize_image_client
+  noize_image_make
   ${catkin_LIBRARIES}
 )
