@@ -1,18 +1,6 @@
 #include <annotation_client_pkg/annotation_client.hpp>
 
 
-AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
-    nh_(nh),
-    pnh_("~")
-{
-    set_paramenter();
-    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
-    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
-    tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
-}
-
 void AnnotationClient::set_paramenter()
 {
     pnh_.getParam("common_parameter", param_list);

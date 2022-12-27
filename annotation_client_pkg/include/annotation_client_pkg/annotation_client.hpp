@@ -24,13 +24,13 @@
 #include <data_transform_pkg/func_data_convertion.hpp>
 #include <opencv2/opencv.hpp>
 #include <std_msgs/Empty.h>
+#include <noize_package/image/noize_image_client.hpp>
 
 class AnnotationClient
 {
 public:
     AnnotationClient(ros::NodeHandle &);
     void main();
-    void acc_main(int);
     void set_paramenter();
     common_msgs::CloudData nearest_extractor(common_msgs::CloudData, common_srvs::MeshCloudService, int);
     common_srvs::MeshCloudService mesh_request(std::string);
@@ -39,6 +39,7 @@ public:
     common_msgs::CloudData crop_cloudmsg(common_msgs::CloudData);
     XmlRpc::XmlRpcValue param_list;
     int the_number_of_dataset_;
+    int counter_;
 
 private:
     ros::NodeHandle nh_, pnh_;
@@ -57,9 +58,9 @@ private:
     Util util_;
     SpaceHandlingLibrary instance_drawer_;
     CloudProcess cloud_process_;
-    ros::Publisher domain_randomize_pub_;
     double q_x_para_, q_y_para_, q_z_para_, x_para_, y_para_, z_para_;
     double xyz_step_, qxyz_step_;
     double nearest_radious_, occlusion_object_radious_;
     std::string hdf5_record_file_path_, hdf5_open_file_path_;
+    NoizeImageClient noize_image_client_;
 };

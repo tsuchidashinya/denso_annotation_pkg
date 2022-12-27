@@ -1,5 +1,25 @@
 #include <annotation_client_pkg/annotation_client.hpp>
 
+AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
+    nh_(nh),
+    pnh_("~"),
+    noize_image_client_(nh),
+    counter_(0)
+{
+    set_paramenter();
+    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
+    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
+    vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
+    vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeDeleteService>(vis_delete_service_name_);
+    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
+    hdf5_record_2_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSensorData>(hdf5_record_2_service_name_);
+    tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
+    tf_delete_client_ = nh_.serviceClient<common_srvs::TfDeleteService>(tf_delete_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
+
+}
+
 common_msgs::CloudData AnnotationClient::crop_cloudmsg(common_msgs::CloudData input_cloud) {
     pcl::PointCloud<pcl::PointXYZL> pcl_data = UtilMsgData::cloudmsg_to_pclLabel(input_cloud);
     cloud_process_.set_crop_frame(sensor_frame_, world_frame_);

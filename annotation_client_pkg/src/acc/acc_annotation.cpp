@@ -1,17 +1,6 @@
 #include <annotation_client_pkg/annotation_client.hpp>
 
 
-AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
-    nh_(nh),
-    pnh_("~")
-{
-    set_paramenter();
-    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
-    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
-}
-
 void AnnotationClient::set_paramenter()
 {
     pnh_.getParam("common_parameter", param_list);
@@ -27,7 +16,7 @@ void AnnotationClient::set_paramenter()
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
 }
 
-void AnnotationClient::acc_main(int count)
+void AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
@@ -109,7 +98,7 @@ void AnnotationClient::acc_main(int count)
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = mesh_srv.response.pose;
     record_srv.request.cloud_data = sensor_cloud;
-    if (count >= the_number_of_dataset_ - 1) {
+    if (counter_ >= the_number_of_dataset_ - 1) {
         record_srv.request.is_end = 1;
     }
     else {
@@ -121,22 +110,5 @@ void AnnotationClient::acc_main(int count)
     visualize_srv.request.cloud_data_list.push_back(sensor_cloud);
     visualize_srv.request.topic_name_list.push_back("acc_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
-}
-
-int main(int argc, char** argv)
-{
-    ros::init(argc, argv, "semantic_segmentation");
-    ros::NodeHandle nh;
-    AnnotationClient annotation_main(nh);
-    int counter;
-    for (int i = 0; i < annotation_main.the_number_of_dataset_; i++) {
-        annotation_main.acc_main(i);
-        // ros::Duration(0.1).sleep();
-        Util::message_show("Progress rate", std::to_string(i + 1) + "/" + std::to_string(annotation_main.the_number_of_dataset_));
-        nh.getParam("record_counter", counter);
-        if (counter >= annotation_main.the_number_of_dataset_) {
-            break;
-        }
-    }
-    return 0;
+    counter_++;
 }
