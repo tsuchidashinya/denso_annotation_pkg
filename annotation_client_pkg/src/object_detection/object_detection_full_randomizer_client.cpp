@@ -55,7 +55,14 @@ void AnnotationClient::main()
         object = decide_gazebo_object_.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
     }
+    // for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[1]); i++) {
+    //     common_msgs::ObjectInfo object;
+    //     object = decide_gazebo_object_.make_object_info(i, object_list_[1]);
+    //     multi_object.push_back(object);
+    // }
     multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
+    // std::mt19937 get_rand_mt;
+    // std::shuffle(multi_object.begin(), multi_object.end(), get_rand_mt);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     
     multi_object_other_kind = decide_gazebo_object_.get_randam_place_position(multi_object_other_kind);
