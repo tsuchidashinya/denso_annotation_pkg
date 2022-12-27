@@ -153,7 +153,7 @@ void AnnotationClient::main()
                     KeyBoardTf key_tf = tf_func_.get_keyboard_tf(xyz_step_, qxyz_step_);
                     final_tf.transform = tf_func_.add_keyboard_tf(final_tf.transform, key_tf);
                     tf_broadcast_request(final_tf);
-                    ros::Duration(0.06);
+                    ros::Duration(0.12);
                     if (key_tf.quit) {
                         ano_data = ano_copy_data;
                         pose_list[index] = mesh_srv.response.pose[0];
