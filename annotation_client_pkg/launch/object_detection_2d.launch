@@ -1,25 +1,17 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="mode" default="random_bbox"/>
-    <group if="$(eval mode=='normal')">
-        <node pkg="annotation_client_pkg" type="object_detection_2d" name="object_detection_2d" output="screen">
-            <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_2d.yaml" command="load" />
+    <group if="$(eval mode=='full_randomizer')">
+        <node pkg="annotation_client_pkg" type="object_detection_full_randomizer" name="object_detection_full_randomizer" output="screen">
+            <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_full_randomizer.yaml" command="load" />
             <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
-    <group if="$(eval mode=='latest')">
+    <group if="$(eval mode=='multi_object')">
         <node pkg="annotation_client_pkg" type="object_detection_multi_object" name="object_detection_multi_object" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_multi_object.yaml" command="load" />
             <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
         </node>
-        <arg name="model_name"  default="denso_box"/>
-        <arg name="event_mode" default="timer" />
-        <arg name="gazebo_ns" default="/gazebo" />
-        <arg name="gazebo_gui_ns" default="/gazebo_gui" />
-        <group ns="randomizers">
-            <node pkg="gazebo_domain_randomizer" name="light_randomizer" type="light_randomizer.py" args="-e $(arg event_mode) --gazebo_ns $(arg gazebo_ns)" output="screen" />
-            <node pkg="gazebo_domain_randomizer" name="link_visual_properties_randomizer" type="link_visual_properties_randomizer.py" args="-m $(arg model_name) -e $(arg event_mode) --gazebo_ns $(arg gazebo_ns) --gazebo_gui_ns $(arg gazebo_gui_ns)" output="screen" />
-        </group>
     </group>
    
 </launch>  

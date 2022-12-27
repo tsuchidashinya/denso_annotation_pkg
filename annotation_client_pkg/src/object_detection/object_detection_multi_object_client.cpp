@@ -1,16 +1,6 @@
 #include <annotation_client_pkg/annotation_client.hpp>
 
 
-AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
-    nh_(nh),
-    pnh_("~")
-{
-    set_paramenter();
-    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
-    domain_randomize_pub_ = nh_.advertise<std_msgs::Empty>("randomizer/trigger", 10);
-}
-
 void AnnotationClient::set_paramenter()
 {
     pnh_.getParam("common_parameter", param_list);
@@ -42,8 +32,7 @@ void AnnotationClient::main()
     DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
-    std_msgs::Empty empty;
-    domain_randomize_pub_.publish(empty);
+    
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
