@@ -29,41 +29,40 @@ void AnnotationClient::set_paramenter()
 
 void AnnotationClient::main()
 {
-    DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
     
     common_msgs::ObjectInfo sensor_object;
-    sensor_object = decide_gazebo_object.get_sensor_position();
+    sensor_object = decide_gazebo_object_.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
 
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all, multi_object_other_kind;
     for (int i = 0; i < object_list_.size(); i++) {
         for (int j = 0; j < quantity_of_object_list_[i]; j++) {
             common_msgs::ObjectInfo object;
-            object = decide_gazebo_object.make_object_info(j, object_list_[i]);
+            object = decide_gazebo_object_.make_object_info(j, object_list_[i]);
             multi_object_all.push_back(object);
         }
     }
-    multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
+    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[0]); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, object_list_[0]);
+        object = decide_gazebo_object_.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
     }
-    multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
+    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     if (util_.random_float(0, 1) < 0.15) {
         for (int i = 1; i < object_list_.size(); i++) {
             for (int j = 0; j < util_.random_int(1, quantity_of_object_list_[i]); j++) {
                 common_msgs::ObjectInfo object;
-                object = decide_gazebo_object.make_object_info(j, object_list_[i]);
+                object = decide_gazebo_object_.make_object_info(j, object_list_[i]);
                 multi_object_other_kind.push_back(object);
             }
         }
     }
-    multi_object_other_kind = decide_gazebo_object.get_randam_place_position(multi_object_other_kind);
+    multi_object_other_kind = decide_gazebo_object_.get_randam_place_position(multi_object_other_kind);
     gazebo_model_move.set_multi_gazebo_model(multi_object_other_kind);
     ros::Duration(0.2).sleep();
     
@@ -97,7 +96,6 @@ void AnnotationClient::main()
     std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
     cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
     cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
-    box_pos = UtilMsgData::set_classname_on_boxposition(box_pos, "HV8_occuluder");
     for (int i = 0; i < box_pos.size(); i++) {
         box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
     }

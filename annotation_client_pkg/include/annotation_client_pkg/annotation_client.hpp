@@ -62,5 +62,5 @@ private:
     double xyz_step_, qxyz_step_;
     double nearest_radious_, occlusion_object_radious_;
     std::string hdf5_record_file_path_, hdf5_open_file_path_;
-    NoizeImageClient noize_image_client_;
+    DecidePosition decide_gazebo_object_;
 };

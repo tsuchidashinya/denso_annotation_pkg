@@ -18,29 +18,29 @@ void AnnotationClient::set_paramenter()
 
 void AnnotationClient::main()
 {
-    DecidePosition decide_gazebo_object;
+    DecidePosition decide_gazebo_object_;
     GazeboMoveServer gazebo_model_move(nh_);
 
-    // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
+    // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object_.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);
     common_msgs::ObjectInfo sensor_object;
-    sensor_object = decide_gazebo_object.get_sensor_position();
+    sensor_object = decide_gazebo_object_.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
     for (int i = 0; i < 30; i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, "HV8");
+        object = decide_gazebo_object_.make_object_info(i, "HV8");
         multi_object_all.push_back(object);
     }
-    multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
+    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     for (int i = 0; i < util_.random_int(1, 24); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, "HV8");
+        object = decide_gazebo_object_.make_object_info(i, "HV8");
         multi_object.push_back(object);
     }
-    multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
+    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(0.5).sleep();
     common_srvs::SensorService sensor_srv;
