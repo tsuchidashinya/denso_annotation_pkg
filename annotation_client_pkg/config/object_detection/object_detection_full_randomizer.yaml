@@ -5,13 +5,13 @@ annotation_main:
   radious: 0.05
   the_number_of_dataset: 2000
   save_base_file_name: t_pipe_full_randomize
-  occlusion_object_radious: 0.033
-  save_dir: /home/ericlab/tsuchida/2022_12/annotation/ObjectDetection/SSD/HV8/full_randomizer
-  main_object_name: HV8
+  occlusion_object_radious: 0.02
+  save_dir: /home/ericlab/tsuchida/2022_12/annotation/ObjectDetection/SSD/t_pipe/full_randomizer
+  main_object_name: t_pipe
   quantity_of_main_object: 34
   instance_of_main_object: 1
   other_object_list:
-    - object_name: t_pipe
+    - object_name: HV8
       quantity_of_the_object: 34
       instance_of_the_object: 2
     - object_name: HV7

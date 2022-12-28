@@ -67,7 +67,7 @@ void AnnotationClient::main()
     
     multi_object_other_kind = decide_gazebo_object_.get_randam_place_position(multi_object_other_kind);
     gazebo_model_move.set_multi_gazebo_model(multi_object_other_kind);
-    ros::Duration(0.3).sleep();
+    ros::Duration(0.7).sleep();
     
 
     common_srvs::SensorService sensor_srv;
