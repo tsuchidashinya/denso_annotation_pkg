@@ -3,8 +3,8 @@
 AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     nh_(nh),
     pnh_("~"),
-    noize_image_client_(nh),
-    counter_(0)
+    counter_(0),
+    decide_gazebo_object_()
 {
     set_paramenter();
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
@@ -18,6 +18,13 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     tf_delete_client_ = nh_.serviceClient<common_srvs::TfDeleteService>(tf_delete_service_name_);
     hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 
+    if (object_list_[0] == "HV8" || object_list_[0] == "HV6") {
+        decide_gazebo_object_.set_decice_pose_option(DecidePoseOption::Head);
+    }
+    else {
+        decide_gazebo_object_.set_decice_pose_option(DecidePoseOption::FullRandom);
+    }
+    
 }
 
 common_msgs::CloudData AnnotationClient::crop_cloudmsg(common_msgs::CloudData input_cloud) {

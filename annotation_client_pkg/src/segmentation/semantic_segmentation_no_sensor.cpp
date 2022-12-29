@@ -30,32 +30,31 @@ void AnnotationClient::set_paramenter()
 
 void AnnotationClient::main()
 {
-    DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeCloud visualize_srv;
     common_srvs::VisualizeDeleteService vis_delete_srv;
 
     // common_msgs::ObjectInfo sensor_object;
-    // sensor_object = decide_gazebo_object.get_sensor_position();
+    // sensor_object = decide_gazebo_object_.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_object);
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
     for (int i = 0; i < object_list_.size(); i++) {
         for (int j = 0; j < quantity_of_object_list_[i]; j++) {
             common_msgs::ObjectInfo object;
-            object = decide_gazebo_object.make_object_info(j, object_list_[i]);
+            object = decide_gazebo_object_.make_object_info(j, object_list_[i]);
             multi_object_all.push_back(object);
             vis_delete_srv.request.delete_cloud_topic_list.push_back(object.tf_name + "_visualize");
         }
     }
-    multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
+    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     for (int i = 0; i < util_.random_int(0, quantity_of_object_list_[0]); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, object_list_[0]);
+        object = decide_gazebo_object_.make_object_info(i, object_list_[0]);
         multi_object.push_back(object);
     }
-    multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
+    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(0.7).sleep();
     
