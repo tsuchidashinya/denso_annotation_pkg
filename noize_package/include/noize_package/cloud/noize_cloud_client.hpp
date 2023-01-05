@@ -21,17 +21,18 @@ public:
     void main();
     void acc_main(int);
     void set_parameter();
+    void visualize_request(std::string, common_msgs::CloudData);
     XmlRpc::XmlRpcValue param_list;
     int the_number_of_execute_;
 
 private:
     ros::NodeHandle nh_, pnh_;
     ros::ServiceClient sensor_client_, object_detect_client_, visualize_client_, cloud_network_client_, accuracy_client_, 
-    hdf5_open_client_, vis_image_client_, hdf5_hdf5_record_client_;
+    hdf5_open_client_, vis_image_client_, hdf5_record_client_;
     std::string sensor_service_name_, object_detect_service_name_, visualize_service_name_,
-    cloud_network_service_name_, accuracy_service_name_, hdf5_open_acc_service_name_, vis_image_service_name_, hdf5_hdf5_record_service_name_;
+    cloud_network_service_name_, accuracy_service_name_, hdf5_open_acc_service_name_, vis_image_service_name_, hdf5_record_service_name_;
     std::string world_frame_, sensor_frame_;
-    std::string hdf5_open_file_path_;
+    std::string hdf5_open_file_path_, hdf5_record_file_path_;
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;
     Util util_;

@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   common_srvs
   tf_package
   sensor_package
+  space_handling_pkg
 )
 
 
