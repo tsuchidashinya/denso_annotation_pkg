@@ -15,6 +15,32 @@ common_msgs::CloudData NoizeCloudMake::sphere_cloud(float r, int point_num)
     return cloud;
 }
 
+common_msgs::CloudData NoizeCloudMake::sphere_empty_cloud(float r, int point_num)
+{
+    common_msgs::CloudData cloud;
+    for (int i = 0; i < point_num; i++) {
+        float x = util_.random_float(-r, r);
+        float y, z;
+        if (util_.probability() < 0.5) {
+            y = std::sqrt(r*r - x*x);
+        }
+        else {
+            y = -std::sqrt(r*r - x*x);
+        }
+        if (util_.probability() < 0.5) {
+            z = std::sqrt(r*r - x*x - y*y);
+        }
+        else {
+            z = -std::sqrt(r*r - x*x - y*y);
+        }
+        cloud.x.push_back(x);
+        cloud.y.push_back(y);
+        cloud.z.push_back(z);
+        cloud.instance.push_back(0);
+    }
+    return cloud;
+}
+
 common_msgs::CloudData NoizeCloudMake::cylinder_cloud(float r, float z_max, int point_num)
 {
     common_msgs::CloudData cloud;
