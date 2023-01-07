@@ -2,6 +2,6 @@ noize_client:
   hdf5_open_acc_service_name: hdf5_open_segmentation_service
   hdf5_record_service_name: record_segmentation_service
   visualize_service_name: visualize_cloud_service
-  hdf5_open_file_path: /home/ericlab/Downloads/sensor_b_box_2000.hdf5
-  hdf5_record_file_path: /home/ericlab/Downloads/sensor_b_box_2000_noize.hdf5
+  hdf5_open_file_path: /home/ericlab/Downloads/sensor_b_box_3000.hdf5
+  hdf5_record_file_path: /home/ericlab/Downloads/sensor_b_box_3000_noize.hdf5
 

@@ -73,17 +73,17 @@ void NoizeCloudClient::main()
         auto trans_cloud_after = UtilMsgData::vector3_to_cloudmsg(translation);
         trans_cloud_after.frame_id = world_frame_;
         // visualize_request("trans_cloud_after", trans_cloud_after);
-        auto rotate_quat = TfFunction::rotate_xyz_make(M_PI/2 + Util::random_float_static(-0.1, 0), 0, 0);
-        board_cloud = NoizeCloudTransform::rotate_noize(board_cloud, TfFunction::tf2_quat_to_geo_quat(rotate_quat));
-        auto noize_board = noize.noize_cloud_random(0.1, 0.1, 0.1);
-        for (int i = 0; i < util_.random_int(0, 10); i++) {
-            auto noize_board_part = noize.noize_cloud_random(0.1, 0.1, 0.1);
-            noize_board = UtilMsgData::concat_cloudmsg(noize_board, noize_board_part);
-        }
+        // auto rotate_quat = TfFunction::rotate_xyz_make(M_PI/2 + Util::random_float_static(-0.1, 0), 0, 0);
+        // board_cloud = NoizeCloudTransform::rotate_noize(board_cloud, TfFunction::tf2_quat_to_geo_quat(rotate_quat));
+        // auto noize_board = noize.noize_cloud_random(0.1, 0.1, 0.1);
+        // for (int i = 0; i < util_.random_int(0, 10); i++) {
+        //     auto noize_board_part = noize.noize_cloud_random(0.1, 0.1, 0.1);
+        //     noize_board = UtilMsgData::concat_cloudmsg(noize_board, noize_board_part);
+        // }
         auto final_cloud = original_cloud_list[all_index];
-        board_cloud = NoizeCloudMake::make_defect_cloud(board_cloud, noize_board, 0.005);
-        board_cloud = NoizeCloudTransform::translation_noize(board_cloud, translation);
-        board_cloud = NoizeCloudTransform::change_frame_id(board_cloud, world_frame_, sensor_frame_);
+        // board_cloud = NoizeCloudMake::make_defect_cloud(board_cloud, noize_board, 0.005);
+        // board_cloud = NoizeCloudTransform::translation_noize(board_cloud, translation);
+        // board_cloud = NoizeCloudTransform::change_frame_id(board_cloud, world_frame_, sensor_frame_);
         
         // visualize_request("board_cloud" + std::to_string(all_index), board_cloud);
         common_msgs::CloudData sum_cloud;
@@ -105,17 +105,7 @@ void NoizeCloudClient::main()
         // final_cloud = NoizeCloudMake::make_defect_cloud(final_cloud, noize_cloud_final, 0.0035);
         // visualize_request("noize_cloud_final" + std::to_string(all_index), noize_cloud_final);
         if (util_.probability() < 0.5) {
-            auto probable1 = util_.probability();
-            if (probable1 < 0.3) {
-                final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, board_cloud);
-            }
-            else if (probable1 < 0.6) {
-                final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, noize_cloud_final);
-            }
-            else {
-                final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, board_cloud);
-                final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, noize_cloud_final);
-            }
+            final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, noize_cloud_final);
         }
         // visualize_request("final_cloud" + std::to_string(all_index), final_cloud);
         common_srvs::Hdf5RecordSegmentation record_srv;
