@@ -11,7 +11,9 @@ class NoizeCloudTransform
 {
 public:
     static common_msgs::CloudData translation_noize(common_msgs::CloudData, geometry_msgs::Vector3);
+    static common_msgs::CloudData translation_noize(common_msgs::CloudData, float, float, float);
     static common_msgs::CloudData rotate_noize(common_msgs::CloudData, geometry_msgs::Quaternion);
+    static common_msgs::CloudData rotate_noize(common_msgs::CloudData, tf2::Quaternion);
     static geometry_msgs::Vector3 get_centroid(common_msgs::CloudData);
     static common_msgs::CloudData get_far_away_cloud(common_msgs::CloudData, geometry_msgs::Vector3, int);
     static common_msgs::CloudData get_instance_boarder_cloud(common_msgs::CloudData, double);

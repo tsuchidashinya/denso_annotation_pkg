@@ -69,3 +69,10 @@ target_link_libraries(noize_cloud_client_node
   noize_cloud_client
   ${catkin_LIBRARIES}
 )
+
+add_executable(noize_cloud_try src/cloud/noize_cloud_try.cpp src/cloud/noize_cloud_client_node.cpp)
+target_link_libraries(noize_cloud_try
+  noize_cloud_make
+  noize_cloud_transform
+  ${catkin_LIBRARIES}
+)

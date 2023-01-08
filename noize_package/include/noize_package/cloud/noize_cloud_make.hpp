@@ -10,6 +10,8 @@ class NoizeCloudMake
 public:
     common_msgs::CloudData sphere_cloud(float, int);
     common_msgs::CloudData sphere_empty_cloud(float, int);
+    common_msgs::CloudData circle_cloud(float, float, float, int);
+    common_msgs::CloudData linear_cloud(float, float, int);
     common_msgs::CloudData cylinder_cloud(float, float, int);
     common_msgs::CloudData rectangle_cloud(float, float, float, int);
     common_msgs::CloudData noize_cloud_random();

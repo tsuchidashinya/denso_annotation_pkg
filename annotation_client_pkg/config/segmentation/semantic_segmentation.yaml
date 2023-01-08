@@ -4,11 +4,11 @@ annotation_main:
   sensor_service_name: sensor_service
   mesh_service_name: mesh_service
   hdf5_record_service_name: record_segmentation_service
-  hdf5_record_file_path: /home/ericlab/tsuchida/2023_01/annotation/Semseg/HV8/sensor_b_box_5000_improve.hdf5
+  hdf5_record_file_path: /home/ericlab/tsuchida/2023_01/annotation/Semseg/HV8/temp/try_20.hdf5
   nearest_radious: 0.002
   LEAF_SIZE: 0.002
   radious: 0.05
-  the_number_of_dataset: 5000
+  the_number_of_dataset: 20
   occlusion_object_radious: 0.035
   main_object_name: HV8
   quantity_of_main_object: 34

@@ -115,3 +115,38 @@ common_msgs::CloudData NoizeCloudMake::noize_cloud_random(float x, float y, floa
     }
     return sum_cloud;
 }
+
+common_msgs::CloudData NoizeCloudMake::circle_cloud(float radious, float angle_max, float tube_radious, int point_num)
+{
+    common_msgs::CloudData cloud;
+    for (int i = 0; i < point_num; i++) {
+        float x, y, z;
+        auto angle = util_.random_float(0, angle_max);
+        auto tube_angle = util_.random_float(0, 2 * M_PI);
+        x = (radious + tube_radious * std::cos(tube_angle)) * std::cos(angle);
+        y = (radious + tube_radious * std::cos(tube_angle)) * std::sin(angle);
+        z = tube_radious * std::sin(tube_angle);
+        cloud.x.push_back(x);
+        cloud.y.push_back(y);
+        cloud.z.push_back(z);
+        cloud.instance.push_back(0);
+    }
+    return cloud;
+}
+
+common_msgs::CloudData NoizeCloudMake::linear_cloud(float length, float tube_radious, int point_num)
+{
+    common_msgs::CloudData cloud;
+    for (int i = 0; i < point_num; i++) {
+        float x, y, z;
+        x = util_.random_float(-length / 2, length / 2);
+        auto tube_angle = util_.random_float(0, 2 * M_PI);
+        y = tube_radious * std::cos(tube_angle);
+        z = tube_radious * std::sin(tube_angle);
+        cloud.x.push_back(x);
+        cloud.y.push_back(y);
+        cloud.z.push_back(z);
+        cloud.instance.push_back(0);
+    }
+    return cloud;
+}

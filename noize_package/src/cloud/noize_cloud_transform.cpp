@@ -51,6 +51,12 @@ common_msgs::CloudData NoizeCloudTransform::translation_noize(common_msgs::Cloud
     return out_cloud;
 }
 
+common_msgs::CloudData NoizeCloudTransform::translation_noize(common_msgs::CloudData cloud, float x, float y, float z)
+{
+    auto vector3 = UtilMsgData::vector3(x, y, z);
+    return translation_noize(cloud, vector3);
+}
+
 common_msgs::CloudData NoizeCloudTransform::rotate_noize(common_msgs::CloudData cloud, geometry_msgs::Quaternion rotation)
 {
     common_msgs::CloudData out_cloud;
@@ -65,6 +71,12 @@ common_msgs::CloudData NoizeCloudTransform::rotate_noize(common_msgs::CloudData 
     }
     out_cloud = UtilMsgData::substitute_cloudmsg_para(out_cloud, cloud);
     return out_cloud;
+}
+
+common_msgs::CloudData NoizeCloudTransform::rotate_noize(common_msgs::CloudData cloud, tf2::Quaternion quat)
+{
+    geometry_msgs::Quaternion rotation = TfFunction::tf2_quat_to_geo_quat(quat);
+    return rotate_noize(cloud, rotation);
 }
 
 geometry_msgs::Vector3 NoizeCloudTransform::get_centroid(common_msgs::CloudData cloud)
