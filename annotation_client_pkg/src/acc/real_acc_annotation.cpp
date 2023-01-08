@@ -31,7 +31,7 @@ void AnnotationClient::set_paramenter()
     hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     int the_number_of_object;
     ROS_INFO_STREAM("How many object do you set?");
@@ -95,4 +95,5 @@ void AnnotationClient::main()
     record_srv.request.cloud_data = ano_data;
     record_srv.request.is_end = 1;
     Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
+    return false;
 }

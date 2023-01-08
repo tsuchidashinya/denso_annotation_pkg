@@ -27,7 +27,7 @@ void AnnotationClient::set_paramenter()
     hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     DecidePosition decide_gazebo_object_;
     GazeboMoveServer gazebo_model_move(nh_);
@@ -122,4 +122,5 @@ void AnnotationClient::main()
     visualize_srv.request.topic_name_list.push_back("acc_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
     counter_++;
+    return false;
 }

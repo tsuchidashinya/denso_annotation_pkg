@@ -30,7 +30,7 @@ class AnnotationClient
 {
 public:
     AnnotationClient(ros::NodeHandle &);
-    void main();
+    bool main();
     void set_paramenter();
     common_msgs::CloudData nearest_extractor(common_msgs::CloudData, common_srvs::MeshCloudService, int);
     common_srvs::MeshCloudService mesh_request(std::string);

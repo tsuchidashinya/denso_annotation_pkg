@@ -37,7 +37,7 @@ void AnnotationClient::set_paramenter()
 
 
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     common_srvs::Hdf5OpenSensorDataService hdf5_open_sensor_srv;
     common_srvs::MeshCloudService mesh_srv;
@@ -236,7 +236,7 @@ void AnnotationClient::main()
             Util::client_request(hdf5_record_2_client_, record_sensor_data_srv, hdf5_record_2_service_name_);
         }
     }
-    
+    return false;
     
     
 }

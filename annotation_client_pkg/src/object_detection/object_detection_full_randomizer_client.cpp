@@ -37,7 +37,7 @@ void AnnotationClient::set_paramenter()
     hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     NoizeImageClient noize_image_client(nh_);
     GazeboMoveServer gazebo_model_move(nh_);
@@ -119,5 +119,6 @@ void AnnotationClient::main()
     vis_img_srv.request.image_list.push_back(UtilMsgData::cvimg_to_rosimg(img, sensor_msgs::image_encodings::BGR8));
     vis_img_srv.request.topic_name_list.push_back("box_draw_image");
     Util::client_request(vis_img_client_, vis_img_srv, vis_img_service_name_);
+    return false;
 }
 

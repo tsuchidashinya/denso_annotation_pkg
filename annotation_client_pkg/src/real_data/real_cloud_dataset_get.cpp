@@ -26,7 +26,7 @@ void AnnotationClient::set_paramenter()
     hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
@@ -50,6 +50,7 @@ void AnnotationClient::main()
     vis_img_srv.request.image_list.push_back(sensor_srv.response.image);
     vis_img_srv.request.topic_name_list.push_back("real_image");
     Util::client_request(vis_img_client_, vis_img_srv, vis_img_service_name_);
+    return false;
 }
 
 

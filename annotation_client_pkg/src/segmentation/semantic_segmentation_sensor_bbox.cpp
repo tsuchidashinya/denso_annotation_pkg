@@ -39,7 +39,7 @@ void AnnotationClient::set_paramenter()
     hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeCloud visualize_srv;
@@ -151,10 +151,14 @@ void AnnotationClient::main()
         visualize_srv.request.cloud_data_list.push_back(cloud_multi[i]);
         visualize_srv.request.topic_name_list.push_back(cloud_multi[i].tf_name + "_visualize");
         final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[i]);
+        if (record_srv.response.finish) {
+            return true;
+        }
         ros::Duration(0.01).sleep();
     }
     Util::client_request(vis_delete_client_, vis_delete_srv, vis_delete_service_name_);
     visualize_srv.request.cloud_data_list.push_back(final_cloud);
     visualize_srv.request.topic_name_list.push_back("final_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
+    return false;
 }

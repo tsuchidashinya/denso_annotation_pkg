@@ -36,7 +36,7 @@ void AnnotationClient::set_paramenter()
 
 
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
     common_srvs::Hdf5OpenAccService hdf5_open_srv;
     common_srvs::MeshCloudService mesh_srv;
@@ -223,5 +223,5 @@ void AnnotationClient::main()
         }
         get_hdf5_file_path = record_srv.response.save_temp_file_path;
     }
-    
+    return false;
 }
