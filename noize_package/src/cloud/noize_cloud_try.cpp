@@ -18,6 +18,7 @@ void NoizeCloudClient::set_parameter()
     pnh_.getParam("common_parameter", param_list);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
+    LEAF_SIZE = param_list["LEAF_SIZE"];
 }
 
 void NoizeCloudClient::visualize_request(std::string topic_name, common_msgs::CloudData cloud)
@@ -63,28 +64,17 @@ void NoizeCloudClient::main()
         auto final_cloud = original_cloud_list[all_index];
         common_msgs::CloudData sum_cloud;
         // sum_cloud = noize.noize_cloud_random(0.03, 0.03, 0.05);
-        for (int i = 0; i < 4; i++) {
-            auto noize_part =  noize.circle_cloud(util_.random_float(0.03, 0.3), util_.random_float(0, M_PI * 3/ 2), util_.random_float(0.0001, 0.003), Util::random_int_static(100, 1500));
-            auto quaternion = TfFunction::rotate_xyz_make(util_.random_float(-M_PI, M_PI), util_.random_float(-M_PI, M_PI), util_.random_float(-M_PI, M_PI));
-            noize_part = NoizeCloudTransform::rotate_noize(noize_part, quaternion);
-            sum_cloud = UtilMsgData::concat_cloudmsg(sum_cloud, noize_part);
-        }
-        for (int i = 0; i < 4; i++) {
-            auto noize_part =  noize.linear_cloud(util_.random_float(0.03, 0.3), util_.random_float(0.0001, 0.003), Util::random_int_static(100, 1500));
-            auto quaternion = TfFunction::rotate_xyz_make(util_.random_float(-M_PI, M_PI), util_.random_float(-M_PI, M_PI), util_.random_float(-M_PI, M_PI));
-            noize_part = NoizeCloudTransform::rotate_noize(noize_part, quaternion);
-            sum_cloud = UtilMsgData::concat_cloudmsg(sum_cloud, noize_part);
-        }
-        
+      
+        sum_cloud = UtilMsgData::concat_cloudmsg(sum_cloud, noize.noize_tube_small());
+        sum_cloud = UtilMsgData::concat_cloudmsg(sum_cloud, noize.noize_tube_big());
         sum_cloud.frame_id = world_frame_;
+        sum_cloud = CloudProcess::downsample_by_voxelgrid(sum_cloud, LEAF_SIZE);
         visualize_request("sum_cloud" + std::to_string(all_index), sum_cloud);
         auto sum_cloud_copy = sum_cloud;
-        auto sample_num = util_.random_int(10, 1500);
-        if (sample_num < sum_cloud.x.size()) {
-            auto pcl_cloud = UtilMsgData::cloudmsg_to_pclLabel(sum_cloud);
-            pcl_cloud = CloudProcess::downsample_random(pcl_cloud, sample_num);
-            sum_cloud = UtilMsgData::pclLabel_to_cloudmsg(pcl_cloud);
-        }
+        // auto sample_num = util_.random_int(10, 1500);
+        // if (sample_num < sum_cloud.x.size()) {
+        //     sum_cloud = CloudProcess::downsample_random(sum_cloud, sample_num);
+        // }
         // visualize_request("noize_cloud_rotate", sum_cloud);
         centroid = NoizeCloudTransform::change_frame_id(centroid, sensor_frame_, world_frame_);
         sum_cloud = NoizeCloudTransform::translation_noize(sum_cloud, centroid);

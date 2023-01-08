@@ -4,6 +4,7 @@
 #include <math.h>
 #include <space_handling_pkg/space_handling_library.hpp>
 #include "noize_cloud_transform.hpp"
+#include <sensor_package/cloud_process.hpp>
 
 class NoizeCloudMake
 {
@@ -16,6 +17,9 @@ public:
     common_msgs::CloudData rectangle_cloud(float, float, float, int);
     common_msgs::CloudData noize_cloud_random();
     common_msgs::CloudData noize_cloud_random(float, float, float);
+    common_msgs::CloudData noize_tube_small_z_range(float, float);
+    common_msgs::CloudData noize_tube_small();
+    common_msgs::CloudData noize_tube_big();
     static common_msgs::CloudData make_defect_cloud(common_msgs::CloudData, common_msgs::CloudData, double);
     void set_parameter();
 private:

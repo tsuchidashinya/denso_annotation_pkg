@@ -36,4 +36,5 @@ private:
     TfFunction tf_func_;
     UtilMsgData util_msg_data_;
     Util util_;
+    double LEAF_SIZE;
 };
