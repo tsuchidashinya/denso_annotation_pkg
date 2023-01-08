@@ -104,7 +104,7 @@ void NoizeCloudClient::main()
         // visualize_request("noize_cloud_final_not_down" + std::to_string(all_index), noize_cloud_final_not_down);
         // final_cloud = NoizeCloudMake::make_defect_cloud(final_cloud, noize_cloud_final, 0.0035);
         // visualize_request("noize_cloud_final" + std::to_string(all_index), noize_cloud_final);
-        if (util_.probability() < 0.5) {
+        if (util_.probability() < 0.25) {
             final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, noize_cloud_final);
         }
         // visualize_request("final_cloud" + std::to_string(all_index), final_cloud);
