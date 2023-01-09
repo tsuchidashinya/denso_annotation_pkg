@@ -193,7 +193,7 @@ common_msgs::CloudData NoizeCloudMake::noize_tube_small()
 common_msgs::CloudData NoizeCloudMake::noize_tube_big()
 {
     common_msgs::CloudData sum_cloud;
-    for (int i = 0; i < util_.random_int(0, 5); i++) {
+    for (int i = 0; i < util_.random_int(0, 10); i++) {
         common_msgs::CloudData noize_part;
         noize_part =  circle_cloud(util_.random_float(0.01, 0.5), util_.random_float(0, M_PI * 3/ 2), util_.random_float(0.0001, 0.003), Util::random_int_static(100, 2000));
         auto quaternion = TfFunction::rotate_xyz_make(util_.random_float(-M_PI, M_PI), util_.random_float(-M_PI, M_PI), util_.random_float(-M_PI, M_PI));

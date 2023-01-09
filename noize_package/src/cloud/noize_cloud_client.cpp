@@ -54,16 +54,16 @@ void NoizeCloudClient::main()
         auto origin_1 = UtilMsgData::extract_ins_cloudmsg(final_cloud, 1);
         auto centroid = NoizeCloudTransform::get_centroid(origin_1);
         NoizeCloudMake noize_object;
-        if (util_.probability() < 0.5) {
+        if (util_.probability() < 0.6) {
             noize_cloud = UtilMsgData::concat_cloudmsg(noize_cloud, noize_object.noize_tube_small());
         }
-        if (util_.probability() < 0.25) {
+        if (util_.probability() < 0.6) {
             noize_cloud = UtilMsgData::concat_cloudmsg(noize_cloud, noize_object.noize_tube_big());
         }
         centroid = NoizeCloudTransform::change_frame_id(centroid, sensor_frame_, world_frame_);
         noize_cloud = NoizeCloudTransform::translation_noize(noize_cloud, centroid);
         auto noize_cloud_final = NoizeCloudTransform::change_frame_id(noize_cloud, world_frame_, sensor_frame_);
-        if (util_.probability() < 0.5) {
+        if (noize_cloud_final.x.size() > 0) {
             final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, noize_cloud_final);
         }
         common_srvs::Hdf5RecordSegmentation record_srv;
