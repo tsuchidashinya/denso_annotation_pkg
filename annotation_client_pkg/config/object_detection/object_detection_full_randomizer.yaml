@@ -3,7 +3,7 @@ annotation_main:
   sensor_service_name: sensor_service
   nearest_radious: 0.002
   radious: 0.05
-  the_number_of_dataset: 3000
+  the_number_of_dataset: 2356
   save_base_file_name: HV8_full_randomizer
   occlusion_object_radious: 0.035
   save_dir: /home/ericlab/tsuchida/2023_01/annotation/ObjectDetection/SSD/HV8/full_randomizer
