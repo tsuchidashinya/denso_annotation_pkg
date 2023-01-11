@@ -6,7 +6,7 @@ annotation_main:
   the_number_of_dataset: 2356
   save_base_file_name: HV8_full_randomizer
   occlusion_object_radious: 0.035
-  save_dir: /home/ericlab/tsuchida/2023_01/annotation/ObjectDetection/SSD/HV8/full_randomizer
+  save_dir: /home/ericlab/tsuchida/2023_01/annotation/ObjectDetection/SSD/HV8/try
   main_object_name: HV8
   quantity_of_main_object: 34
   instance_of_main_object: 1
