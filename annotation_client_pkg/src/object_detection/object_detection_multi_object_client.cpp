@@ -8,10 +8,9 @@ void AnnotationClient::set_paramenter()
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pnh_.getParam("annotation_main", param_list);
     nearest_radious_ = param_list["nearest_radious"];
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
+    vis_img_service_name_ = "visualize_image_service";
+    sensor_service_name_ = "sensor_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
-    vis_img_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
     save_base_file_name_ = static_cast<std::string>(param_list["save_base_file_name"]);
     save_dir_ = static_cast<std::string>(param_list["save_dir"]);
     save_dir_ = Util::join(save_dir_, save_base_file_name_);

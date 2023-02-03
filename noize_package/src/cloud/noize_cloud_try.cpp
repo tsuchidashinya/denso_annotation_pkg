@@ -12,8 +12,8 @@ pnh_("~")
 void NoizeCloudClient::set_parameter()
 {
     pnh_.getParam("noize_client", param_list);
-    hdf5_open_acc_service_name_ = static_cast<std::string>(param_list["hdf5_open_acc_service_name"]);
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
+    hdf5_open_acc_service_name_ = "hdf5_open_segmentation_service";
+    visualize_service_name_ = "visualize_cloud_service";
     hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);
     pnh_.getParam("common_parameter", param_list);
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);

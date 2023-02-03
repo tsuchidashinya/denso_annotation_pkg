@@ -1,12 +1,10 @@
 annotation_main:
-  visualize_image_service_name: visualize_image_service
-  sensor_service_name: sensor_service
   nearest_radious: 0.002
   radious: 0.05
-  the_number_of_dataset: 2356
-  save_base_file_name: HV8_full_randomizer
-  occlusion_object_radious: 0.035
-  save_dir: /home/ericlab/tsuchida/2023_01/annotation/ObjectDetection/SSD/HV8/try
+  the_number_of_dataset: 20
+  save_base_file_name: HV8
+  occlusion_object_radious: 0.04
+  save_dir: /home/ericlab/Pictures/domain_dataset1
   main_object_name: HV8
   quantity_of_main_object: 34
   instance_of_main_object: 1
@@ -23,10 +21,10 @@ annotation_main:
   
 decide_object_position:
   sensor_name: phoxi_camera
-  sensor_angle_max: 0.3
-  sensor_angle_min: -0.3
-  sensor_distance_min: 0.5
-  sensor_distance_max: 1.0
+  sensor_angle_max: 0.1
+  sensor_angle_min: -0.1
+  sensor_distance_min: 0.4
+  sensor_distance_max: 0.7
   z_position: 0.003
   box_height: 0.015
   box_name: denso_box
@@ -44,7 +42,6 @@ data_3D_to_2D:
   radious_y: 0.05
 
 noize_image_client:
-  visualize_image_service_name: visualize_image_service
   small_max_count: 150
   big_max_count: 40
 

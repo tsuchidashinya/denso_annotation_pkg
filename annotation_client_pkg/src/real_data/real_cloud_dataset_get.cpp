@@ -7,11 +7,11 @@ void AnnotationClient::set_paramenter()
     world_frame_ = static_cast<std::string>(param_list["world_frame"]);
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pnh_.getParam("annotation_main", param_list);
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
-    hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
+    visualize_service_name_ = "visualize_cloud_service";
+    sensor_service_name_ = "sensor_service";
+    hdf5_record_service_name_ = "record_real_sensor_data_service";
+    vis_img_service_name_ = "visualize_image_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
-    vis_img_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
     hdf5_record_file_path_ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
 
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);

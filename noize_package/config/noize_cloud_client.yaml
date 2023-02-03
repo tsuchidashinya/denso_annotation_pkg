@@ -1,7 +1,4 @@
 noize_client:
-  hdf5_open_acc_service_name: hdf5_open_segmentation_service
-  hdf5_record_service_name: record_segmentation_service
-  visualize_service_name: visualize_cloud_service
   hdf5_open_file_path: /home/ericlab/tsuchida/2023_01/annotation/Semseg/HV8/data_1000/1000_not_noize.hdf5
   hdf5_record_file_path: /home/ericlab/tsuchida/2023_01/annotation/Semseg/HV8/data_1000/1000_propose.hdf5
 

@@ -1,6 +1,4 @@
 annotation_main:
-  visualize_image_service_name: visualize_image_service
-  sensor_service_name: sensor_service
   nearest_radious: 0.002
   radious: 0.05
   the_number_of_dataset: 2000

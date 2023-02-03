@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="mode" default="random_bbox"/>
+    <arg name="mode" default="sensor_b_box"/>
     <group if="$(eval mode=='multi_object')">
         <node pkg="annotation_client_pkg" type="semantic_segmentation_multi_object_client" name="semantic_segmentation_multi_object_client" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/segmentation/semantic_segmentation.yaml" command="load" />

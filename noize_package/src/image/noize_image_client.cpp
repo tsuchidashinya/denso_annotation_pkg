@@ -11,7 +11,7 @@ pnh_("~")
 void NoizeImageClient::set_parameter()
 {
     pnh_.getParam("noize_image_client", param_list);
-    vis_image_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
+    vis_image_service_name_ = "visualize_image_service";
     small_max_count_ = static_cast<int>(param_list["small_max_count"]);
     big_max_count_ = static_cast<int>(param_list["big_max_count"]);
 }
@@ -64,6 +64,51 @@ void NoizeImageClient::noize_image_main()
         }
         
     }
+    auto sensor_image = UtilMsgData::cvimg_to_rosimg(img, sensor_msgs::image_encodings::BGR8);
+    common_srvs::VisualizeImage vis_img_srv;
+    vis_img_srv.request.image_list.push_back(sensor_image);
+    vis_img_srv.request.topic_name_list.push_back("display_object_topic");
+    Util::client_request(vis_image_client_, vis_img_srv, vis_image_service_name_);
+}
+
+void NoizeImageClient::noize_image_main(std::string save_path)
+{
+    NoizeImageMake noize_image;
+    auto img = noize_image.plane_image_random();
+    for (int i = 0; i < util_.random_int(1, big_max_count_); i++) {
+        auto probably = util_.probability();
+        if (probably < 0.25) {
+            img = noize_image.circle_random(img, SizeOption::big);
+        }
+        else if (probably < 0.6) {
+            img = noize_image.linear_line_random(img, SizeOption::big);
+        }
+        else if (probably < 0.8) {
+            img = noize_image.rectangle_random(img, SizeOption::big);
+        }
+        else if (probably < 1) {
+            img = noize_image.ellipse_random(img, SizeOption::big);
+        }
+        
+    }
+    for (int i = 0; i < util_.random_int(1, small_max_count_); i++) {
+        auto probably = util_.probability();
+        if (probably < 0.25) {
+            img = noize_image.circle_random(img, SizeOption::small);
+        }
+        else if (probably < 0.6) {
+            img = noize_image.linear_line_random(img, SizeOption::small);
+        }
+        else if (probably < 0.8) {
+            img = noize_image.rectangle_random(img, SizeOption::small);
+        }
+        else if (probably < 1) {
+            img = noize_image.ellipse_random(img, SizeOption::small);
+        }
+        
+    }
+    Util::message_show("save_path", save_path);
+    cv::imwrite(save_path, img);
     auto sensor_image = UtilMsgData::cvimg_to_rosimg(img, sensor_msgs::image_encodings::BGR8);
     common_srvs::VisualizeImage vis_img_srv;
     vis_img_srv.request.image_list.push_back(sensor_image);

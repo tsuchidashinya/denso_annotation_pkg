@@ -8,10 +8,9 @@ void AnnotationClient::set_paramenter()
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pnh_.getParam("annotation_main", param_list);
     nearest_radious_ = param_list["nearest_radious"];
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
+    vis_img_service_name_ = "visualize_image_service";
+    sensor_service_name_ = "sensor_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
-    vis_img_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
     save_base_file_name_ = static_cast<std::string>(param_list["save_base_file_name"]);
     save_dir_ = static_cast<std::string>(param_list["save_dir"]);
     occlusion_object_radious_ = param_list["occlusion_object_radious"];
@@ -39,12 +38,17 @@ void AnnotationClient::set_paramenter()
 
 bool AnnotationClient::main()
 {
+    std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
     NoizeImageClient noize_image_client(nh_);
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
     noize_image_client.restore_image();
-    if (util_.probability() < 0.6) {
-        noize_image_client.noize_image_main();
+    // if (util_.probability() < 0.6) {
+    //     noize_image_client.noize_image_main();
+    // }
+
+     if (util_.probability() < 1) {
+        noize_image_client.noize_image_main(Util::join("/home/ericlab/Pictures/domain_texture", final_base_file_name + ".jpg"));
     }
     
     common_msgs::ObjectInfo sensor_object;
@@ -107,7 +111,7 @@ bool AnnotationClient::main()
     Util::mkdir(image_dir_path);
     Util::mkdir(box_dir_path);
     Util::mkdir(label_dir_path);
-    std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
+    
     cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
     cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
     for (int i = 0; i < box_pos.size(); i++) {

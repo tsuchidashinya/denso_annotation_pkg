@@ -8,11 +8,11 @@ void AnnotationClient::set_paramenter()
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pnh_.getParam("annotation_main", param_list);
     nearest_radious_ = param_list["nearest_radious"];
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    vis_delete_service_name_ = static_cast<std::string>(param_list["visualize_delete_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
-    mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
-    hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
+    visualize_service_name_ = "visualize_cloud_service";
+    vis_delete_service_name_ = "visualize_delete_service";
+    sensor_service_name_ = "sensor_service";
+    mesh_service_name_ = "mesh_service";
+    hdf5_record_service_name_ = "record_segmentation_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
     occlusion_object_radious_ = param_list["occlusion_object_radious"];

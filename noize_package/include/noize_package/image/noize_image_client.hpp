@@ -19,6 +19,7 @@ class NoizeImageClient
 public:
     NoizeImageClient(ros::NodeHandle&);
     void noize_image_main();
+    void noize_image_main(std::string);
     void restore_image();
     void set_parameter();
     XmlRpc::XmlRpcValue param_list;
