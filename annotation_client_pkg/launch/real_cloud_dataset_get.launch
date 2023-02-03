@@ -2,6 +2,6 @@
 <launch>
     <node pkg="annotation_client_pkg" type="real_cloud_dataset_get" name="real_cloud_dataset_get" output="screen">
         <rosparam file="$(find annotation_client_pkg)/config/real_data/real_cloud_dataset_get.yaml" command="load" />
-        <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+        <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
     </node>
 </launch>

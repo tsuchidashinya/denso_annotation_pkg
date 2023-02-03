@@ -4,13 +4,13 @@
     <group if="$(eval mode=='full_randomizer')">
         <node pkg="annotation_client_pkg" type="object_detection_full_randomizer" name="object_detection_full_randomizer" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_full_randomizer.yaml" command="load" />
-            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval mode=='multi_object')">
         <node pkg="annotation_client_pkg" type="object_detection_multi_object" name="object_detection_multi_object" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_multi_object.yaml" command="load" />
-            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
    

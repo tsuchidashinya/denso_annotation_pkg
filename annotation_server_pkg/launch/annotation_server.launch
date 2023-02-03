@@ -4,23 +4,23 @@
     
     <node pkg="mesh_cloud_package" type="mesh_cloud_server" name="mesh_cloud_server" output="screen">
         <rosparam file="$(find mesh_cloud_package)/config/mesh_cloud_server.yaml" command="load" />
-        <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+        <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
     </node>
     <group if="$(eval sim_or_real=='real')">
         <node pkg="sensor_package" type="SensorServer" name="sensor_server" output="screen">
             <rosparam file="$(find sensor_package)/config/sensor_server_real_photoneo.yaml" command="load"/>
-            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <group if="$(eval sim_or_real=='sim')">
         <node pkg="sensor_package" type="SensorServer" name="sensor_server" output="screen">
             <rosparam file="$(find sensor_package)/config/sensor_server.yaml" command="load"/>
-            <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+            <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
         </node>
     </group>
     <node pkg="visualize_package" type="visualize_server" name="visualize_server" output="screen">
         <rosparam file="$(find visualize_package)/config/visualize_server.yaml" command="load" />
-        <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+        <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
     </node>
     <node pkg="hdf5_package" type="hdf5_record_server.py" name="hdf5_record_server" output="screen">
         <rosparam file="$(find hdf5_package)/config/hdf5_record_server.yaml" command="load" />

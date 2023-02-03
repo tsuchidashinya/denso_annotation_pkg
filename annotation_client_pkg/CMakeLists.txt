@@ -8,7 +8,7 @@ add_compile_options(-std=c++17)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  util
+  util_package
   gazebo_model_package
   tf_package
   noize_package

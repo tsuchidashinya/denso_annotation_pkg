@@ -3,7 +3,7 @@
 
     <node pkg="noize_package" type="noize_cloud_client_node" name="noize_cloud_client_node" output="screen">
         <rosparam file="$(find noize_package)/config/noize_cloud_client.yaml" command="load" ns="" />
-        <rosparam file="$(find util)/config/common_parameter.yaml" command="load" />
+        <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
     </node>
 
 </launch>

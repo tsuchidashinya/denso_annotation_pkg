@@ -9,7 +9,7 @@ project(noize_package)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  util
+  util_package
   common_srvs
   tf_package
   sensor_package
@@ -20,7 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
  LIBRARIES noize_cloud_make noize_cloud_transform noize_cloud_client noize_image_client
-#  CATKIN_DEPENDS roscpp util
+#  CATKIN_DEPENDS roscpp util_package
 #  DEPENDS system_lib
 )
 
