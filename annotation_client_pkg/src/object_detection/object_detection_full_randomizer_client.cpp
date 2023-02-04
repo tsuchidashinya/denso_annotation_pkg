@@ -53,6 +53,8 @@ bool AnnotationClient::main()
     if (util_.probability() < 0.8) {
         noize_image_client.noize_image_main();
     }
+    auto light_para = decide_gazebo_object_.get_light_properties();
+    gazebo_model_move.set_light(light_para);
 
     //  if (util_.probability() < 1) {
     //     noize_image_client.noize_image_main(Util::join("/home/ericlab/Pictures/domain_texture", final_base_file_name + ".jpg"));

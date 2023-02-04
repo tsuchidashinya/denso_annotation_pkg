@@ -3,7 +3,7 @@ annotation_main:
   the_number_of_dataset: 2000
   save_base_file_name: t_pipe_box
   occlusion_object_radious: 0.02
-  save_dir: /home/ericlab/tsuchida/2023_02/annotation/ObjectDetection/ssd/t_pipe_full_change_color
+  save_dir: /home/ericlab/tsuchida/picture/test_try/2_5
   main_object_name: t_pipe
   num_of_main_object: 34
   instance_of_main_object: 1
