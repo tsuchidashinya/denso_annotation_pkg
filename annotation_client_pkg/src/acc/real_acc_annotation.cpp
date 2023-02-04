@@ -16,7 +16,9 @@ void AnnotationClient::set_paramenter()
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
-    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
+    ObjectListType object_option;
+    object_option.object_name = static_cast<std::string>(param_list["main_object_name"]);
+    object_option_list_.push_back(object_option);
     hdf5_record_file_path_ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
 
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
@@ -67,7 +69,7 @@ bool AnnotationClient::main()
             Util::client_request(tf_br_client_, tf_br_srv, tf_br_service_name_);
             ros::Duration(0.09);
             common_msgs::ObjectInfo mesh_input;
-            mesh_input.object_name = object_list_[0];
+            mesh_input.object_name = object_option_list_[0].object_name;
             mesh_input.tf_name = tf_name_list[i];
             common_srvs::MeshCloudService mesh_srv;
             mesh_srv.request.multi_object_info.push_back(mesh_input);

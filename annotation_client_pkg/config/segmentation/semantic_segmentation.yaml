@@ -13,10 +13,10 @@ annotation_main:
       quantity_of_the_object: 34
       instance_of_the_object: 2
     - object_name: HV7
-      quantity_of_the_object: 6
+      num_of_object: 6
       instance_of_the_object: 3
     - object_name: HV6
-      quantity_of_the_object: 6
+      num_of_object: 6
       instance_of_the_object: 4
   
 decide_object_position:

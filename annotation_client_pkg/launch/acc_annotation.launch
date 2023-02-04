@@ -10,8 +10,8 @@
         </node>
     </group>
     <group if="$(eval sim_or_real=='real')">
-        <node pkg="calibration_pkg" type="calibrate_tf_broadcaster" name="calibrate_tf_broadcaster">
-            <rosparam file="$(find calibration_pkg)/config/calibrate_tf_broadcaster.yaml" command="load" ns="" />
+        <node pkg="calibration_package" type="calibrate_tf_broadcaster" name="calibrate_tf_broadcaster">
+            <rosparam file="$(find calibration_package)/config/calibrate_tf_broadcaster.yaml" command="load" ns="" />
             <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
         </node>
         <group if="$(eval hdf5_mode=='None')">

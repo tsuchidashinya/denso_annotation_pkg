@@ -9,7 +9,7 @@ AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
     set_paramenter();
     
 
-    if (object_list_[0] == "HV8" || object_list_[0] == "HV6") {
+    if (object_option_list_[0].object_name == "HV8" || object_option_list_[0].object_name == "HV6") {
         decide_gazebo_object_.set_decice_pose_option(DecidePoseOption::Head);
     }
     else {
@@ -29,7 +29,7 @@ common_srvs::MeshCloudService AnnotationClient::mesh_request(std::string tf_name
 {
     common_msgs::ObjectInfo mesh_input;
     common_srvs::MeshCloudService mesh_srv;
-    mesh_input.object_name = object_list_[0];
+    mesh_input.object_name = object_option_list_[0].object_name;
     mesh_input.tf_name = tf_name;
     mesh_srv.request.multi_object_info.clear();
     mesh_srv.request.multi_object_info.push_back(mesh_input);

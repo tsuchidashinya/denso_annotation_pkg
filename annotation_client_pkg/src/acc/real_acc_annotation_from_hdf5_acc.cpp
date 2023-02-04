@@ -18,7 +18,9 @@ void AnnotationClient::set_paramenter()
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     qxyz_step_ = param_list["qxyz_step"];
     xyz_step_ = param_list["xyz_step"];
-    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
+    ObjectListType object_option;
+    object_option.object_name = static_cast<std::string>(param_list["main_object_name"]);
+    object_option_list_.push_back(object_option);
     hdf5_record_file_path_ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
     hdf5_open_file_path_ = static_cast<std::string>(param_list["hdf5_open_file_path"]);
 
