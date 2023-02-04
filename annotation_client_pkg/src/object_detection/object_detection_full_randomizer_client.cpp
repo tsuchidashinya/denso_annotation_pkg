@@ -13,15 +13,22 @@ void AnnotationClient::set_paramenter()
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     save_base_file_name_ = static_cast<std::string>(param_list["save_base_file_name"]);
     save_dir_ = static_cast<std::string>(param_list["save_dir"]);
-    occlusion_object_radious_ = param_list["occlusion_object_radious"];
-    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
-    quantity_of_object_list_.push_back(static_cast<int>(param_list["quantity_of_main_object"]));
-    instance_of_object_list_.push_back(static_cast<int>(param_list["instance_of_main_object"]));
+    ObjectListType object_option;
+    object_option.instance_num = static_cast<int>(param_list["instance_of_main_object"]);
+    object_option.num_of_object = static_cast<int>(param_list["num_of_main_object"]);
+    object_option.object_name = static_cast<std::string>(param_list["main_object_name"]);
+    object_option.radious = param_list["radious_of_main_object"];
+    object_option.occlusion_radious = param_list["occlusion_radious_of_main_object"];
+    object_option_list_.push_back(object_option);
     pnh_.getParam("annotation_main/other_object_list", param_list);
     for (int i = 0; i < param_list.size(); i++) {
-        object_list_.push_back(static_cast<std::string>(param_list[i]["object_name"]));
-        quantity_of_object_list_.push_back(static_cast<int>(param_list[i]["quantity_of_the_object"]));
-        instance_of_object_list_.push_back(static_cast<int>(param_list[i]["instance_of_the_object"]));
+        ObjectListType other_object_option;
+        other_object_option.instance_num = static_cast<int>(param_list[i]["instance_of_the_object"]);
+        other_object_option.num_of_object = static_cast<int>(param_list[i]["num_of_object"]);
+        other_object_option.object_name = static_cast<std::string>(param_list[i]["object_name"]);
+        other_object_option.occlusion_radious = param_list[i]["occlusion_radious"];
+        other_object_option.radious = param_list[i]["radious"];
+        object_option_list_.push_back(other_object_option);
     }
 
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
@@ -55,20 +62,26 @@ bool AnnotationClient::main()
     sensor_object = decide_gazebo_object_.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
 
-    std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all, multi_object_other_kind;
-    for (int i = 0; i < object_list_.size(); i++) {
-        for (int j = 0; j < quantity_of_object_list_[i]; j++) {
+    std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
+    int object_counter = 0;
+    for (int i = 0; i < object_option_list_.size(); i++) {
+        for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
             common_msgs::ObjectInfo object;
-            object = decide_gazebo_object_.make_object_info(j, object_list_[i]);
+            object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
             multi_object_all.push_back(object);
+            object_counter++;
         }
     }
+
+
     multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
-    for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[0]); i++) {
+    object_counter = 0;
+    for (int i = 0; i < util_.random_int(1, object_option_list_[0].num_of_object); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object_.make_object_info(i, object_list_[0]);
+        object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
         multi_object.push_back(object);
+        object_counter++;
     }
     // for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[1]); i++) {
     //     common_msgs::ObjectInfo object;
@@ -76,12 +89,8 @@ bool AnnotationClient::main()
     //     multi_object.push_back(object);
     // }
     multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
-    // std::mt19937 get_rand_mt;
-    // std::shuffle(multi_object.begin(), multi_object.end(), get_rand_mt);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     
-    multi_object_other_kind = decide_gazebo_object_.get_randam_place_position(multi_object_other_kind);
-    gazebo_model_move.set_multi_gazebo_model(multi_object_other_kind);
     ros::Duration(0.7).sleep();
     
 
@@ -92,9 +101,9 @@ bool AnnotationClient::main()
     img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
-    Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
+    multi_object = instance_drawer_.extract_occuluder(multi_object);
+    Data3Dto2D draw_3d_to_2d(cinfo_list, Util::get_image_size(img));
+    std::vector<common_msgs::BoxPosition> box_pos = draw_3d_to_2d.get_out_data(multi_object);
     for (int i = 0; i < box_pos.size(); i++) {
         YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
         

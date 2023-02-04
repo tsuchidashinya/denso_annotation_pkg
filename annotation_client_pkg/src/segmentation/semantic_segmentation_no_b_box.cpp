@@ -15,18 +15,23 @@ void AnnotationClient::set_paramenter()
     hdf5_record_service_name_ = "record_segmentation_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
-    occlusion_object_radious_ = param_list["occlusion_object_radious"];
-    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
-    hdf5_record_file_path_ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
-    quantity_of_object_list_.push_back(static_cast<int>(param_list["quantity_of_main_object"]));
-    instance_of_object_list_.push_back(static_cast<int>(param_list["instance_of_main_object"]));
+    ObjectListType object_option;
+    object_option.instance_num = static_cast<int>(param_list["instance_of_main_object"]);
+    object_option.num_of_object = static_cast<int>(param_list["num_of_main_object"]);
+    object_option.object_name = static_cast<std::string>(param_list["main_object_name"]);
+    object_option.radious = param_list["radious_of_main_object"];
+    object_option.occlusion_radious = param_list["occlusion_radious_of_main_object"];
+    object_option_list_.push_back(object_option);
     pnh_.getParam("annotation_main/other_object_list", param_list);
     for (int i = 0; i < param_list.size(); i++) {
-        object_list_.push_back(static_cast<std::string>(param_list[i]["object_name"]));
-        quantity_of_object_list_.push_back(static_cast<int>(param_list[i]["quantity_of_the_object"]));
-        instance_of_object_list_.push_back(static_cast<int>(param_list[i]["instance_of_the_object"]));
+        ObjectListType other_object_option;
+        other_object_option.instance_num = static_cast<int>(param_list[i]["instance_of_the_object"]);
+        other_object_option.num_of_object = static_cast<int>(param_list[i]["num_of_object"]);
+        other_object_option.object_name = static_cast<std::string>(param_list[i]["object_name"]);
+        other_object_option.occlusion_radious = param_list[i]["occlusion_radious"];
+        other_object_option.radious = param_list[i]["radious"];
+        object_option_list_.push_back(other_object_option);
     }
-
     sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
     mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
     visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
@@ -50,20 +55,23 @@ bool AnnotationClient::main()
     gazebo_model_move.set_gazebo_model(sensor_object);
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
-    for (int i = 0; i < object_list_.size(); i++) {
-        for (int j = 0; j < quantity_of_object_list_[i]; j++) {
+    int object_counter = 0;
+    for (int i = 0; i < object_option_list_.size(); i++) {
+        for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
             common_msgs::ObjectInfo object;
-            object = decide_gazebo_object_.make_object_info(j, object_list_[i]);
+            object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
             multi_object_all.push_back(object);
-            vis_delete_srv.request.delete_cloud_topic_list.push_back(object.tf_name + "_visualize");
+            object_counter++;
         }
     }
     multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
-    for (int i = 0; i < util_.random_int(0, quantity_of_object_list_[0]); i++) {
+    object_counter = 0;
+    for (int i = 0; i < util_.random_int(1, object_option_list_[0].num_of_object); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object_.make_object_info(i, object_list_[0]);
+        object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
         multi_object.push_back(object);
+        object_counter++;
     }
     multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
@@ -75,7 +83,7 @@ bool AnnotationClient::main()
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
+    multi_object = instance_drawer_.extract_occuluder(multi_object);
     multi_object = Util::delete_empty_object_info(multi_object);
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
@@ -95,8 +103,8 @@ bool AnnotationClient::main()
     cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
     for (int i = 0; i < cloud_multi.size(); i++) {
         int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
-        int object_index = Util::find_element_vector(object_list_, cloud_multi[i].object_name);
-        cloud_multi[i] = SpaceHandlingLibrary::search_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], instance_of_object_list_[object_index], 0.002);
+        int object_index = Util::find_objectinfo_by_tfname(multi_object, cloud_multi[i].tf_name);
+        cloud_multi[i] = SpaceHandlingLibrary::search_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], multi_object[object_index].instance_num, 0.002);
     }
 
     common_msgs::CloudData final_cloud;

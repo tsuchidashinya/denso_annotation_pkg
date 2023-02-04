@@ -19,7 +19,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>util_package</build_depend>
-  <build_depend>gazebo_model_package</build_depend>
+  <build_depend>gazebo_model_pkg</build_depend>
   <build_depend>tf_package</build_depend>
   <build_depend>space_handling_pkg</build_depend>
   <build_depend>data_transform_pkg</build_depend>

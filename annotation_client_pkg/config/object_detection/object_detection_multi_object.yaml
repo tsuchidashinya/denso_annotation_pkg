@@ -6,14 +6,14 @@ annotation_main:
   occlusion_object_radious: 0.033
   save_dir: /home/ericlab/tsuchida/2022_12/annotation/ObjectDetection/SSD/multi_object
   main_object_name: HV8 
-  quantity_of_main_object: 34
+  num_of_main_object: 34
   instance_of_main_object: 1
   other_object_list:
     - object_name: t_pipe
-      quantity_of_the_object: 2
+      num_of_object: 2
       instance_of_the_object: 2
     - object_name: HV7
-      quantity_of_the_object: 2
+      num_of_object: 2
       instance_of_the_object: 3
   
 decide_object_position:

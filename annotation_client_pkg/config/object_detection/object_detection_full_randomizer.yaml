@@ -4,20 +4,39 @@ annotation_main:
   the_number_of_dataset: 20
   save_base_file_name: HV8
   occlusion_object_radious: 0.04
-  save_dir: /home/ericlab/Pictures/domain_dataset1
-  main_object_name: HV8
-  quantity_of_main_object: 34
+  save_dir: /home/ericlab/tsuchida/picture/test_try
+  # main_object_name: HV8
+  # num_of_main_object: 34
+  # instance_of_main_object: 1
+  # radious_of_main_object: 0.05
+  # occlusion_radious_of_main_object: 0.033
+
+  main_object_name: t_pipe
+  num_of_main_object: 34
   instance_of_main_object: 1
+  radious_of_main_object: 0.04
+  occlusion_radious_of_main_object: 0.02
   other_object_list:
-    - object_name: t_pipe
-      quantity_of_the_object: 34
+    # - object_name: t_pipe
+    #   num_of_object: 34
+    #   instance_of_the_object: 2
+    #   occlusion_radious: 0.02
+    #   radious: 0.04
+    - object_name: HV8
+      num_of_object: 34
       instance_of_the_object: 2
+      occlusion_radious: 0.035
+      radious: 0.05
     - object_name: HV7
-      quantity_of_the_object: 6
+      num_of_object: 6
       instance_of_the_object: 3
+      occlusion_radious: 0.02
+      radious: 0.04
     - object_name: HV6
-      quantity_of_the_object: 6
+      num_of_object: 6
       instance_of_the_object: 4
+      occlusion_radious: 0.033
+      radious: 0.05
   
 decide_object_position:
   sensor_name: phoxi_camera

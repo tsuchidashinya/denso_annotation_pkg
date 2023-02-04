@@ -9,7 +9,7 @@ add_compile_options(-std=c++17)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   util_package
-  gazebo_model_package
+  gazebo_model_pkg
   tf_package
   noize_package
   space_handling_pkg
