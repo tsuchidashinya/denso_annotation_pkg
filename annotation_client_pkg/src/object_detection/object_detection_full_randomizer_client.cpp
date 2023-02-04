@@ -43,13 +43,13 @@ bool AnnotationClient::main()
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
     noize_image_client.restore_image();
-    // if (util_.probability() < 0.6) {
-    //     noize_image_client.noize_image_main();
-    // }
-
-     if (util_.probability() < 1) {
-        noize_image_client.noize_image_main(Util::join("/home/ericlab/Pictures/domain_texture", final_base_file_name + ".jpg"));
+    if (util_.probability() < 0.8) {
+        noize_image_client.noize_image_main();
     }
+
+    //  if (util_.probability() < 1) {
+    //     noize_image_client.noize_image_main(Util::join("/home/ericlab/Pictures/domain_texture", final_base_file_name + ".jpg"));
+    // }
     
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object_.get_sensor_position();

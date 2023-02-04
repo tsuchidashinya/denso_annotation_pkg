@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="mode" default="random_bbox"/>
+    <arg name="mode" default="full_randomizer"/>
     <group if="$(eval mode=='full_randomizer')">
         <node pkg="annotation_client_pkg" type="object_detection_full_randomizer" name="object_detection_full_randomizer" output="screen">
             <rosparam file="$(find annotation_client_pkg)/config/object_detection/object_detection_full_randomizer.yaml" command="load" />
