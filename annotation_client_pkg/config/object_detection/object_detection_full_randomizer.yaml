@@ -1,15 +1,14 @@
 annotation_main:
   nearest_radious: 0.002
-  radious: 0.05
-  the_number_of_dataset: 20
-  save_base_file_name: HV8
-  occlusion_object_radious: 0.04
-  save_dir: /home/ericlab/Pictures/domain_dataset1
-  main_object_name: HV8
+  the_number_of_dataset: 3000
+  save_base_file_name: t_pipe_box
+  occlusion_object_radious: 0.02
+  save_dir: /home/ericlab/tsuchida/2023_02/annotation/ObjectDetection/ssd/t_pipe_full_radious_0_04
+  main_object_name: t_pipe
   quantity_of_main_object: 34
   instance_of_main_object: 1
   other_object_list:
-    - object_name: t_pipe
+    - object_name: HV8
       quantity_of_the_object: 34
       instance_of_the_object: 2
     - object_name: HV7
@@ -21,10 +20,10 @@ annotation_main:
   
 decide_object_position:
   sensor_name: phoxi_camera
-  sensor_angle_max: 0.1
-  sensor_angle_min: -0.1
-  sensor_distance_min: 0.4
-  sensor_distance_max: 0.7
+  sensor_angle_max: 0.3
+  sensor_angle_min: -0.3
+  sensor_distance_min: 0.45
+  sensor_distance_max: 1.0
   z_position: 0.003
   box_height: 0.015
   box_name: denso_box
@@ -38,8 +37,8 @@ data_transform_pkg:
   cy_scale: 0.9
 
 data_3D_to_2D:
-  radious_x: 0.05
-  radious_y: 0.05
+  radious_x: 0.04
+  radious_y: 0.04
 
 noize_image_client:
   small_max_count: 150
