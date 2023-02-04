@@ -1,4 +1,3 @@
 annotation_main:
   hdf5_record_file_path: /home/dl-box/tsuchida/2022_12/annotation/real_data/real_HV8_10.hdf5
-  radious: 0.05
   the_number_of_dataset: 10
