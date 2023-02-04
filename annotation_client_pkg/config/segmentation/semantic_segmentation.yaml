@@ -1,23 +1,33 @@
 annotation_main:
-  hdf5_record_file_path: /home/ericlab/tsuchida/2023_02/annotation/Semgeg/t_pipe/sensor_b_box_4000.hdf5
+  hdf5_record_file_path: /home/dl-box/tsuchida/2023_02/annotation/Semgeg/HV8/no_sensor_4000.hdf5
   nearest_radious: 0.002
-  LEAF_SIZE: 0.002
-  radious: 0.05
   the_number_of_dataset: 4000
-  occlusion_object_radious: 0.02
-  main_object_name: t_pipe
+  # main_object_name: t_pipe
+  # quantity_of_main_object: 34
+  # instance_of_main_object: 1
+  # radious_of_main_object: 0.04
+  # occlusion_radious_of_main_object: 0.02
+  main_object_name: HV8
   quantity_of_main_object: 34
   instance_of_main_object: 1
+  radious_of_main_object: 0.05
+  occlusion_radious_of_main_object: 0.037
   other_object_list:
-    - object_name: HV8
+    - object_name: t_pipe
       quantity_of_the_object: 34
       instance_of_the_object: 2
+      occlusion_radious: 0.02
+      radious: 0.04
     - object_name: HV7
       num_of_object: 6
       instance_of_the_object: 3
+      occlusion_radious: 0.02
+      radious: 0.04
     - object_name: HV6
       num_of_object: 6
       instance_of_the_object: 4
+      occlusion_radious: 0.033
+      radious: 0.05
   
 decide_object_position:
   sensor_name: phoxi_camera
