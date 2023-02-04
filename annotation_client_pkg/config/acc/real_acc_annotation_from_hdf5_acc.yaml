@@ -1,15 +1,8 @@
-hdf5_open_server:
-  hdf5_open_service_name: hdf5_open_service
-  hdf5_real_phoxi_open_service_name: hdf5_real_phoxi_open_service
-  hdf5_segmentation_service_name: hdf5_segmentation_service
-  hdf5_file_path: /home/ericlab/Downloads/acc_real.hdf5
+
 
 annotation_main:
-  visualize_service_name: visualize_cloud_service
-  mesh_service_name: mesh_service
-  hdf5_record_service_name: record_acc_service
-  hdf5_open_service_name: hdf5_open_service
-  tf_br_service_name: tf_broadcast_service
+  hdf5_open_file_path: /media/ericlab/DE59-9C00/test/result/acc_real.hdf5
+  hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/acc_real.hdf5
   nearest_radious: 0.002
   the_number_of_dataset: 1
   xyz_step: 0.003
@@ -36,3 +29,13 @@ data_transform_pkg:
 data_3D_to_2D:
   radious_x: 0.05
   radious_y: 0.05
+
+
+cloud_process:
+  planar_threshold: 0.01
+  x_min: -0.4
+  y_min: -0.4
+  z_min: -0.01
+  x_max: 0.14
+  y_max: 0.3
+  z_max: 0.5

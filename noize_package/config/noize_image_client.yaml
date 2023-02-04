@@ -1,0 +1,8 @@
+noize_image_client:
+  small_max_count: 150
+  big_max_count: 40
+
+noize_image_make:
+  image_height: 1544
+  image_width: 2064
+  divide_threshold: 100

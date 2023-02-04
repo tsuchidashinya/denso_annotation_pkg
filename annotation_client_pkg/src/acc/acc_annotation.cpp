@@ -1,17 +1,6 @@
 #include <annotation_client_pkg/annotation_client.hpp>
 
 
-AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
-    nh_(nh),
-    pnh_("~")
-{
-    set_paramenter();
-    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
-    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
-    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
-}
-
 void AnnotationClient::set_paramenter()
 {
     pnh_.getParam("common_parameter", param_list);
@@ -19,39 +8,49 @@ void AnnotationClient::set_paramenter()
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pnh_.getParam("annotation_main", param_list);
     nearest_radious_ = param_list["nearest_radious"];
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
-    mesh_service_name_ = static_cast<std::string>(param_list["mesh_service_name"]);
-    hdf5_record_service_name_ = static_cast<std::string>(param_list["hdf5_record_service_name"]);
+    visualize_service_name_ = "visualize_cloud_service";
+    sensor_service_name_ = "sensor_service";
+    mesh_service_name_ = "mesh_service";
+    hdf5_record_service_name_ = "record_acc_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
-    gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
+
+    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
+    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
+    vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
+    vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeDeleteService>(vis_delete_service_name_);
+    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
+    hdf5_record_2_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSensorData>(hdf5_record_2_service_name_);
+    tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
+    tf_delete_client_ = nh_.serviceClient<common_srvs::TfDeleteService>(tf_delete_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
-    DecidePosition decide_gazebo_object;
+    DecidePosition decide_gazebo_object_;
     GazeboMoveServer gazebo_model_move(nh_);
 
-    // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object.get_sensor_position();
+    // common_msgs::ObjectInfo sensor_pos_info = decide_gazebo_object_.get_sensor_position();
     // gazebo_model_move.set_gazebo_model(sensor_pos_info);
     common_msgs::ObjectInfo sensor_object;
-    sensor_object = decide_gazebo_object.get_sensor_position();
+    sensor_object = decide_gazebo_object_.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
     for (int i = 0; i < 30; i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, "HV8");
+        object = decide_gazebo_object_.make_object_info(i, "HV8");
         multi_object_all.push_back(object);
     }
-    multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
+    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     for (int i = 0; i < util_.random_int(1, 24); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, "HV8");
+        object = decide_gazebo_object_.make_object_info(i, "HV8");
         multi_object.push_back(object);
     }
-    multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
+    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(0.5).sleep();
     common_srvs::SensorService sensor_srv;
@@ -60,7 +59,7 @@ void AnnotationClient::main()
     common_msgs::CloudData sensor_cloud = sensor_srv.response.cloud_data;
     cv::Mat img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    multi_object = instance_drawer_.extract_occuluder(multi_object, 0.038);
+    multi_object = instance_drawer_.extract_occuluder(multi_object);
     multi_object = Util::delete_empty_object_info(multi_object);
     // Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     // std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(UtilAnno::tf_listen_frames_from_objectinfo(multi_object));
@@ -89,9 +88,9 @@ void AnnotationClient::main()
 
     Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
     sensor_cloud = sensor_srv.response.cloud_data;
-    sensor_cloud = InstanceLabelDrawer::draw_instance_all(sensor_cloud, 0);
+    sensor_cloud = UtilMsgData::draw_all_ins_cloudmsg(sensor_cloud, 0);
     for (int i = 0; i < mesh_cloud_list.size(); i++) {
-        sensor_cloud = InstanceLabelDrawer::extract_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
+        sensor_cloud = SpaceHandlingLibrary::search_nearest_point(sensor_cloud, mesh_cloud_list[i], 1, 0.002);
     }
     // Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     // std::vector<common_msgs::CloudData> cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
@@ -109,11 +108,18 @@ void AnnotationClient::main()
     record_srv.request.image = sensor_srv.response.image;
     record_srv.request.pose_data_list = mesh_srv.response.pose;
     record_srv.request.cloud_data = sensor_cloud;
-    record_srv.request.the_number_of_dataset = the_number_of_dataset_;
+    if (counter_ >= the_number_of_dataset_ - 1) {
+        record_srv.request.is_end = 1;
+    }
+    else {
+        record_srv.request.is_end = 0;
+    }
     Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
 
     common_srvs::VisualizeCloud visualize_srv;
     visualize_srv.request.cloud_data_list.push_back(sensor_cloud);
     visualize_srv.request.topic_name_list.push_back("acc_cloud");
     Util::client_request(visualize_client_, visualize_srv, visualize_service_name_);
+    counter_++;
+    return false;
 }

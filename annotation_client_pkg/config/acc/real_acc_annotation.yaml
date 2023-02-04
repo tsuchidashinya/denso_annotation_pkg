@@ -1,9 +1,5 @@
 annotation_main:
-  visualize_service_name: visualize_cloud_service
-  sensor_service_name: sensor_service
-  mesh_service_name: mesh_service
-  hdf5_record_service_name: record_acc_service
-  tf_br_service_name: tf_broadcast_service
+  hdf5_record_file_path: /media/ericlab/DE59-9C00/test/result/concate/acc_real_2.hdf5
   nearest_radious: 0.002
   xyz_step: 0.003
   qxyz_step: 0.01

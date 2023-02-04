@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="noize_package" type="noize_cloud_try" name="noize_cloud_try" output="screen">
+        <rosparam file="$(find noize_package)/config/noize_cloud_try.yaml" command="load" ns="" />
+        <rosparam file="$(find util_package)/config/common_parameter.yaml" command="load" />
+    </node>
+
+</launch>

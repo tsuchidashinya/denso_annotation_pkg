@@ -1,36 +1,43 @@
 annotation_main:
-  hdf5_record_file_path: /home/ericlab/tsuchida/2023_02/annotation/Semgeg/t_pipe/sensor_b_box_4000.hdf5
   nearest_radious: 0.002
-  LEAF_SIZE: 0.002
-  radious: 0.05
-  the_number_of_dataset: 4000
+  the_number_of_dataset: 3000
+  save_base_file_name: t_pipe_box
   occlusion_object_radious: 0.02
+  save_dir: /home/ericlab/tsuchida/2023_02/annotation/ObjectDetection/ssd/t_pipe_full_radious_0_04
   main_object_name: t_pipe
   quantity_of_main_object: 34
   instance_of_main_object: 1
+  radious_of_main_object: 0.04
+  occlusion_radious_of_main_object: 0.02
   other_object_list:
     - object_name: HV8
       quantity_of_the_object: 34
       instance_of_the_object: 2
+      occlusion_radious: 0.035
+      radious: 0.05
     - object_name: HV7
       num_of_object: 6
       instance_of_the_object: 3
+      occlusion_radious: 0.02
+      radious: 0.04
     - object_name: HV6
       num_of_object: 6
       instance_of_the_object: 4
+      occlusion_radious: 0.033
+      radious: 0.05
   
 decide_object_position:
   sensor_name: phoxi_camera
   sensor_angle_max: 0.3
   sensor_angle_min: -0.3
-  sensor_distance_min: 0.8
-  sensor_distance_max: 1.5
+  sensor_distance_min: 0.45
+  sensor_distance_max: 1.0
   z_position: 0.003
-  box_height: 0.01
+  box_height: 0.015
   box_name: denso_box
   object_height: 0.15
   radious: 0.05
-  decide_pose_opition: FullRandom
+  sensor_small_deviation: 0.4
 
 data_transform_pkg:
   f_scale: 0.5
@@ -40,3 +47,12 @@ data_transform_pkg:
 data_3D_to_2D:
   radious_x: 0.04
   radious_y: 0.04
+
+noize_image_client:
+  small_max_count: 150
+  big_max_count: 40
+
+noize_image_make:
+  image_height: 1544
+  image_width: 2064
+  divide_threshold: 100

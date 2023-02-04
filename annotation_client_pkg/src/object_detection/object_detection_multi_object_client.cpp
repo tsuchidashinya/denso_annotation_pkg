@@ -1,16 +1,6 @@
 #include <annotation_client_pkg/annotation_client.hpp>
 
 
-AnnotationClient::AnnotationClient(ros::NodeHandle &nh):
-    nh_(nh),
-    pnh_("~")
-{
-    set_paramenter();
-    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
-    vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
-    domain_randomize_pub_ = nh_.advertise<std_msgs::Empty>("randomizer/trigger", 10);
-}
-
 void AnnotationClient::set_paramenter()
 {
     pnh_.getParam("common_parameter", param_list);
@@ -18,64 +8,82 @@ void AnnotationClient::set_paramenter()
     sensor_frame_ = static_cast<std::string>(param_list["sensor_frame"]);
     pnh_.getParam("annotation_main", param_list);
     nearest_radious_ = param_list["nearest_radious"];
-    visualize_service_name_ = static_cast<std::string>(param_list["visualize_service_name"]);
-    sensor_service_name_ = static_cast<std::string>(param_list["sensor_service_name"]);
+    vis_img_service_name_ = "visualize_image_service";
+    sensor_service_name_ = "sensor_service";
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
-    vis_img_service_name_ = static_cast<std::string>(param_list["visualize_image_service_name"]);
     save_base_file_name_ = static_cast<std::string>(param_list["save_base_file_name"]);
     save_dir_ = static_cast<std::string>(param_list["save_dir"]);
     save_dir_ = Util::join(save_dir_, save_base_file_name_);
-    occlusion_object_radious_ = param_list["occlusion_object_radious"];
-    object_list_.push_back(static_cast<std::string>(param_list["main_object_name"]));
-    quantity_of_object_list_.push_back(static_cast<int>(param_list["quantity_of_main_object"]));
-    instance_of_object_list_.push_back(static_cast<int>(param_list["instance_of_main_object"]));
+    ObjectListType object_option;
+    object_option.instance_num = static_cast<int>(param_list["instance_of_main_object"]);
+    object_option.num_of_object = static_cast<int>(param_list["num_of_main_object"]);
+    object_option.object_name = static_cast<std::string>(param_list["main_object_name"]);
+    object_option.radious = param_list["radious_of_main_object"];
+    object_option.occlusion_radious = param_list["occlusion_radious_of_main_object"];
+    object_option_list_.push_back(object_option);
     pnh_.getParam("annotation_main/other_object_list", param_list);
     for (int i = 0; i < param_list.size(); i++) {
-        object_list_.push_back(static_cast<std::string>(param_list[i]["object_name"]));
-        quantity_of_object_list_.push_back(static_cast<int>(param_list[i]["quantity_of_the_object"]));
-        instance_of_object_list_.push_back(static_cast<int>(param_list[i]["instance_of_the_object"]));
+        ObjectListType other_object_option;
+        other_object_option.instance_num = static_cast<int>(param_list[i]["instance_of_the_object"]);
+        other_object_option.num_of_object = static_cast<int>(param_list[i]["num_of_object"]);
+        other_object_option.object_name = static_cast<std::string>(param_list[i]["object_name"]);
+        other_object_option.occlusion_radious = param_list[i]["occlusion_radious"];
+        other_object_option.radious = param_list[i]["radious"];
+        object_option_list_.push_back(other_object_option);
     }
+
+    sensor_client_ = nh_.serviceClient<common_srvs::SensorService>(sensor_service_name_);
+    mesh_client_ = nh_.serviceClient<common_srvs::MeshCloudService>(mesh_service_name_);
+    visualize_client_ = nh_.serviceClient<common_srvs::VisualizeCloud>(visualize_service_name_);
+    vis_img_client_ = nh_.serviceClient<common_srvs::VisualizeImage>(vis_img_service_name_);
+    vis_delete_client_ = nh_.serviceClient<common_srvs::VisualizeDeleteService>(vis_delete_service_name_);
+    hdf5_record_client_ = nh_.serviceClient<common_srvs::Hdf5RecordAcc>(hdf5_record_service_name_);
+    hdf5_record_2_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSensorData>(hdf5_record_2_service_name_);
+    tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
+    tf_delete_client_ = nh_.serviceClient<common_srvs::TfDeleteService>(tf_delete_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
 }
 
-void AnnotationClient::main()
+bool AnnotationClient::main()
 {
-    DecidePosition decide_gazebo_object;
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
-    std_msgs::Empty empty;
-    domain_randomize_pub_.publish(empty);
+    
     common_msgs::ObjectInfo sensor_object;
-    sensor_object = decide_gazebo_object.get_sensor_position();
+    sensor_object = decide_gazebo_object_.get_sensor_position();
     gazebo_model_move.set_gazebo_model(sensor_object);
 
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all, multi_object_other_kind;
-    for (int i = 0; i < object_list_.size(); i++) {
-        for (int j = 0; j < quantity_of_object_list_[i]; j++) {
+    int object_counter = 0;
+    for (int i = 0; i < object_option_list_.size(); i++) {
+        for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
             common_msgs::ObjectInfo object;
-            object = decide_gazebo_object.make_object_info(j, object_list_[i]);
+            object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
             multi_object_all.push_back(object);
+            object_counter++;
         }
     }
-    multi_object_all = decide_gazebo_object.get_remove_position(multi_object_all);
+    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
-    for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[0]); i++) {
+    object_counter = 0;
+    for (int i = 0; i < util_.random_int(1, object_option_list_[0].num_of_object); i++) {
         common_msgs::ObjectInfo object;
-        object = decide_gazebo_object.make_object_info(i, object_list_[0]);
+        object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
         multi_object.push_back(object);
+        object_counter++;
     }
-    multi_object = decide_gazebo_object.get_randam_place_position(multi_object);
-    gazebo_model_move.set_multi_gazebo_model(multi_object);
     if (util_.random_float(0, 1) < 0.15) {
-        for (int i = 1; i < object_list_.size(); i++) {
-            for (int j = 0; j < util_.random_int(1, quantity_of_object_list_[i]); j++) {
+        for (int i = 1; i < object_option_list_.size(); i++) {
+            for (int j = 0; j < util_.random_int(1, object_option_list_[i].num_of_object); j++) {
                 common_msgs::ObjectInfo object;
-                object = decide_gazebo_object.make_object_info(j, object_list_[i]);
-                multi_object_other_kind.push_back(object);
+                object = decide_gazebo_object_.make_object_info(object_counter, j, object_option_list_[0]);
+                multi_object.push_back(object);
+                object_counter++;
             }
         }
     }
-    multi_object_other_kind = decide_gazebo_object.get_randam_place_position(multi_object_other_kind);
-    gazebo_model_move.set_multi_gazebo_model(multi_object_other_kind);
+    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
+    gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(0.2).sleep();
     
 
@@ -86,7 +94,7 @@ void AnnotationClient::main()
     img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    multi_object = instance_drawer_.extract_occuluder(multi_object, occlusion_object_radious_);
+    multi_object = instance_drawer_.extract_occuluder(multi_object);
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
     for (int i = 0; i < box_pos.size(); i++) {
@@ -108,7 +116,6 @@ void AnnotationClient::main()
     std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
     cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
     cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
-    box_pos = InstanceLabelDrawer::set_object_class_name(box_pos, "HV8_occuluder");
     for (int i = 0; i < box_pos.size(); i++) {
         box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
     }
@@ -118,5 +125,6 @@ void AnnotationClient::main()
     vis_img_srv.request.image_list.push_back(UtilMsgData::cvimg_to_rosimg(img, sensor_msgs::image_encodings::BGR8));
     vis_img_srv.request.topic_name_list.push_back("box_draw_image");
     Util::client_request(vis_img_client_, vis_img_srv, vis_img_service_name_);
+    return false;
 }
 
