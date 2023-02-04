@@ -1,20 +1,30 @@
 annotation_main:
   nearest_radious: 0.002
-  the_number_of_dataset: 3000
+  the_number_of_dataset: 20
   save_base_file_name: t_pipe_box
   occlusion_object_radious: 0.02
-  save_dir: /home/ericlab/tsuchida/2023_02/annotation/ObjectDetection/ssd/t_pipe_full_radious_0_04
-  main_object_name: t_pipe
-  quantity_of_main_object: 34
+  save_dir: /home/dl-box/tsuchida/test_try/ObjectDetection/ssd/t_pipe_full_radious_0_04
+  # main_object_name: t_pipe
+  # quantity_of_main_object: 34
+  # instance_of_main_object: 1
+  # radious_of_main_object: 0.04
+  # occlusion_radious_of_main_object: 0.02
+  main_object_name: HV8
+  num_of_main_object: 34
   instance_of_main_object: 1
-  radious_of_main_object: 0.04
-  occlusion_radious_of_main_object: 0.02
+  radious_of_main_object: 0.05
+  occlusion_radious_of_main_object: 0.037
   other_object_list:
-    - object_name: HV8
-      quantity_of_the_object: 34
+    - object_name: t_pipe
+      num_of_object: 34
       instance_of_the_object: 2
-      occlusion_radious: 0.035
-      radious: 0.05
+      occlusion_radious: 0.02
+      radious: 0.04
+     # - object_name: HV8
+    #   quantity_of_the_object: 34
+    #   instance_of_the_object: 2
+    #   occlusion_radious: 0.035
+    #   radious: 0.05
     - object_name: HV7
       num_of_object: 6
       instance_of_the_object: 3

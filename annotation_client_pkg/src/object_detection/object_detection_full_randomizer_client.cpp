@@ -72,8 +72,6 @@ bool AnnotationClient::main()
             object_counter++;
         }
     }
-
-
     multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
     gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     object_counter = 0;

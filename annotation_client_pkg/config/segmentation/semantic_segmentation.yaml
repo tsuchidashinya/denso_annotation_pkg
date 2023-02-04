@@ -8,13 +8,13 @@ annotation_main:
   # radious_of_main_object: 0.04
   # occlusion_radious_of_main_object: 0.02
   main_object_name: HV8
-  quantity_of_main_object: 34
+  num_of_main_object: 34
   instance_of_main_object: 1
   radious_of_main_object: 0.05
   occlusion_radious_of_main_object: 0.037
   other_object_list:
     - object_name: t_pipe
-      quantity_of_the_object: 34
+      num_of_object: 34
       instance_of_the_object: 2
       occlusion_radious: 0.02
       radious: 0.04
