@@ -1,5 +1,5 @@
 annotation_main:
-  hdf5_record_file_path: /home/dl-box/tsuchida/2023_02/annotation/Semgeg/HV8/no_sensor_4000.hdf5
+  hdf5_record_file_path: /home/ericlab/tsuchida/2023_02/annotation/Semgeg/HV8/no_b_box_4000.hdf5
   nearest_radious: 0.002
   the_number_of_dataset: 4000
   # main_object_name: t_pipe
