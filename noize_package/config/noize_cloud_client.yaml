@@ -1,4 +1,4 @@
 noize_client:
-  hdf5_open_file_path: /home/ericlab/tsuchida/2022_12/annotation/Semseg/t_pipe/sensor_b_box_3000.hdf5
-  hdf5_record_file_path: /home/ericlab/tsuchida/2022_12/annotation/Semseg/t_pipe/sensor_b_box_3000_noize.hdf5
+  hdf5_open_file_path: /home/ericlab/tsuchida/2023_02/annotation/Semgeg/t_pipe/sensor_b_box_4000.hdf5
+  hdf5_record_file_path: /home/ericlab/tsuchida/2023_02/annotation/Semgeg/t_pipe/sensor_b_box_4000_noize.hdf5
 
