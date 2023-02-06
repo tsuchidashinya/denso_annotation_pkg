@@ -13,6 +13,7 @@ void AnnotationClient::set_paramenter()
     sensor_service_name_ = "sensor_service";
     mesh_service_name_ = "mesh_service";
     hdf5_record_service_name_ = "record_segmentation_service";
+    hdf5_record_file_path_ = static_cast<std::string>(param_list["hdf5_record_file_path"]);
     the_number_of_dataset_ = param_list["the_number_of_dataset"];
     gazebo_sensor_service_name_ = static_cast<std::string>(param_list["gazebo_sensor_service_name"]);
     ObjectListType object_option;
@@ -75,7 +76,7 @@ bool AnnotationClient::main()
     }
     multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
-    ros::Duration(0.7).sleep();
+    ros::Duration(1.0).sleep();
     
     common_srvs::SensorService sensor_srv;
     sensor_srv.request.counter = 1;
