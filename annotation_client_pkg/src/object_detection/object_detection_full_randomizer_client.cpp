@@ -50,7 +50,7 @@ bool AnnotationClient::main()
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
     noize_image_client.restore_image();
-    if (util_.probability() < 0.8) {
+    if (util_.probability() < 0.5) {
         noize_image_client.noize_image_main();
     }
     auto light_para = decide_gazebo_object_.get_light_properties();
