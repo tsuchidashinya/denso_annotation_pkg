@@ -87,44 +87,44 @@ bool AnnotationClient::main()
     ros::Duration(0.2).sleep();
     
 
-    common_srvs::SensorService sensor_srv;
-    sensor_srv.request.counter = 1;
-    Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
-    cv::Mat img_ori, img;
-    img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
-    img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
-    std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
-    multi_object = instance_drawer_.extract_occuluder(multi_object);
-    Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
-    std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
-    for (int i = 0; i < box_pos.size(); i++) {
-        YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
+    // common_srvs::SensorService sensor_srv;
+    // sensor_srv.request.counter = 1;
+    // Util::client_request(sensor_client_, sensor_srv, sensor_service_name_);
+    // cv::Mat img_ori, img;
+    // img = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
+    // img_ori = UtilMsgData::rosimg_to_cvimg(sensor_srv.response.image, sensor_msgs::image_encodings::BGR8);
+    // std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
+    // multi_object = instance_drawer_.extract_occuluder(multi_object);
+    // Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
+    // std::vector<common_msgs::BoxPosition> box_pos = make_2d_3d.get_out_data(multi_object);
+    // for (int i = 0; i < box_pos.size(); i++) {
+    //     YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
         
-        float scale_up = 1.2;
-        yolo_data.w = scale_up * yolo_data.w;
-        yolo_data.h = scale_up * yolo_data.h;
+    //     float scale_up = 1.2;
+    //     yolo_data.w = scale_up * yolo_data.w;
+    //     yolo_data.h = scale_up * yolo_data.h;
         
-        box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
-    }
-    img = Data3Dto2D::draw_b_box(img, box_pos);
-    std::string image_dir_path = Util::join(save_dir_, "images");
-    std::string box_dir_path = Util::join(save_dir_, "boxes");
-    std::string label_dir_path = Util::join(save_dir_, "labels");
-    Util::mkdir(image_dir_path);
-    Util::mkdir(box_dir_path);
-    Util::mkdir(label_dir_path);
-    std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
-    cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
-    cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
-    for (int i = 0; i < box_pos.size(); i++) {
-        box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
-    }
-    Util::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
-    vis_img_srv.request.image_list.push_back(UtilMsgData::cvimg_to_rosimg(img_ori, sensor_msgs::image_encodings::BGR8));
-    vis_img_srv.request.topic_name_list.push_back("original_image");
-    vis_img_srv.request.image_list.push_back(UtilMsgData::cvimg_to_rosimg(img, sensor_msgs::image_encodings::BGR8));
-    vis_img_srv.request.topic_name_list.push_back("box_draw_image");
-    Util::client_request(vis_img_client_, vis_img_srv, vis_img_service_name_);
-    return false;
+    //     box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
+    // }
+    // img = Data3Dto2D::draw_b_box(img, box_pos);
+    // std::string image_dir_path = Util::join(save_dir_, "images");
+    // std::string box_dir_path = Util::join(save_dir_, "boxes");
+    // std::string label_dir_path = Util::join(save_dir_, "labels");
+    // Util::mkdir(image_dir_path);
+    // Util::mkdir(box_dir_path);
+    // Util::mkdir(label_dir_path);
+    // std::string final_base_file_name = save_base_file_name_ + "_" + Util::get_time_str();
+    // cv::imwrite(Util::join(image_dir_path, final_base_file_name + ".jpg"), img_ori);
+    // cv::imwrite(Util::join(box_dir_path, final_base_file_name + ".jpg"), img);
+    // for (int i = 0; i < box_pos.size(); i++) {
+    //     box_pos[i] = UtilMsgData::box_position_normalized(box_pos[i]);
+    // }
+    // Util::write_b_box_label(box_pos, Util::join(label_dir_path, final_base_file_name + ".txt"));
+    // vis_img_srv.request.image_list.push_back(UtilMsgData::cvimg_to_rosimg(img_ori, sensor_msgs::image_encodings::BGR8));
+    // vis_img_srv.request.topic_name_list.push_back("original_image");
+    // vis_img_srv.request.image_list.push_back(UtilMsgData::cvimg_to_rosimg(img, sensor_msgs::image_encodings::BGR8));
+    // vis_img_srv.request.topic_name_list.push_back("box_draw_image");
+    // Util::client_request(vis_img_client_, vis_img_srv, vis_img_service_name_);
+    // return false;
 }
 

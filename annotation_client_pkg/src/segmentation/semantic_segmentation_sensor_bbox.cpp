@@ -54,29 +54,40 @@ bool AnnotationClient::main()
 
     common_msgs::ObjectInfo sensor_object;
     sensor_object = decide_gazebo_object_.get_sensor_position();
-    gazebo_model_move.set_gazebo_model(sensor_object);
+    // sensor_object = decide_gazebo_object_.get_sensor_return_position();
+    for (int i = 0; i < 4; i++) {
+        gazebo_model_move.set_gazebo_model(sensor_object);
+        ros::Duration(0.1).sleep();
+    }
+    
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
     int object_counter = 0;
-    for (int i = 0; i < object_option_list_.size(); i++) {
-        for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
-            common_msgs::ObjectInfo object;
-            object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
-            multi_object_all.push_back(object);
-            object_counter++;
-        }
-    }
-    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
-    gazebo_model_move.set_multi_gazebo_model(multi_object_all);
+    // for (int i = 0; i < object_option_list_.size(); i++) {
+    //     for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
+    //         common_msgs::ObjectInfo object;
+    //         object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
+    //         multi_object_all.push_back(object);
+    //         object_counter++;
+    //     }
+    // }
+    // multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
+    // gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     object_counter = 0;
-    for (int i = 0; i < util_.random_int(1, object_option_list_[0].num_of_object); i++) {
+    // for (int i = 0; i < util_.random_int(1, object_option_list_[0].num_of_object); i++) {
+    //     common_msgs::ObjectInfo object;
+    //     object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
+    //     multi_object.push_back(object);
+    //     object_counter++;
+    // }
+     for (int i = 0; i < 5; i++) {
         common_msgs::ObjectInfo object;
         object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
         multi_object.push_back(object);
         object_counter++;
     }
-    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
-    gazebo_model_move.set_multi_gazebo_model(multi_object);
+    // multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
+    // gazebo_model_move.set_multi_gazebo_model(multi_object);
     ros::Duration(0.7).sleep();
     
     common_srvs::SensorService sensor_srv;
@@ -87,6 +98,7 @@ bool AnnotationClient::main()
     std::vector<float> cinfo_list = UtilMsgData::caminfo_to_floatlist(sensor_srv.response.camera_info);
     // if (util_.random_float(0, 1) < 0.8) {
     multi_object = instance_drawer_.extract_occuluder(multi_object);
+    // Util::message_show("multi", multi_object.size());
     multi_object = Util::delete_empty_object_info(multi_object);
     // }
     Data3Dto2D make_2d_3d(cinfo_list, Util::get_image_size(img));
@@ -98,6 +110,7 @@ bool AnnotationClient::main()
     mesh_srv.request.multi_object_info = multi_object;
     Util::client_request(mesh_client_, mesh_srv, mesh_service_name_);
     std::vector<common_msgs::CloudData> mesh_cloud_list = mesh_srv.response.mesh;
+    // Util::message_show("mesh_cloud", mesh_cloud_list.size());
     common_msgs::CloudData sum_mesh_cloud;
     for (int i = 0; i < mesh_cloud_list.size(); i++) {
         visualize_srv.request.cloud_data_list.push_back(mesh_cloud_list[i]);
@@ -114,58 +127,82 @@ bool AnnotationClient::main()
     Data2Dto3D get3d(cinfo_list, Util::get_image_size(img));
     std::vector<common_msgs::CloudData> cloud_multi;
 
-    for (int i = 0; i < box_pos.size(); i++) {
-        YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
-        if (util_.random_float(0, 1) < 0.9) {
-            float scale_up = util_.random_float(0.95, 1.5);
-            if (util_.random_float(0, 1) < 0.33) {
-                yolo_data.w = scale_up * yolo_data.w;
-            }
-            else if (util_.random_float(0, 1) < 0.67) {
-                yolo_data.h = scale_up * yolo_data.h;
-            }
-            else {
-                yolo_data.w = scale_up * yolo_data.w;
-                yolo_data.h = scale_up * yolo_data.h;
-            }
-        }
-        if (util_.random_float(0, 1) < 0.9) {
-            float scale_up = 0.01;
-            if (util_.random_float(0, 1) < 0.33) {
-                yolo_data.x = scale_up + yolo_data.x;
-            }
-            else if (util_.random_float(0, 1) < 0.67) {
-                yolo_data.y = scale_up + yolo_data.y;
-            }
-            else {
-                yolo_data.x = scale_up + yolo_data.x;
-                yolo_data.y = scale_up + yolo_data.y;
-            }
-        }
-        box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
-    }
+    // for (int i = 0; i < box_pos.size(); i++) {
+    //     YoloFormat yolo_data = UtilMsgData::pascalvoc_to_yolo(box_pos[i], Util::get_image_size(img));
+    //     if (util_.random_float(0, 1) < 0.9) {
+    //         float scale_up = util_.random_float(0.95, 1.5);
+    //         auto probability = util_.random_float(0, 1);
+    //         if (probability < 0.33) {
+    //             yolo_data.w = scale_up * yolo_data.w;
+    //         }
+    //         else if (probability < 0.67) {
+    //             yolo_data.h = scale_up * yolo_data.h;
+    //         }
+    //         else {
+    //             yolo_data.w = scale_up * yolo_data.w;
+    //             yolo_data.h = scale_up * yolo_data.h;
+    //         }
+    //     }
+    //     if (util_.random_float(0, 1) < 0.9) {
+    //         float scale_up = util_.random_float(-0.01, 0.01);
+            
+    //         auto probable = util_.random_float(0, 1);
+    //         if (probable < 0.25) {
+    //             yolo_data.x = scale_up + yolo_data.x;
+    //         }
+    //         else if (probable < 0.5) {
+    //             yolo_data.y = scale_up + yolo_data.y;
+    //         }
+    //         else if (probable < 0.75) {
+    //             yolo_data.x = scale_up + yolo_data.x;
+    //             yolo_data.y = scale_up + yolo_data.y;
+    //         }
+    //         else {
+    //             yolo_data.x = scale_up + yolo_data.x;
+    //             yolo_data.y = -1 * scale_up + yolo_data.y;
+    //         }
+    //     }
+    //     box_pos[i] = UtilMsgData::yolo_to_pascalvoc(yolo_data, Util::get_image_size(img));
+    // }
     cloud_multi = get3d.get_out_data(sensor_cloud, box_pos);
+    // Util::message_show("cloud_multi", cloud_multi.size());
     for (int i = 0; i < cloud_multi.size(); i++) {
         int mesh_index = Util::find_tfname_from_cloudlist(mesh_cloud_list, cloud_multi[i].tf_name);
         int object_index = Util::find_objectinfo_by_tfname(multi_object, cloud_multi[i].tf_name);
+        // ROS_INFO_STREAM(mesh_index << " : " << object_index);
         cloud_multi[i] = SpaceHandlingLibrary::search_nearest_point(cloud_multi[i], mesh_cloud_list[mesh_index], multi_object[object_index].instance_num, 0.002);
     }
 
     common_msgs::CloudData final_cloud;
-    for (int i = 0; i < cloud_multi.size(); i++) {
-        common_srvs::Hdf5RecordSegmentation record_srv;
-        record_srv.request.record_file_path = hdf5_record_file_path_;
-        record_srv.request.cloud_data = cloud_multi[i];
-        record_srv.request.the_number_of_dataset = the_number_of_dataset_;
-        Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
-        visualize_srv.request.cloud_data_list.push_back(cloud_multi[i]);
-        visualize_srv.request.topic_name_list.push_back(cloud_multi[i].tf_name + "_visualize");
-        final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[i]);
-        if (record_srv.response.finish) {
-            return true;
-        }
-        ros::Duration(0.01).sleep();
+    // for (int i = 0; i < cloud_multi.size(); i++) {
+    //     common_srvs::Hdf5RecordSegmentation record_srv;
+    //     record_srv.request.record_file_path = hdf5_record_file_path_;
+    //     record_srv.request.cloud_data = cloud_multi[i];
+    //     record_srv.request.the_number_of_dataset = the_number_of_dataset_;
+    //     Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
+    //     visualize_srv.request.cloud_data_list.push_back(cloud_multi[i]);
+    //     visualize_srv.request.topic_name_list.push_back(cloud_multi[i].tf_name + "_visualize");
+    //     final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[i]);
+    //     if (record_srv.response.finish) {
+    //         return true;
+    //     }
+    //     ros::Duration(0.01).sleep();
+    // }
+    
+    common_srvs::Hdf5RecordSegmentation record_srv;
+    record_srv.request.record_file_path = hdf5_record_file_path_;
+    int index = 0;
+    record_srv.request.cloud_data = cloud_multi[index];
+    record_srv.request.the_number_of_dataset = the_number_of_dataset_;
+    Util::client_request(hdf5_record_client_, record_srv, hdf5_record_service_name_);
+    visualize_srv.request.cloud_data_list.push_back(cloud_multi[index]);
+    visualize_srv.request.topic_name_list.push_back(cloud_multi[index].tf_name + "_visualize");
+    final_cloud = UtilMsgData::concat_cloudmsg(final_cloud, cloud_multi[index]);
+    if (record_srv.response.finish) {
+        return true;
     }
+    ros::Duration(0.01).sleep();
+    
     Util::client_request(vis_delete_client_, vis_delete_srv, vis_delete_service_name_);
     visualize_srv.request.cloud_data_list.push_back(final_cloud);
     visualize_srv.request.topic_name_list.push_back("final_cloud");

@@ -54,10 +54,10 @@ void NoizeCloudClient::main()
         auto origin_1 = UtilMsgData::extract_ins_cloudmsg(final_cloud, 1);
         auto centroid = NoizeCloudTransform::get_centroid(origin_1);
         NoizeCloudMake noize_object;
-        if (util_.probability() < 0.6) {
+        if (util_.probability() < 0.8) {
             noize_cloud = UtilMsgData::concat_cloudmsg(noize_cloud, noize_object.noize_tube_small());
         }
-        if (util_.probability() < 0.6) {
+        if (util_.probability() < 0.8) {
             noize_cloud = UtilMsgData::concat_cloudmsg(noize_cloud, noize_object.noize_tube_big());
         }
         centroid = NoizeCloudTransform::change_frame_id(centroid, sensor_frame_, world_frame_);

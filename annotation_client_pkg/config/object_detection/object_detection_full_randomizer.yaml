@@ -1,30 +1,30 @@
 annotation_main:
   nearest_radious: 0.002
   the_number_of_dataset: 2000
-  save_base_file_name: t_pipe_box
+  save_base_file_name: HV8
   occlusion_object_radious: 0.02
-  save_dir: /home/ericlab/tsuchida/picture/test_try/2_5
-  main_object_name: t_pipe
-  num_of_main_object: 34
-  instance_of_main_object: 1
-  radious_of_main_object: 0.04
-  occlusion_radious_of_main_object: 0.02
-  # main_object_name: HV8
+  save_dir: /home/ericlab/tsuchida/2023_02/image_02/第４章/sensor
+  # main_object_name: t_pipe
   # num_of_main_object: 34
   # instance_of_main_object: 1
-  # radious_of_main_object: 0.05
-  # occlusion_radious_of_main_object: 0.037
+  # radious_of_main_object: 0.04
+  # occlusion_radious_of_main_object: 0.02
+  main_object_name: HV8
+  num_of_main_object: 34
+  instance_of_main_object: 1
+  radious_of_main_object: 0.05
+  occlusion_radious_of_main_object: 0.037
   other_object_list:
-    # - object_name: t_pipe
-    #   num_of_object: 34
-    #   instance_of_the_object: 2
-    #   occlusion_radious: 0.02
-    #   radious: 0.04
-    - object_name: HV8
+    - object_name: t_pipe
       num_of_object: 34
       instance_of_the_object: 2
-      occlusion_radious: 0.035
-      radious: 0.05
+      occlusion_radious: 0.02
+      radious: 0.04
+    # - object_name: HV8
+    #   num_of_object: 34
+    #   instance_of_the_object: 2
+    #   occlusion_radious: 0.035
+    #   radious: 0.05
     - object_name: HV7
       num_of_object: 6
       instance_of_the_object: 3
@@ -38,8 +38,8 @@ annotation_main:
   
 decide_object_position:
   sensor_name: phoxi_camera
-  sensor_angle_max: 0.3
-  sensor_angle_min: -0.3
+  sensor_angle_max: 0.15
+  sensor_angle_min: -0.15
   sensor_distance_min: 0.45
   sensor_distance_max: 1.0
   z_position: 0.003
