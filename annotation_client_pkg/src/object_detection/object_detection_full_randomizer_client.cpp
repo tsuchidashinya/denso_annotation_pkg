@@ -92,7 +92,7 @@ bool AnnotationClient::main()
     multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
     gazebo_model_move.set_multi_gazebo_model(multi_object);
     
-    ros::Duration(0.7).sleep();
+    ros::Duration(0.6).sleep();
     
 
     common_srvs::SensorService sensor_srv;
