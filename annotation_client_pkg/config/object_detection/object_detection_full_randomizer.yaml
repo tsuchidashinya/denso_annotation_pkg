@@ -1,9 +1,8 @@
 annotation_main:
   nearest_radious: 0.002
-  the_number_of_dataset: 2000
+  the_number_of_dataset: 3000
   save_base_file_name: HV8
-  occlusion_object_radious: 0.02
-  save_dir: /home/ericlab/tsuchida/2023_02/image_02/第４章/sensor
+  save_dir: /home/ericlab/tsuchida/2023_02/annotation/ObjectDetection/full_randomize/HV8/full_3000
   # main_object_name: t_pipe
   # num_of_main_object: 34
   # instance_of_main_object: 1

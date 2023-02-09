@@ -50,13 +50,13 @@ bool AnnotationClient::main()
     GazeboMoveServer gazebo_model_move(nh_);
     common_srvs::VisualizeImage vis_img_srv;
     noize_image_client.restore_image();
-    // if (util_.probability() < 1.0) {
-    //     noize_image_client.noize_image_main();
-    // }
-    // auto light_para = decide_gazebo_object_.get_light_properties();
-    // gazebo_model_move.set_light(light_para);
-    // auto link_para = decide_gazebo_object_.get_link_visual_parameter("denso_box");
-    // gazebo_model_move.set_link_visual(link_para);
+    if (util_.probability() < 0.6) {
+        noize_image_client.noize_image_main();
+    }
+    auto light_para = decide_gazebo_object_.get_light_properties();
+    gazebo_model_move.set_light(light_para);
+    auto link_para = decide_gazebo_object_.get_link_visual_parameter("denso_box");
+    gazebo_model_move.set_link_visual(link_para);
     //  if (util_.probability() < 1) {
     //     noize_image_client.noize_image_main(Util::join("/home/ericlab/Pictures/domain_texture", final_base_file_name + ".jpg"));
     // }
@@ -70,36 +70,45 @@ bool AnnotationClient::main()
     
     std::vector<common_msgs::ObjectInfo> multi_object, multi_object_all;
     int object_counter = 0;
-    // for (int i = 0; i < object_option_list_.size(); i++) {
-    //     for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
-    //         common_msgs::ObjectInfo object;
-    //         object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
-    //         multi_object_all.push_back(object);
-    //         object_counter++;
-    //     }
-    // }
-    // multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
-    // gazebo_model_move.set_multi_gazebo_model(multi_object_all);
+    for (int i = 0; i < object_option_list_.size(); i++) {
+        for (int j = 0; j < object_option_list_[i].num_of_object; j++) {
+            common_msgs::ObjectInfo object;
+            object = DecidePosition::make_object_info(object_counter, j, object_option_list_[i]);
+            multi_object_all.push_back(object);
+            object_counter++;
+        }
+    }
+    multi_object_all = decide_gazebo_object_.get_remove_position(multi_object_all);
+    gazebo_model_move.set_multi_gazebo_model(multi_object_all);
     object_counter = 0;
-    // for (int i = 0; i < util_.random_int(1, object_option_list_[0].num_of_object); i++) {
-    //     common_msgs::ObjectInfo object;
-    //     object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
-    //     multi_object.push_back(object);
-    //     object_counter++;
-    // }
-    for (int i = 0; i < 5; i++) {
+    int ob_num_start;
+    if (util_.probability() < 0.3) {
+    // if (util_.probability() < 1) {
+
+        ob_num_start = 1;
+    }
+    else {
+        ob_num_start = 15;
+    }
+    for (int i = 0; i < util_.random_int(ob_num_start, object_option_list_[0].num_of_object); i++) {
         common_msgs::ObjectInfo object;
         object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
         multi_object.push_back(object);
         object_counter++;
     }
+    // for (int i = 0; i < 5; i++) {
+    //     common_msgs::ObjectInfo object;
+    //     object = decide_gazebo_object_.make_object_info(object_counter, i, object_option_list_[0]);
+    //     multi_object.push_back(object);
+    //     object_counter++;
+    // }
     // for (int i = 0; i < util_.random_int(1, quantity_of_object_list_[1]); i++) {
     //     common_msgs::ObjectInfo object;
     //     object = decide_gazebo_object_.make_object_info(i, object_list_[1]);
     //     multi_object.push_back(object);
     // }
-    // multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
-    // gazebo_model_move.set_multi_gazebo_model(multi_object);
+    multi_object = decide_gazebo_object_.get_randam_place_position(multi_object);
+    gazebo_model_move.set_multi_gazebo_model(multi_object);
     
     ros::Duration(0.6).sleep();
     
