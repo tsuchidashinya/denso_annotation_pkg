@@ -33,7 +33,7 @@ void AnnotationClient::set_paramenter()
     hdf5_record_2_client_ = nh_.serviceClient<common_srvs::Hdf5RecordSensorData>(hdf5_record_2_service_name_);
     tf_br_client_ = nh_.serviceClient<common_srvs::TfBroadcastService>(tf_br_service_name_);
     tf_delete_client_ = nh_.serviceClient<common_srvs::TfDeleteService>(tf_delete_service_name_);
-    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenAccService>(hdf5_open_acc_service_name_);
+    hdf5_open_client_ = nh_.serviceClient<common_srvs::Hdf5OpenSensorDataService>(hdf5_open_acc_service_name_);
 }
 
 
